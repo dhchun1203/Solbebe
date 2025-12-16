@@ -46,7 +46,7 @@ const Home = () => {
             </p>
             <Link
               to="/products"
-              className="inline-block bg-white text-pastel-pink px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+              className="inline-block bg-white text-pastel-pink-text px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
             >
               신상 보러가기
             </Link>

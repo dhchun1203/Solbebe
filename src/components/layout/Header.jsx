@@ -6,7 +6,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* 로고 */}
-          <Link to="/" className="text-2xl font-bold text-pastel-pink">
+          <Link to="/" className="text-2xl font-bold text-pastel-pink-text">
             Solbebe
           </Link>
 
@@ -14,19 +14,19 @@ const Header = () => {
           <nav className="flex items-center gap-6">
             <Link 
               to="/" 
-              className="text-gray-700 hover:text-pastel-pink transition-colors"
+              className="text-gray-700 hover:text-pastel-pink-text transition-colors"
             >
               홈
             </Link>
             <Link 
               to="/products" 
-              className="text-gray-700 hover:text-pastel-pink transition-colors"
+              className="text-gray-700 hover:text-pastel-pink-text transition-colors"
             >
               상품
             </Link>
             <Link 
               to="/products?category=all" 
-              className="text-gray-700 hover:text-pastel-pink transition-colors"
+              className="text-gray-700 hover:text-pastel-pink-text transition-colors"
             >
               카테고리
             </Link>

@@ -238,13 +238,13 @@ const ProductDetail = () => {
 
         {/* 상품 정보 */}
         <div>
-          <span className="text-sm text-pastel-pink font-medium uppercase">
+          <span className="text-sm text-pastel-pink-text font-medium uppercase">
             {product.category}
           </span>
           <h1 className="text-3xl font-bold text-gray-800 mt-2 mb-4">
             {product.name}
           </h1>
-          <p className="text-3xl font-bold text-pastel-pink mb-6">
+          <p className="text-3xl font-bold text-pastel-pink-text mb-6">
             {product.price?.toLocaleString()}원
           </p>
 
@@ -308,7 +308,7 @@ const ProductDetail = () => {
             onClick={() => setActiveTab('info')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'info'
-                ? 'text-pastel-pink border-b-2 border-pastel-pink'
+                ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
                 : 'text-gray-500'
             }`}
           >
@@ -318,7 +318,7 @@ const ProductDetail = () => {
             onClick={() => setActiveTab('material')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'material'
-                ? 'text-pastel-pink border-b-2 border-pastel-pink'
+                ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
                 : 'text-gray-500'
             }`}
           >
@@ -328,7 +328,7 @@ const ProductDetail = () => {
             onClick={() => setActiveTab('shipping')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'shipping'
-                ? 'text-pastel-pink border-b-2 border-pastel-pink'
+                ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
                 : 'text-gray-500'
             }`}
           >

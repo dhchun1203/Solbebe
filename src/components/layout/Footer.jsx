@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* 로고 */}
-          <div className="text-xl font-bold text-pastel-pink">
+          <div className="text-xl font-bold text-pastel-pink-text">
             Solbebe
           </div>
 
@@ -14,21 +14,21 @@ const Footer = () => {
           <div className="flex gap-4">
             <a 
               href="#" 
-              className="text-gray-600 hover:text-pastel-pink transition-colors"
+              className="text-gray-600 hover:text-pastel-pink-text transition-colors"
               aria-label="Instagram"
             >
               Instagram
             </a>
             <a 
               href="#" 
-              className="text-gray-600 hover:text-pastel-pink transition-colors"
+              className="text-gray-600 hover:text-pastel-pink-text transition-colors"
               aria-label="Facebook"
             >
               Facebook
             </a>
             <a 
               href="#" 
-              className="text-gray-600 hover:text-pastel-pink transition-colors"
+              className="text-gray-600 hover:text-pastel-pink-text transition-colors"
               aria-label="Kakao"
             >
               Kakao
