@@ -16,56 +16,13 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // 더미 데이터 (실제 API 연동 전까지)
-        const dummyProducts = [
-          {
-            id: '1',
-            name: '부드러운 베이비 바디슈트',
-            price: 29000,
-            category: 'top',
-            images: ['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400'],
-          },
-          {
-            id: '2',
-            name: '코지 베이비 원피스',
-            price: 35000,
-            category: 'dress',
-            images: ['https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400'],
-          },
-          {
-            id: '3',
-            name: '소프트 베이비 팬츠',
-            price: 25000,
-            category: 'bottom',
-            images: ['https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400'],
-          },
-          {
-            id: '4',
-            name: '귀여운 베이비 모자',
-            price: 15000,
-            category: 'accessory',
-            images: ['https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400'],
-          },
-          {
-            id: '5',
-            name: '베이비 긴팔 티셔츠',
-            price: 22000,
-            category: 'top',
-            images: ['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400'],
-          },
-          {
-            id: '6',
-            name: '베이비 반바지',
-            price: 20000,
-            category: 'bottom',
-            images: ['https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400'],
-          },
-        ]
-        setProducts(dummyProducts)
-        // 실제 사용: const data = await productApi.getAllProducts()
-        // setProducts(data)
+        // Supabase에서 실제 상품 데이터 가져오기
+        const data = await productApi.getAllProducts()
+        setProducts(data || [])
       } catch (error) {
         console.error('상품 조회 실패:', error)
+        // 에러 발생 시 빈 배열로 설정
+        setProducts([])
       } finally {
         setLoading(false)
       }

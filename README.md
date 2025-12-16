@@ -441,6 +441,8 @@ npm install
 - **[Supabase 설정 가이드](./docs/SUPABASE_SETUP.md)** - 상세한 Supabase 설정 방법
 - **[빠른 시작 가이드](./docs/QUICK_START.md)** - 빠른 시작 가이드
 - **[Supabase SQL 파일](./docs/SUPABASE_SQL.sql)** - 데이터베이스 설정 SQL
+- **[AI 이미지 생성 가이드](./docs/AI_IMAGE_GUIDE.md)** - DALL·E/Midjourney/Ideogram로 상품 이미지 생성
+- **[이미지 업로드 가이드](./docs/IMAGE_UPLOAD_GUIDE.md)** - Supabase Storage에 이미지 업로드 및 적용
 
 ---
 

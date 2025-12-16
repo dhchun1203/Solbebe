@@ -13,3 +13,5 @@ const InquiryButton = ({ productId, className = '' }) => {
 
 export default InquiryButton
 
+
+

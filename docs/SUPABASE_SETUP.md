@@ -366,3 +366,5 @@ DROP TABLE IF EXISTS products CASCADE;
 
 설정이 완료되면 실제 프로덕션 환경에서는 RLS를 활성화하고, 환경 변수를 Vercel 등 배포 플랫폼에 설정하는 것을 권장합니다.
 
+
+

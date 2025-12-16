@@ -176,3 +176,5 @@ ON CONFLICT DO NOTHING;
 -- 모든 테이블과 데이터가 성공적으로 생성되었습니다!
 -- Supabase Table Editor에서 확인해보세요.
 
+
+

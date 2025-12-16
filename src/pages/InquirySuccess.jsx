@@ -46,3 +46,5 @@ const InquirySuccess = () => {
 
 export default InquirySuccess
 
+
+

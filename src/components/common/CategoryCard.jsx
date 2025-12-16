@@ -24,3 +24,5 @@ const CategoryCard = ({ category, icon, description }) => {
 
 export default CategoryCard
 
+
+

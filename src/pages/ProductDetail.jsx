@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import InquiryButton from '../components/common/InquiryButton'
 import { productApi } from '../services/api'
@@ -10,36 +10,121 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [activeTab, setActiveTab] = useState('info')
+  
+  // 드래그 관련 상태
+  const thumbnailContainerRef = useRef(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   const { setSelectedProduct, setSelectedSize, setSelectedColor, selectedSize, selectedColor } = useProductStore()
+
+  // 색상 이름을 영어로 매핑
+  const getColorCode = (colorName) => {
+    const colorMap = {
+      '크림': 'beige',
+      '베이지': 'beige',
+      '핑크': 'pink',
+      '블루': 'blue',
+      '하늘색': 'blue',
+      '화이트': 'white',
+      '그레이': 'gray',
+    }
+    return colorMap[colorName] || colorName.toLowerCase()
+  }
+
+  // 선택된 색상에 맞는 이미지 필터링
+  const getFilteredImages = () => {
+    if (!product?.images || product.images.length === 0) return []
+    
+    // 색상이 선택되지 않았으면 모든 이미지 반환
+    if (!selectedColor) return product.images
+    
+    const colorCode = getColorCode(selectedColor)
+    
+    // 이미지 URL에서 해당 색상 코드가 포함된 이미지만 필터링
+    return product.images.filter(image => {
+      const imageUrl = image.toLowerCase()
+      // 다양한 패턴 지원:
+      // - 하이픈 사이: -beige-, -blue-, -pink-
+      // - 경로: /beige/, /blue/, /pink/
+      // - 하이픈 뒤 확장자: -beige.png, -blue.png, -pink.png (모자/신발 등)
+      return (
+        imageUrl.includes(`-${colorCode}-`) || 
+        imageUrl.includes(`/${colorCode}/`) ||
+        imageUrl.includes(`-${colorCode}.`) ||
+        imageUrl.endsWith(`-${colorCode}.png`)
+      )
+    })
+  }
+
+  const filteredImages = getFilteredImages()
+
+  // 색상 변경 시 이미지 인덱스 초기화
+  useEffect(() => {
+    if (selectedColor && filteredImages.length > 0) {
+      setSelectedImageIndex(0)
+    }
+  }, [selectedColor, filteredImages.length])
+
+  // 드래그 시작
+  const handleMouseDown = (e) => {
+    if (!thumbnailContainerRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX - thumbnailContainerRef.current.offsetLeft)
+    setScrollLeft(thumbnailContainerRef.current.scrollLeft)
+  }
+
+  // 드래그 중
+  const handleMouseMove = (e) => {
+    if (!isDragging || !thumbnailContainerRef.current) return
+    e.preventDefault()
+    const x = e.pageX - thumbnailContainerRef.current.offsetLeft
+    const walk = (x - startX) * 2 // 스크롤 속도 조절
+    thumbnailContainerRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  // 드래그 종료
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  // 마우스가 영역을 벗어났을 때
+  const handleMouseLeave = () => {
+    setIsDragging(false)
+  }
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // 더미 데이터
-        const dummyProduct = {
-          id: id,
-          name: '부드러운 베이비 바디슈트',
-          price: 29000,
-          category: '상의',
-          images: [
-            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800',
-            'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800',
-            'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800',
-          ],
-          sizes: ['70', '80', '90'],
-          colors: ['크림', '핑크', '블루'],
-          description: '아기의 부드러운 피부를 위한 프리미엄 바디슈트입니다.',
-          material: '순면 100%, 인체에 무해한 염료 사용',
-          care: '30도 이하 세탁, 중성세제 사용, 그늘에서 건조',
+        console.log('상품 ID로 조회 시작:', id)
+        // Supabase에서 실제 상품 데이터 가져오기
+        const data = await productApi.getProductById(id)
+        
+        console.log('조회된 상품 데이터:', data)
+        
+        if (!data) {
+          console.warn('상품 데이터가 없습니다. ID:', id)
+          setProduct(null)
+          return
         }
-        setProduct(dummyProduct)
-        setSelectedProduct(dummyProduct)
-        // 실제 사용: const data = await productApi.getProductById(id)
-        // setProduct(data)
-        // setSelectedProduct(data)
+        
+        // 이미지가 없는 경우를 대비한 처리
+        if (!data.images || data.images.length === 0) {
+          console.warn('상품 이미지가 없습니다:', data.name)
+        }
+        
+        setProduct(data)
+        setSelectedProduct(data)
       } catch (error) {
         console.error('상품 조회 실패:', error)
+        console.error('에러 상세:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        })
+        // 에러 발생 시 빈 상태로 설정
+        setProduct(null)
       } finally {
         setLoading(false)
       }
@@ -47,6 +132,9 @@ const ProductDetail = () => {
 
     if (id) {
       fetchProduct()
+    } else {
+      console.warn('상품 ID가 없습니다')
+      setLoading(false)
     }
   }, [id, setSelectedProduct])
 
@@ -61,7 +149,11 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        상품을 찾을 수 없습니다.
+        <p className="text-xl font-semibold text-gray-700 mb-2">상품을 찾을 수 없습니다.</p>
+        <p className="text-gray-500 mb-4">상품 ID: {id}</p>
+        <p className="text-sm text-gray-400">
+          브라우저 콘솔(F12)에서 에러 메시지를 확인해주세요.
+        </p>
       </div>
     )
   }
@@ -72,33 +164,76 @@ const ProductDetail = () => {
       <div className="grid md:grid-cols-2 gap-8 mb-12">
         {/* 이미지 갤러리 */}
         <div>
-          <div className="aspect-square bg-pastel-beige rounded-xl overflow-hidden mb-4">
-            <img
-              src={product.images[selectedImageIndex] || product.images[0]}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          {/* 썸네일 리스트 */}
-          <div className="flex gap-2">
-            {product.images.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImageIndex(index)}
-                className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                  selectedImageIndex === index
-                    ? 'border-pastel-pink'
-                    : 'border-transparent'
-                }`}
-              >
+          {filteredImages.length > 0 ? (
+            <>
+              <div className="aspect-square bg-pastel-beige rounded-xl overflow-hidden mb-4">
                 <img
-                  src={image}
-                  alt={`${product.name} ${index + 1}`}
+                  src={filteredImages[selectedImageIndex] || filteredImages[0]}
+                  alt={product.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // 이미지 로드 실패 시 기본 이미지 표시
+                    e.target.src = 'https://via.placeholder.com/800x800?text=Image+Not+Found'
+                  }}
                 />
-              </button>
-            ))}
-          </div>
+              </div>
+              {/* 썸네일 리스트 */}
+              {filteredImages.length > 1 && (
+                <div
+                  ref={thumbnailContainerRef}
+                  className="flex gap-2 overflow-x-auto cursor-grab active:cursor-grabbing scrollbar-hide"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {filteredImages.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={(e) => {
+                        // 드래그 중이면 클릭 이벤트 방지
+                        if (isDragging) {
+                          e.preventDefault()
+                          return
+                        }
+                        setSelectedImageIndex(index)
+                      }}
+                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 select-none ${
+                        selectedImageIndex === index
+                          ? 'border-pastel-pink'
+                          : 'border-transparent hover:border-gray-300'
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={`${product.name} ${index + 1}`}
+                        className="w-full h-full object-cover pointer-events-none"
+                        draggable={false}
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/200x200?text=Image+Not+Found'
+                        }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+              {selectedColor && filteredImages.length === 0 && (
+                <p className="text-sm text-gray-500 mt-2 text-center">
+                  {selectedColor} 색상의 이미지를 찾을 수 없습니다.
+                </p>
+              )}
+            </>
+          ) : product.images && product.images.length > 0 ? (
+            <div className="aspect-square bg-pastel-beige rounded-xl flex items-center justify-center">
+              <p className="text-gray-400">
+                {selectedColor ? `${selectedColor} 색상의 이미지를 선택해주세요.` : '이미지 준비 중입니다'}
+              </p>
+            </div>
+          ) : (
+            <div className="aspect-square bg-pastel-beige rounded-xl flex items-center justify-center">
+              <p className="text-gray-400">이미지 준비 중입니다</p>
+            </div>
+          )}
         </div>
 
         {/* 상품 정보 */}

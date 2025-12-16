@@ -11,50 +11,12 @@ const Home = () => {
   useEffect(() => {
     const fetchRecommendedProducts = async () => {
       try {
-        // 실제 API 호출 대신 더미 데이터 사용 (Supabase 연동 전까지)
-        const dummyProducts = [
-          {
-            id: '1',
-            name: '부드러운 베이비 바디슈트',
-            price: 29000,
-            category: '상의',
-            images: ['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400'],
-            sizes: ['70', '80', '90'],
-            colors: ['크림', '핑크'],
-          },
-          {
-            id: '2',
-            name: '코지 베이비 원피스',
-            price: 35000,
-            category: '원피스',
-            images: ['https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400'],
-            sizes: ['70', '80', '90'],
-            colors: ['베이지', '블루'],
-          },
-          {
-            id: '3',
-            name: '소프트 베이비 팬츠',
-            price: 25000,
-            category: '하의',
-            images: ['https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400'],
-            sizes: ['70', '80', '90'],
-            colors: ['화이트', '그레이'],
-          },
-          {
-            id: '4',
-            name: '귀여운 베이비 모자',
-            price: 15000,
-            category: '악세서리',
-            images: ['https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400'],
-            sizes: ['Free'],
-            colors: ['핑크', '블루'],
-          },
-        ]
-        setRecommendedProducts(dummyProducts)
-        // 실제 사용: const products = await productApi.getRecommendedProducts(6)
-        // setRecommendedProducts(products)
+        // Supabase에서 추천 상품 가져오기
+        const products = await productApi.getRecommendedProducts(6)
+        setRecommendedProducts(products || [])
       } catch (error) {
         console.error('상품 조회 실패:', error)
+        setRecommendedProducts([])
       } finally {
         setLoading(false)
       }
