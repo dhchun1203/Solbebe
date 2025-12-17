@@ -170,7 +170,7 @@ const ProductDetail = () => {
     <div className="container mx-auto px-4 py-4 md:py-8">
       <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
         {/* 이미지 갤러리 */}
-        <div>
+        <div className="min-w-0">
           {filteredImages.length > 0 ? (
             <>
               <div className="aspect-square bg-pastel-beige rounded-xl overflow-hidden mb-4">
@@ -188,11 +188,30 @@ const ProductDetail = () => {
               {filteredImages.length > 1 && (
                 <div
                   ref={thumbnailContainerRef}
-                  className="flex gap-2 overflow-x-auto cursor-grab active:cursor-grabbing scrollbar-hide"
+                  className="flex gap-2 overflow-x-auto overflow-y-hidden cursor-grab active:cursor-grabbing scrollbar-hide max-w-full"
+                  style={{ WebkitOverflowScrolling: 'touch' }}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseLeave}
+                  onTouchStart={(e) => {
+                    // 모바일 터치 이벤트 처리
+                    if (thumbnailContainerRef.current) {
+                      setIsDragging(true)
+                      setStartX(e.touches[0].pageX - thumbnailContainerRef.current.offsetLeft)
+                      setScrollLeft(thumbnailContainerRef.current.scrollLeft)
+                    }
+                  }}
+                  onTouchMove={(e) => {
+                    if (!isDragging || !thumbnailContainerRef.current) return
+                    e.preventDefault()
+                    const x = e.touches[0].pageX - thumbnailContainerRef.current.offsetLeft
+                    const walk = (x - startX) * 2
+                    thumbnailContainerRef.current.scrollLeft = scrollLeft - walk
+                  }}
+                  onTouchEnd={() => {
+                    setIsDragging(false)
+                  }}
                 >
                   {filteredImages.map((image, index) => (
                     <button
@@ -205,7 +224,7 @@ const ProductDetail = () => {
                         }
                         setSelectedImageIndex(index)
                       }}
-                      className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 select-none ${
+                      className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 select-none min-w-[64px] md:min-w-[80px] ${
                         selectedImageIndex === index
                           ? 'border-pastel-pink'
                           : 'border-transparent hover:border-gray-300'

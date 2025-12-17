@@ -138,7 +138,7 @@ const Inquiry = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-pastel-pink text-white py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-pastel-pink-text text-white py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? '제출 중...' : '문의 제출하기'}
         </button>
