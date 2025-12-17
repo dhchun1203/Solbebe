@@ -12,6 +12,7 @@ const ProductList = () => {
     searchParams.get('category') || 'all'
   )
   const [sortBy, setSortBy] = useState('latest')
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,8 +32,27 @@ const ProductList = () => {
     fetchProducts()
   }, [])
 
+  // URL 파라미터 변경 감지
+  useEffect(() => {
+    const category = searchParams.get('category') || 'all'
+    const search = searchParams.get('search') || ''
+    setSelectedCategory(category)
+    setSearchQuery(search)
+  }, [searchParams])
+
   useEffect(() => {
     let filtered = [...products]
+
+    // 검색 필터
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(
+        (p) =>
+          p.name?.toLowerCase().includes(query) ||
+          p.description?.toLowerCase().includes(query) ||
+          p.category?.toLowerCase().includes(query)
+      )
+    }
 
     // 카테고리 필터
     if (selectedCategory !== 'all') {
@@ -50,7 +70,7 @@ const ProductList = () => {
     }
 
     setFilteredProducts(filtered)
-  }, [products, selectedCategory, sortBy])
+  }, [products, selectedCategory, sortBy, searchQuery])
 
   const categoryMap = {
     all: '전체',
@@ -62,7 +82,9 @@ const ProductList = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">상품 목록</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        {searchQuery ? `"${searchQuery}" 검색 결과` : '상품 목록'}
+      </h1>
 
       {/* Filter Bar */}
       <div className="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row gap-4 justify-between">

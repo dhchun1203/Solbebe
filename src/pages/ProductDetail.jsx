@@ -1,8 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import InquiryButton from '../components/common/InquiryButton'
+import Toast from '../components/common/Toast'
 import { productApi } from '../services/api'
 import { useProductStore } from '../store/productStore'
+import { useCartStore } from '../store/cartStore'
+import { useAuthStore } from '../store/authStore'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -18,6 +21,10 @@ const ProductDetail = () => {
   const [scrollLeft, setScrollLeft] = useState(0)
 
   const { setSelectedProduct, setSelectedSize, setSelectedColor, selectedSize, selectedColor } = useProductStore()
+  const { addToCart } = useCartStore()
+  const { user } = useAuthStore()
+  const navigate = useNavigate()
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' })
 
   // 색상 이름을 영어로 매핑
   const getColorCode = (colorName) => {
@@ -296,10 +303,81 @@ const ProductDetail = () => {
             </div>
           </div>
 
+          {/* 장바구니 추가 버튼 */}
+          <button
+            onClick={async () => {
+              // 로그인 체크
+              if (!user) {
+                setToast({
+                  isVisible: true,
+                  message: '로그인이 필요합니다. 로그인 후 이용해주세요.',
+                  type: 'error',
+                })
+                // 로그인 모달을 열기 위해 약간의 딜레이 후 Header의 로그인 버튼 클릭 이벤트 트리거
+                setTimeout(() => {
+                  const loginButton = document.querySelector('[aria-label="로그인"]')
+                  if (loginButton) {
+                    loginButton.click()
+                  }
+                }, 500)
+                return
+              }
+
+              // 사이즈와 색상이 필수인지 확인
+              if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+                setToast({
+                  isVisible: true,
+                  message: '사이즈를 선택해주세요.',
+                  type: 'error',
+                })
+                return
+              }
+              if (product.colors && product.colors.length > 0 && !selectedColor) {
+                setToast({
+                  isVisible: true,
+                  message: '색상을 선택해주세요.',
+                  type: 'error',
+                })
+                return
+              }
+
+              // 장바구니에 추가
+              const result = await addToCart(product, {
+                size: selectedSize,
+                color: selectedColor,
+              })
+
+              if (result.success) {
+                setToast({
+                  isVisible: true,
+                  message: '장바구니에 추가되었습니다!',
+                  type: 'success',
+                })
+              } else {
+                setToast({
+                  isVisible: true,
+                  message: result.error || '장바구니에 추가하는데 실패했습니다.',
+                  type: 'error',
+                })
+              }
+            }}
+            className="w-full bg-gray-800 text-white text-center py-4 rounded-xl font-semibold hover:bg-gray-700 transition-all shadow-md hover:shadow-lg mb-3"
+          >
+            장바구니에 추가
+          </button>
+
           {/* 구매 문의 버튼 */}
           <InquiryButton productId={product.id} />
         </div>
       </div>
+
+      {/* 토스트 알림 */}
+      <Toast
+        isVisible={toast.isVisible}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+      />
 
       {/* 설명 탭 */}
       <div className="mb-8">

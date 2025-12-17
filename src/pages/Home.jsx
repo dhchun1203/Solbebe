@@ -33,11 +33,16 @@ const Home = () => {
   ]
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-pastel-pink to-pastel-blue py-20 md:py-32">
+      <section className="relative bg-gradient-to-b from-pastel-pink to-white py-20 md:py-32">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
+            {/* 프리미엄 태그 */}
+            <div className="inline-block bg-white rounded-lg px-4 py-2 mb-6">
+              <span className="text-sm font-medium text-gray-800">프리미엄 베이비웨어</span>
+            </div>
+            
             <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
               Soft & Cozy Babywear
             </h1>
@@ -46,27 +51,24 @@ const Home = () => {
             </p>
             <Link
               to="/products"
-              className="inline-block bg-white text-pastel-pink-text px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+              className="inline-block bg-gray-800 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
             >
-              신상 보러가기
+              지금 보러가기
             </Link>
           </div>
-        </div>
-        {/* 배너 이미지 */}
-        <div className="absolute inset-0 -z-10 opacity-20">
-          <img 
-            src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=1920" 
-            alt="Hero Banner"
-            className="w-full h-full object-cover"
-          />
         </div>
       </section>
 
       {/* Category Quick Menu */}
-      <section className="container mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
+      <section className="container mx-auto px-4 py-12 bg-white">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
           카테고리
         </h2>
+          <p className="text-gray-600">
+            아기에게 필요한 모든 것
+          </p>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map((category) => (
             <CategoryCard
@@ -81,9 +83,14 @@ const Home = () => {
 
       {/* Recommended Products */}
       <section className="container mx-auto px-4 py-12 bg-white">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
           추천 상품
         </h2>
+          <p className="text-gray-600">
+            엄선된 베스트 아이템
+          </p>
+        </div>
         {loading ? (
           <div className="text-center py-12">로딩 중...</div>
         ) : (
@@ -96,7 +103,7 @@ const Home = () => {
       </section>
 
       {/* Brand Story Section */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="container mx-auto px-4 py-12 bg-white">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="rounded-xl overflow-hidden shadow-md">
             <img
