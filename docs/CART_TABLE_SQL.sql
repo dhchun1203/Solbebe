@@ -80,3 +80,4 @@ CREATE POLICY "Users can delete their own cart items"
 -- RLS 정책이 적용되어 각 사용자는 자신의 장바구니만 접근할 수 있습니다.
 
 
+

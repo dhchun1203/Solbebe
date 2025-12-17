@@ -31,16 +31,16 @@ const SearchModal = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20"
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-16 md:pt-20 px-4"
       onClick={onClose}
       onKeyDown={handleKeyDown}
     >
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4"
+        className="bg-white rounded-xl shadow-xl w-full max-w-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="flex items-center gap-4">
+        <form onSubmit={handleSubmit} className="p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
             <div className="flex-1 relative">
               <input
                 ref={inputRef}
@@ -48,23 +48,25 @@ const SearchModal = ({ isOpen, onClose }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="상품을 검색하세요..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
                 onKeyDown={handleKeyDown}
               />
             </div>
-            <button
-              type="submit"
-              className="px-6 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors"
-            >
-              검색
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-3 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              취소
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className="flex-1 sm:flex-none px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors"
+              >
+                검색
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2.5 md:py-3 text-sm md:text-base text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                취소
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -73,5 +75,6 @@ const SearchModal = ({ isOpen, onClose }) => {
 }
 
 export default SearchModal
+
 
 

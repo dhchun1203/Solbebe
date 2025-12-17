@@ -68,16 +68,16 @@ const Inquiry = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">구매 문의</h1>
+    <div className="container mx-auto px-4 py-4 md:py-8 max-w-2xl">
+      <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">구매 문의</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6 md:p-8 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6">
         {/* 상품 정보 (읽기 전용) */}
         {selectedProduct && (
-          <div className="bg-pastel-beige rounded-xl p-4">
-            <h2 className="font-semibold text-gray-800 mb-2">상품 정보</h2>
-            <p className="text-gray-700">{selectedProduct.name}</p>
-            <div className="mt-2 flex gap-4 text-sm text-gray-600">
+          <div className="bg-pastel-beige rounded-xl p-3 md:p-4">
+            <h2 className="text-sm md:text-base font-semibold text-gray-800 mb-2">상품 정보</h2>
+            <p className="text-sm md:text-base text-gray-700">{selectedProduct.name}</p>
+            <div className="mt-2 flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs md:text-sm text-gray-600">
               {selectedSize && <span>사이즈: {selectedSize}</span>}
               {selectedColor && <span>색상: {selectedColor}</span>}
             </div>
@@ -86,7 +86,7 @@ const Inquiry = () => {
 
         {/* 이름 */}
         <div>
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="name" className="block text-sm md:text-base text-gray-700 font-medium mb-2">
             이름 <span className="text-red-500">*</span>
           </label>
           <input
@@ -96,14 +96,14 @@ const Inquiry = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
+            className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
             placeholder="이름을 입력해주세요"
           />
         </div>
 
         {/* 연락처 */}
         <div>
-          <label htmlFor="phone" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="phone" className="block text-sm md:text-base text-gray-700 font-medium mb-2">
             연락처 <span className="text-red-500">*</span>
           </label>
           <input
@@ -113,14 +113,14 @@ const Inquiry = () => {
             value={formData.phone}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
+            className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
             placeholder="연락처를 입력해주세요"
           />
         </div>
 
         {/* 요청사항 */}
         <div>
-          <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="message" className="block text-sm md:text-base text-gray-700 font-medium mb-2">
             요청사항
           </label>
           <textarea
@@ -129,7 +129,7 @@ const Inquiry = () => {
             value={formData.message}
             onChange={handleChange}
             rows={5}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink resize-none"
+            className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink resize-none"
             placeholder="추가 요청사항이 있으시면 입력해주세요"
           />
         </div>
@@ -138,7 +138,7 @@ const Inquiry = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-pastel-pink text-white py-4 rounded-xl font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-pastel-pink text-white py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? '제출 중...' : '문의 제출하기'}
         </button>
@@ -148,6 +148,7 @@ const Inquiry = () => {
 }
 
 export default Inquiry
+
 
 
 

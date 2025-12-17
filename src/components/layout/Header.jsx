@@ -9,7 +9,9 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const profileMenuRef = useRef(null)
+  const mobileMenuRef = useRef(null)
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
   const totalItems = getTotalItems()
@@ -33,16 +35,19 @@ const Header = () => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
         setIsProfileMenuOpen(false)
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false)
+      }
     }
 
-    if (isProfileMenuOpen) {
+    if (isProfileMenuOpen || isMobileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isProfileMenuOpen])
+  }, [isProfileMenuOpen, isMobileMenuOpen])
 
   const handleSignOut = async () => {
     await signOut()
@@ -53,17 +58,17 @@ const Header = () => {
   return (
     <>
       <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between">
             {/* 로고 및 메뉴 */}
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-4 md:gap-8">
               {/* 로고 */}
-              <Link to="/" className="text-2xl font-bold text-gray-800">
+              <Link to="/" className="text-xl md:text-2xl font-bold text-gray-800">
                 Solbebe
               </Link>
 
-              {/* 메뉴 */}
-              <nav className="flex items-center gap-8">
+              {/* 데스크탑 메뉴 */}
+              <nav className="hidden md:flex items-center gap-8">
                 <Link 
                   to="/" 
                   className="text-lg text-gray-800 hover:text-pastel-pink-text transition-colors"
@@ -83,10 +88,25 @@ const Header = () => {
                   카테고리
                 </Link>
               </nav>
+
+              {/* 모바일 햄버거 메뉴 버튼 */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors"
+                aria-label="메뉴"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
             </div>
 
             {/* 아이콘 버튼들 */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               {/* 검색 버튼 */}
               <button
                 onClick={() => setIsSearchOpen(true)}
@@ -168,6 +188,71 @@ const Header = () => {
               )}
             </div>
           </div>
+
+          {/* 모바일 메뉴 */}
+          {isMobileMenuOpen && (
+            <div ref={mobileMenuRef} className="md:hidden border-t border-gray-200 mt-3 pt-3">
+              <nav className="flex flex-col gap-4">
+                <Link 
+                  to="/" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
+                >
+                  홈
+                </Link>
+                <Link 
+                  to="/products" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
+                >
+                  상품
+                </Link>
+                <Link 
+                  to="/products?category=all" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
+                >
+                  카테고리
+                </Link>
+                {user && (
+                  <Link 
+                    to="/cart" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2 flex items-center gap-2"
+                  >
+                    장바구니
+                    {totalItems > 0 && (
+                      <span className="bg-pastel-pink-text text-white text-xs font-bold rounded-full px-2 py-0.5">
+                        {totalItems > 9 ? '9+' : totalItems}
+                      </span>
+                    )}
+                  </Link>
+                )}
+                {user ? (
+                  <div className="pt-2 border-t border-gray-200">
+                    <p className="text-sm text-gray-600 mb-1">{user.user_metadata?.name || '사용자'}</p>
+                    <p className="text-xs text-gray-500 mb-3">{user.email}</p>
+                    <button
+                      onClick={handleSignOut}
+                      className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors"
+                    >
+                      로그아웃
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      setIsLoginOpen(true)
+                    }}
+                    className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2 text-left"
+                  >
+                    로그인
+                  </button>
+                )}
+              </nav>
+            </div>
+          )}
         </div>
       </header>
 

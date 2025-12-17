@@ -167,8 +167,8 @@ const ProductDetail = () => {
 
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
+    <div className="container mx-auto px-4 py-4 md:py-8">
+      <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
         {/* 이미지 갤러리 */}
         <div>
           {filteredImages.length > 0 ? (
@@ -205,7 +205,7 @@ const ProductDetail = () => {
                         }
                         setSelectedImageIndex(index)
                       }}
-                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 select-none ${
+                      className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 select-none ${
                         selectedImageIndex === index
                           ? 'border-pastel-pink'
                           : 'border-transparent hover:border-gray-300'
@@ -245,13 +245,13 @@ const ProductDetail = () => {
 
         {/* 상품 정보 */}
         <div>
-          <span className="text-sm text-pastel-pink-text font-medium uppercase">
+          <span className="text-xs md:text-sm text-pastel-pink-text font-medium uppercase">
             {product.category}
           </span>
-          <h1 className="text-3xl font-bold text-gray-800 mt-2 mb-4">
+          <h1 className="text-xl md:text-3xl font-bold text-gray-800 mt-2 mb-3 md:mb-4">
             {product.name}
           </h1>
-          <p className="text-3xl font-bold text-pastel-pink-text mb-6">
+          <p className="text-2xl md:text-3xl font-bold text-pastel-pink-text mb-4 md:mb-6">
             {product.price?.toLocaleString()}원
           </p>
 
@@ -264,14 +264,14 @@ const ProductDetail = () => {
           </div>
 
           {/* 사이즈 선택 */}
-          <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">사이즈</label>
-            <div className="flex gap-2">
+          <div className="mb-4 md:mb-6">
+            <label className="block text-sm md:text-base text-gray-700 font-medium mb-2">사이즈</label>
+            <div className="flex flex-wrap gap-2">
               {product.sizes?.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`px-6 py-2 rounded-xl border-2 transition-all ${
+                  className={`px-4 md:px-6 py-2 text-sm md:text-base rounded-xl border-2 transition-all ${
                     selectedSize === size
                       ? 'border-pastel-pink bg-pastel-pink text-white'
                       : 'border-gray-300 hover:border-pastel-pink'
@@ -284,14 +284,14 @@ const ProductDetail = () => {
           </div>
 
           {/* 색상 선택 */}
-          <div className="mb-8">
-            <label className="block text-gray-700 font-medium mb-2">색상</label>
-            <div className="flex gap-2">
+          <div className="mb-6 md:mb-8">
+            <label className="block text-sm md:text-base text-gray-700 font-medium mb-2">색상</label>
+            <div className="flex flex-wrap gap-2">
               {product.colors?.map((color) => (
                 <button
                   key={color}
                   onClick={() => setSelectedColor(color)}
-                  className={`px-6 py-2 rounded-xl border-2 transition-all ${
+                  className={`px-4 md:px-6 py-2 text-sm md:text-base rounded-xl border-2 transition-all ${
                     selectedColor === color
                       ? 'border-pastel-pink bg-pastel-pink text-white'
                       : 'border-gray-300 hover:border-pastel-pink'
@@ -361,7 +361,7 @@ const ProductDetail = () => {
                 })
               }
             }}
-            className="w-full bg-gray-800 text-white text-center py-4 rounded-xl font-semibold hover:bg-gray-700 transition-all shadow-md hover:shadow-lg mb-3"
+            className="w-full bg-gray-800 text-white text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold hover:bg-gray-700 transition-all shadow-md hover:shadow-lg mb-3"
           >
             장바구니에 추가
           </button>
@@ -380,11 +380,11 @@ const ProductDetail = () => {
       />
 
       {/* 설명 탭 */}
-      <div className="mb-8">
-        <div className="flex gap-4 border-b border-gray-200">
+      <div className="mb-6 md:mb-8">
+        <div className="flex gap-2 md:gap-4 border-b border-gray-200 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setActiveTab('info')}
-            className={`px-6 py-3 font-medium transition-colors ${
+            className={`px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium transition-colors whitespace-nowrap ${
               activeTab === 'info'
                 ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
                 : 'text-gray-500'
@@ -394,7 +394,7 @@ const ProductDetail = () => {
           </button>
           <button
             onClick={() => setActiveTab('material')}
-            className={`px-6 py-3 font-medium transition-colors ${
+            className={`px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium transition-colors whitespace-nowrap ${
               activeTab === 'material'
                 ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
                 : 'text-gray-500'
@@ -404,7 +404,7 @@ const ProductDetail = () => {
           </button>
           <button
             onClick={() => setActiveTab('shipping')}
-            className={`px-6 py-3 font-medium transition-colors ${
+            className={`px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium transition-colors whitespace-nowrap ${
               activeTab === 'shipping'
                 ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
                 : 'text-gray-500'
@@ -414,15 +414,15 @@ const ProductDetail = () => {
           </button>
         </div>
 
-        <div className="mt-6 p-6 bg-white rounded-xl shadow-md">
+        <div className="mt-4 md:mt-6 p-4 md:p-6 bg-white rounded-xl shadow-md">
           {activeTab === 'info' && (
-            <p className="text-gray-600 leading-relaxed">{product.description}</p>
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed">{product.description}</p>
           )}
           {activeTab === 'material' && (
-            <p className="text-gray-600 leading-relaxed">{product.material}</p>
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed">{product.material}</p>
           )}
           {activeTab === 'shipping' && (
-            <div className="text-gray-600 leading-relaxed space-y-2">
+            <div className="text-sm md:text-base text-gray-600 leading-relaxed space-y-2">
               <p>• 배송비: 3,000원 (50,000원 이상 구매 시 무료배송)</p>
               <p>• 배송 소요: 2-3일</p>
               <p>• 제주 및 도서산간 지역 추가 배송비 발생</p>

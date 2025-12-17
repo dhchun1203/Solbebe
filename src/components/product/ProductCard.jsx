@@ -19,14 +19,14 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* 정보 */}
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         <span className="text-xs text-pastel-pink-text font-medium uppercase">
           {category}
         </span>
-        <h3 className="text-lg font-semibold text-gray-800 mt-1 line-clamp-2">
+        <h3 className="text-sm md:text-lg font-semibold text-gray-800 mt-1 line-clamp-2">
           {name}
         </h3>
-        <p className="text-xl font-bold text-pastel-pink-text mt-2">
+        <p className="text-base md:text-xl font-bold text-pastel-pink-text mt-2">
           {price?.toLocaleString()}원
         </p>
       </div>

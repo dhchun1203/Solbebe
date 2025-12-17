@@ -81,19 +81,19 @@ const ProductList = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
+    <div className="container mx-auto px-4 py-4 md:py-8">
+      <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">
         {searchQuery ? `"${searchQuery}" 검색 결과` : '상품 목록'}
       </h1>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row gap-4 justify-between">
-        <div className="flex items-center gap-4">
-          <label className="text-gray-700 font-medium">카테고리:</label>
+      <div className="bg-white rounded-xl shadow-md p-3 md:p-4 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+          <label className="text-sm md:text-base text-gray-700 font-medium whitespace-nowrap">카테고리:</label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
+            className="w-full sm:w-auto px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
           >
             {Object.entries(categoryMap).map(([value, label]) => (
               <option key={value} value={value}>
@@ -103,12 +103,12 @@ const ProductList = () => {
           </select>
         </div>
 
-        <div className="flex items-center gap-4">
-          <label className="text-gray-700 font-medium">정렬:</label>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+          <label className="text-sm md:text-base text-gray-700 font-medium whitespace-nowrap">정렬:</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
+            className="w-full sm:w-auto px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
           >
             <option value="latest">최신순</option>
             <option value="price-low">가격 낮은순</option>
@@ -119,13 +119,13 @@ const ProductList = () => {
 
       {/* Product Grid */}
       {loading ? (
-        <div className="text-center py-12">로딩 중...</div>
+        <div className="text-center py-8 md:py-12">로딩 중...</div>
       ) : filteredProducts.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-8 md:py-12 text-gray-500">
           상품이 없습니다.
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -13,13 +13,13 @@ const CategoryCard = ({ category, icon, description }) => {
   return (
     <Link
       to={`/products?category=${categoryValue}`}
-      className="block bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100"
+      className="block bg-white rounded-xl shadow-md p-4 md:p-6 text-center hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100"
     >
-      <div className="text-4xl mb-3 flex justify-center">
+      <div className="text-3xl md:text-4xl mb-2 md:mb-3 flex justify-center">
         <span className="text-gray-800">{icon}</span>
       </div>
-      <h3 className="text-lg font-semibold text-gray-800 mb-1">{category}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
+      <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-1">{category}</h3>
+      <p className="text-xs md:text-sm text-gray-600">{description}</p>
     </Link>
   )
 }

@@ -59,18 +59,18 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
       onClick={onClose}
       onKeyDown={handleKeyDown}
     >
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-md"
+        className="bg-white rounded-xl shadow-xl w-full max-w-md my-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           {/* 헤더 */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
               {isLogin ? '로그인' : '회원가입'}
             </h2>
             <button
@@ -84,10 +84,10 @@ const LoginModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* 폼 */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
                   이름
                 </label>
                 <input
@@ -95,14 +95,14 @@ const LoginModal = ({ isOpen, onClose }) => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="이름을 입력하세요"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                  className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
                   required={!isLogin}
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
                 이메일
               </label>
               <input
@@ -110,13 +110,13 @@ const LoginModal = ({ isOpen, onClose }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일을 입력하세요"
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
                 비밀번호
               </label>
               <input
@@ -124,14 +124,14 @@ const LoginModal = ({ isOpen, onClose }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
                 required
               />
             </div>
 
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
                   비밀번호 확인
                 </label>
                 <input
@@ -139,14 +139,14 @@ const LoginModal = ({ isOpen, onClose }) => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="비밀번호를 다시 입력하세요"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                  className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
                   required={!isLogin}
                 />
               </div>
             )}
 
             {error && (
-              <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">
+              <div className="text-red-500 text-xs md:text-sm bg-red-50 p-2 md:p-3 rounded-lg">
                 {error}
               </div>
             )}
@@ -154,7 +154,7 @@ const LoginModal = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-800 text-white py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gray-800 text-white py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? '처리 중...' : isLogin ? '로그인' : '회원가입'}
             </button>
@@ -162,11 +162,11 @@ const LoginModal = ({ isOpen, onClose }) => {
 
           {/* 비밀번호 찾기 (로그인 모드일 때만) */}
           {isLogin && (
-            <div className="mt-4 text-center">
+            <div className="mt-3 md:mt-4 text-center">
               <Link
                 to="/forgot-password"
                 onClick={onClose}
-                className="text-sm text-gray-600 hover:text-pastel-pink-text transition-colors"
+                className="text-xs md:text-sm text-gray-600 hover:text-pastel-pink-text transition-colors"
               >
                 비밀번호를 잊으셨나요?
               </Link>
@@ -174,13 +174,13 @@ const LoginModal = ({ isOpen, onClose }) => {
           )}
 
           {/* 로그인/회원가입 전환 */}
-          <div className="mt-6 text-center">
+          <div className="mt-4 md:mt-6 text-center">
             <button
               onClick={() => {
                 setIsLogin(!isLogin)
                 clearError()
               }}
-              className="text-sm text-gray-600 hover:text-pastel-pink-text transition-colors"
+              className="text-xs md:text-sm text-gray-600 hover:text-pastel-pink-text transition-colors"
             >
               {isLogin ? (
                 <>
