@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard'
 import CategoryCard from '../components/common/CategoryCard'
 import { productApi } from '../services/api'
+import { CATEGORIES, DEFAULTS, ROUTES } from '../constants'
 
 const Home = () => {
   const [recommendedProducts, setRecommendedProducts] = useState([])
@@ -11,8 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchRecommendedProducts = async () => {
       try {
-        // Supabase에서 추천 상품 가져오기
-        const products = await productApi.getRecommendedProducts(6)
+        const products = await productApi.getRecommendedProducts(DEFAULTS.RECOMMENDED_PRODUCTS_LIMIT)
         setRecommendedProducts(products || [])
       } catch (error) {
         console.error('상품 조회 실패:', error)
@@ -25,13 +25,6 @@ const Home = () => {
     fetchRecommendedProducts()
   }, [])
 
-  const categories = [
-    { name: '상의', icon: '👕', description: '편안한 상의' },
-    { name: '하의', icon: '👖', description: '부드러운 하의' },
-    { name: '원피스', icon: '👗', description: '귀여운 원피스' },
-    { name: '악세서리', icon: '🧢', description: '액세서리' },
-  ]
-
   return (
     <div className="w-full bg-white">
       {/* Hero Section */}
@@ -39,7 +32,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             {/* 프리미엄 태그 */}
-            <div className="inline-block bg-white rounded-lg px-3 py-1.5 md:px-4 md:py-2 mb-4 md:mb-6">
+            <div className="inline-block bg-transparent rounded-lg px-3 py-1.5 md:px-4 md:py-2 mb-4 md:mb-6">
               <span className="text-xs md:text-sm font-medium text-gray-800">프리미엄 베이비웨어</span>
             </div>
             
@@ -50,7 +43,7 @@ const Home = () => {
               우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요
             </p>
             <Link
-              to="/products"
+              to={ROUTES.PRODUCTS}
               className="inline-block bg-gray-800 text-white px-6 py-3 md:px-8 md:py-4 rounded-xl text-sm md:text-base font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
             >
               지금 보러가기
@@ -70,9 +63,9 @@ const Home = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {categories.map((category) => (
+          {CATEGORIES.map((category) => (
             <CategoryCard
-              key={category.name}
+              key={category.value}
               category={category.name}
               icon={category.icon}
               description={category.description}
@@ -107,7 +100,7 @@ const Home = () => {
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="rounded-xl overflow-hidden shadow-md order-2 md:order-1">
             <img
-              src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800"
+              src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800"
               alt="Brand Story"
               className="w-full h-full object-cover"
             />

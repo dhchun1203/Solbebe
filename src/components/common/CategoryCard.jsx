@@ -1,18 +1,14 @@
 import { Link } from 'react-router-dom'
+import { CATEGORIES, ROUTES } from '../../constants'
 
 const CategoryCard = ({ category, icon, description }) => {
-  const categoryMap = {
-    '상의': 'top',
-    '하의': 'bottom',
-    '원피스': 'dress',
-    '악세서리': 'accessory',
-  }
-
-  const categoryValue = categoryMap[category] || category.toLowerCase()
+  // 카테고리 이름으로 value 찾기
+  const categoryData = CATEGORIES.find(cat => cat.name === category)
+  const categoryValue = categoryData?.value || category.toLowerCase()
 
   return (
     <Link
-      to={`/products?category=${categoryValue}`}
+      to={`${ROUTES.PRODUCTS}?category=${categoryValue}`}
       className="block bg-white rounded-xl shadow-md p-4 md:p-6 text-center hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100"
     >
       <div className="text-3xl md:text-4xl mb-2 md:mb-3 flex justify-center">

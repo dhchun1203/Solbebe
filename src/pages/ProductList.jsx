@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard'
 import { productApi } from '../services/api'
+import { CATEGORY_MAP, SORT_OPTIONS } from '../constants'
 
 const ProductList = () => {
   const [searchParams] = useSearchParams()
@@ -72,14 +73,6 @@ const ProductList = () => {
     setFilteredProducts(filtered)
   }, [products, selectedCategory, sortBy, searchQuery])
 
-  const categoryMap = {
-    all: '전체',
-    top: '상의',
-    bottom: '하의',
-    dress: '원피스',
-    accessory: '악세서리',
-  }
-
   return (
     <div className="container mx-auto px-4 py-4 md:py-8">
       <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">
@@ -95,7 +88,7 @@ const ProductList = () => {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="w-full sm:w-auto px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
           >
-            {Object.entries(categoryMap).map(([value, label]) => (
+            {Object.entries(CATEGORY_MAP).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
@@ -110,9 +103,11 @@ const ProductList = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="w-full sm:w-auto px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
           >
-            <option value="latest">최신순</option>
-            <option value="price-low">가격 낮은순</option>
-            <option value="price-high">가격 높은순</option>
+            {SORT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '../services/supabase'
+import { formatError } from '../utils/errorHandler'
+import { ERROR_MESSAGES, STORAGE_KEYS } from '../constants'
 
 export const useAuthStore = create(
   persist(
@@ -30,32 +32,7 @@ export const useAuthStore = create(
 
           return { success: true }
         } catch (error) {
-          // Supabase 에러 메시지를 사용자 친화적인 메시지로 변환
-          let errorMessage = '로그인에 실패했습니다.'
-          
-          if (error.message) {
-            // Supabase 에러 코드 및 메시지 확인
-            const errorMsg = error.message.toLowerCase()
-            
-            if (errorMsg.includes('invalid login credentials') || 
-                errorMsg.includes('invalid credentials') ||
-                errorMsg.includes('email not found') ||
-                errorMsg.includes('user not found')) {
-              // 이메일이 존재하지 않거나 비밀번호가 틀린 경우
-              // 보안상 구체적인 정보를 제공하지 않음
-              errorMessage = '이메일 또는 비밀번호가 올바르지 않습니다.'
-            } else if (errorMsg.includes('email not confirmed')) {
-              errorMessage = '이메일 인증이 완료되지 않았습니다. 이메일을 확인해주세요.'
-            } else if (errorMsg.includes('too many requests')) {
-              errorMessage = '너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.'
-            } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-              errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.'
-            } else {
-              // 기타 에러는 원본 메시지 사용
-              errorMessage = error.message
-            }
-          }
-
+          const errorMessage = formatError(error, ERROR_MESSAGES.LOGIN_FAILED)
           set({
             loading: false,
             error: errorMessage,
@@ -89,27 +66,7 @@ export const useAuthStore = create(
 
           return { success: true }
         } catch (error) {
-          // Supabase 에러 메시지를 사용자 친화적인 메시지로 변환
-          let errorMessage = '회원가입에 실패했습니다.'
-          
-          if (error.message) {
-            const errorMsg = error.message.toLowerCase()
-            
-            if (errorMsg.includes('user already registered') || 
-                errorMsg.includes('email already exists') ||
-                errorMsg.includes('already registered')) {
-              errorMessage = '이미 등록된 이메일입니다. 로그인해주세요.'
-            } else if (errorMsg.includes('password')) {
-              errorMessage = '비밀번호가 너무 짧거나 형식이 올바르지 않습니다.'
-            } else if (errorMsg.includes('email')) {
-              errorMessage = '올바른 이메일 형식이 아닙니다.'
-            } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-              errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.'
-            } else {
-              errorMessage = error.message
-            }
-          }
-
+          const errorMessage = formatError(error, ERROR_MESSAGES.SIGNUP_FAILED)
           set({
             loading: false,
             error: errorMessage,
@@ -132,9 +89,10 @@ export const useAuthStore = create(
             error: null,
           })
         } catch (error) {
+          const errorMessage = formatError(error, ERROR_MESSAGES.LOGOUT_FAILED)
           set({
             loading: false,
-            error: error.message || '로그아웃에 실패했습니다.',
+            error: errorMessage,
           })
         }
       },
@@ -160,7 +118,7 @@ export const useAuthStore = create(
       clearError: () => set({ error: null }),
     }),
     {
-      name: 'auth-storage',
+      name: STORAGE_KEYS.AUTH,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,

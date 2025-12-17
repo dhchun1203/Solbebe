@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t border-gray-200 mt-12 md:mt-20">
+    <footer className="bg-gradient-to-b from-white to-pastel-pink border-t border-white mt-12 md:mt-20">
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* 로고 */}
@@ -37,7 +37,7 @@ const Footer = () => {
 
           {/* 카피라이트 */}
           <div className="text-xs md:text-sm text-gray-500">
-            © 2024 Solbebe. All rights reserved.
+            © 2025 Solbebe. All rights reserved.
           </div>
         </div>
       </div>

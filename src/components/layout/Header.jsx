@@ -1,91 +1,83 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SearchModal from '../common/SearchModal'
 import LoginModal from '../common/LoginModal'
 import { useCartStore } from '../../store/cartStore'
 import { useAuthStore } from '../../store/authStore'
+import { useClickOutside } from '../../hooks/useClickOutside'
+import { ROUTES } from '../../constants'
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const profileMenuRef = useRef(null)
-  const mobileMenuRef = useRef(null)
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
   const totalItems = getTotalItems()
   const { user, signOut, checkSession } = useAuthStore()
 
+  // 외부 클릭 감지 훅
+  const profileMenuRef = useClickOutside(() => setIsProfileMenuOpen(false), isProfileMenuOpen)
+  const mobileMenuRef = useClickOutside(() => setIsMobileMenuOpen(false), isMobileMenuOpen)
+
   useEffect(() => {
-    // 컴포넌트 마운트 시 세션 확인
     checkSession()
   }, [checkSession])
 
   useEffect(() => {
-    // 로그인한 사용자의 장바구니 로드
     if (user) {
       loadCartItems()
     }
   }, [user, loadCartItems])
 
-  // 외부 클릭 시 드롭다운 닫기
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
-        setIsProfileMenuOpen(false)
-      }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
-        setIsMobileMenuOpen(false)
-      }
-    }
-
-    if (isProfileMenuOpen || isMobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isProfileMenuOpen, isMobileMenuOpen])
-
   const handleSignOut = async () => {
     await signOut()
     setIsProfileMenuOpen(false)
-    navigate('/')
+    navigate(ROUTES.HOME)
   }
 
   return (
     <>
       <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 md:py-4">
+        <div className="container mx-auto px-4 py-2 md:py-3">
           <div className="flex items-center justify-between">
             {/* 로고 및 메뉴 */}
             <div className="flex items-center gap-4 md:gap-8">
               {/* 로고 */}
-              <Link to="/" className="text-xl md:text-2xl font-bold text-gray-800">
-                Solbebe
+              <Link to={ROUTES.HOME} className="flex items-center">
+                {/* 로고 이미지가 있으면 이미지 사용, 없으면 텍스트 표시 */}
+                <img 
+                  src="/logo.png" 
+                  alt="Solbebe" 
+                  className="h-10 md:h-12 max-h-12 md:max-h-14 w-auto object-contain"
+                  onError={(e) => {
+                    // 이미지 로드 실패 시 텍스트로 대체
+                    e.target.style.display = 'none'
+                    const textElement = e.target.nextElementSibling
+                    if (textElement) {
+                      textElement.style.display = 'block'
+                    }
+                  }}
+                />
+                <span className="text-xl md:text-2xl font-bold text-gray-800" style={{ display: 'none' }}>
+                  Solbebe
+                </span>
               </Link>
 
               {/* 데스크탑 메뉴 */}
               <nav className="hidden md:flex items-center gap-8">
                 <Link 
-                  to="/" 
+                  to={ROUTES.HOME} 
                   className="text-lg text-gray-800 hover:text-pastel-pink-text transition-colors"
                 >
                   홈
                 </Link>
                 <Link 
-                  to="/products" 
+                  to={ROUTES.PRODUCTS} 
                   className="text-lg text-gray-800 hover:text-pastel-pink-text transition-colors"
                 >
                   상품
-                </Link>
-                <Link 
-                  to="/products?category=all" 
-                  className="text-lg text-gray-800 hover:text-pastel-pink-text transition-colors"
-                >
-                  카테고리
                 </Link>
               </nav>
 
@@ -146,7 +138,7 @@ const Header = () => {
 
                       {/* 장바구니 메뉴 */}
                       <Link
-                        to="/cart"
+                        to={ROUTES.CART}
                         onClick={() => setIsProfileMenuOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
                       >
@@ -194,29 +186,22 @@ const Header = () => {
             <div ref={mobileMenuRef} className="md:hidden border-t border-gray-200 mt-3 pt-3">
               <nav className="flex flex-col gap-4">
                 <Link 
-                  to="/" 
+                  to={ROUTES.HOME} 
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
                 >
                   홈
                 </Link>
                 <Link 
-                  to="/products" 
+                  to={ROUTES.PRODUCTS} 
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
                 >
                   상품
                 </Link>
-                <Link 
-                  to="/products?category=all" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
-                >
-                  카테고리
-                </Link>
                 {user && (
                   <Link 
-                    to="/cart" 
+                    to={ROUTES.CART} 
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2 flex items-center gap-2"
                   >

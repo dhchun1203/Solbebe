@@ -271,9 +271,9 @@ const ProductDetail = () => {
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`px-4 md:px-6 py-2 text-sm md:text-base rounded-xl border-2 transition-all ${
+                  className={`px-3 md:px-5 py-1.5 md:py-2 text-xs md:text-sm rounded-xl border-2 transition-all ${
                     selectedSize === size
-                      ? 'border-pastel-pink bg-pastel-pink text-white'
+                      ? 'border-pastel-pink-text bg-pastel-pink-text text-white'
                       : 'border-gray-300 hover:border-pastel-pink'
                   }`}
                 >
@@ -291,9 +291,9 @@ const ProductDetail = () => {
                 <button
                   key={color}
                   onClick={() => setSelectedColor(color)}
-                  className={`px-4 md:px-6 py-2 text-sm md:text-base rounded-xl border-2 transition-all ${
+                  className={`px-3 md:px-5 py-1.5 md:py-2 text-xs md:text-sm rounded-xl border-2 transition-all ${
                     selectedColor === color
-                      ? 'border-pastel-pink bg-pastel-pink text-white'
+                      ? 'border-pastel-pink-text bg-pastel-pink-text text-white'
                       : 'border-gray-300 hover:border-pastel-pink'
                   }`}
                 >

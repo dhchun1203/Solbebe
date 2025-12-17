@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { formatPriceWithUnit } from '../../utils/formatters'
+import { ROUTES } from '../../constants'
 
 const ProductCard = ({ product }) => {
   const { id, name, price, images, category } = product
@@ -6,7 +8,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <Link 
-      to={`/products/${id}`}
+      to={`${ROUTES.PRODUCTS}/${id}`}
       className="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
     >
       {/* 이미지 */}
@@ -26,8 +28,8 @@ const ProductCard = ({ product }) => {
         <h3 className="text-sm md:text-lg font-semibold text-gray-800 mt-1 line-clamp-2">
           {name}
         </h3>
-        <p className="text-base md:text-xl font-bold text-pastel-pink-text mt-2">
-          {price?.toLocaleString()}원
+        <p className="text-base md:text-xl font-medium text-pastel-pink-text mt-2">
+          {formatPriceWithUnit(price)}
         </p>
       </div>
     </Link>
