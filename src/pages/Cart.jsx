@@ -153,6 +153,21 @@ const Cart = () => {
               </div>
             </div>
             <button
+              onClick={() => {
+                // 장바구니 아이템 정보를 state로 전달하여 Inquiry 페이지로 이동
+                navigate('/inquiry', {
+                  state: {
+                    cartItems: items.map(item => ({
+                      productId: item.productId,
+                      productName: item.product.name,
+                      size: item.size,
+                      color: item.color,
+                      quantity: item.quantity,
+                      price: item.product.price
+                    }))
+                  }
+                })
+              }}
               className="w-full bg-gray-800 text-white py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold hover:bg-gray-700 transition-colors"
             >
               구매 문의하기

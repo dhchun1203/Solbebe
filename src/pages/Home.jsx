@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard'
 import CategoryCard from '../components/common/CategoryCard'
@@ -8,21 +8,67 @@ import { CATEGORIES, DEFAULTS, ROUTES } from '../constants'
 const Home = () => {
   const [recommendedProducts, setRecommendedProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const timeoutRef = useRef(null)
+  const isMountedRef = useRef(true)
 
   useEffect(() => {
+    isMountedRef.current = true
+
     const fetchRecommendedProducts = async () => {
       try {
+        console.log('상품 조회 시작...')
         const products = await productApi.getRecommendedProducts(DEFAULTS.RECOMMENDED_PRODUCTS_LIMIT)
-        setRecommendedProducts(products || [])
+        console.log('상품 조회 성공:', products)
+        
+        // 타임아웃 취소 (성공 시)
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        
+        if (isMountedRef.current) {
+          setRecommendedProducts(products || [])
+          setLoading(false)
+        }
       } catch (error) {
         console.error('상품 조회 실패:', error)
-        setRecommendedProducts([])
-      } finally {
-        setLoading(false)
+        console.error('에러 상세:', {
+          message: error?.message,
+          stack: error?.stack,
+          originalError: error?.originalError
+        })
+        
+        // 타임아웃 취소 (실패 시)
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        
+        if (isMountedRef.current) {
+          setRecommendedProducts([])
+          setLoading(false)
+        }
       }
     }
 
+    // 타임아웃 설정 (10초 후에도 응답이 없으면 에러 처리)
+    timeoutRef.current = setTimeout(() => {
+      console.error('상품 조회 타임아웃 (10초 초과)')
+      if (isMountedRef.current) {
+        setLoading(false)
+        setRecommendedProducts([])
+      }
+    }, 10000)
+
     fetchRecommendedProducts()
+
+    return () => {
+      isMountedRef.current = false
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+    }
   }, [])
 
   return (
@@ -85,7 +131,33 @@ const Home = () => {
           </p>
         </div>
         {loading ? (
-          <div className="text-center py-8 md:py-12">로딩 중...</div>
+          <div className="text-center py-8 md:py-12">
+            <div className="mb-4">로딩 중...</div>
+            <div className="text-sm text-gray-500">
+              {import.meta.env.DEV && (
+                <div className="mt-4 p-4 bg-yellow-50 rounded-lg text-left max-w-2xl mx-auto">
+                  <p className="font-semibold mb-2">🔍 디버깅 정보:</p>
+                  <p className="text-xs mb-1">1. 브라우저 개발자 도구 (F12) → Network 탭 열기</p>
+                  <p className="text-xs mb-1">2. "products" 요청 찾기</p>
+                  <p className="text-xs mb-1">3. Status Code 확인:</p>
+                  <p className="text-xs ml-4">- 401/403: RLS 정책 문제 → Supabase SQL Editor에서 실행:</p>
+                  <p className="text-xs ml-8 font-mono bg-gray-100 p-1 rounded">ALTER TABLE products DISABLE ROW LEVEL SECURITY;</p>
+                  <p className="text-xs ml-4">- pending: 네트워크 문제</p>
+                  <p className="text-xs ml-4">- 200: 정상 (데이터 확인 필요)</p>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : recommendedProducts.length === 0 ? (
+          <div className="text-center py-8 md:py-12">
+            <p className="text-gray-500 mb-4">상품이 없습니다.</p>
+            {import.meta.env.DEV && (
+              <div className="text-sm text-gray-400">
+                <p>Supabase에서 상품 데이터를 확인하세요.</p>
+                <p className="mt-2">Table Editor → products 테이블</p>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {recommendedProducts.map((product) => (

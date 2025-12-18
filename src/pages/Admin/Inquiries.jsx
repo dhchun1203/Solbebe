@@ -1,0 +1,237 @@
+import { useEffect, useState } from 'react'
+import { inquiryApi } from '../../services/api'
+import Toast from '../../components/common/Toast'
+
+const Inquiries = () => {
+  const [inquiries, setInquiries] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [selectedInquiry, setSelectedInquiry] = useState(null)
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' })
+
+  useEffect(() => {
+    fetchInquiries()
+  }, [])
+
+  const fetchInquiries = async () => {
+    try {
+      setLoading(true)
+      console.log('📦 문의 조회 시작...')
+      const data = await inquiryApi.getAllInquiries()
+      console.log('📦 문의 조회 성공:', data?.length || 0)
+      setInquiries(data || [])
+    } catch (error) {
+      console.error('📦 문의 조회 실패:', error)
+      setInquiries([]) // 에러 발생 시 빈 배열로 설정
+      setToast({
+        isVisible: true,
+        message: '문의를 불러오는데 실패했습니다. ' + (error?.message || ''),
+        type: 'error',
+      })
+    } finally {
+      setLoading(false)
+      console.log('📦 문의 조회 완료 (로딩 종료)')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">로딩 중...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">문의 관리</h1>
+
+      {inquiries.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl shadow-md">
+          <p className="text-gray-500">등록된 문의가 없습니다.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {inquiries.map((inquiry) => (
+            <div
+              key={inquiry.id}
+              className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => setSelectedInquiry(inquiry)}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <p className="font-semibold text-gray-800 mb-1">{inquiry.name}</p>
+                  <p className="text-sm text-gray-600">{inquiry.phone}</p>
+                  {inquiry.email && (
+                    <p className="text-xs text-gray-500">{inquiry.email}</p>
+                  )}
+                </div>
+                <div className="text-right">
+                  <span className={`inline-block px-2 py-1 rounded text-xs font-medium mb-1 ${
+                    inquiry.status === 'completed' ? 'bg-green-100 text-green-800' :
+                    inquiry.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                    inquiry.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                    'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {inquiry.status === 'completed' ? '처리 완료' :
+                     inquiry.status === 'processing' ? '처리 중' :
+                     inquiry.status === 'cancelled' ? '취소됨' :
+                     '접수 대기'}
+                  </span>
+                  <p className="text-xs text-gray-500">
+                    {new Date(inquiry.created_at).toLocaleDateString('ko-KR')}
+                  </p>
+                </div>
+              </div>
+
+              {inquiry.products && (
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-gray-700 mb-1">상품:</p>
+                  <p className="text-sm text-gray-600">
+                    {typeof inquiry.products === 'object' && inquiry.products.name
+                      ? inquiry.products.name
+                      : '상품 정보 없음'}
+                  </p>
+                </div>
+              )}
+
+              {inquiry.options && (
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-gray-700 mb-1">옵션:</p>
+                  <p className="text-sm text-gray-600">
+                    {typeof inquiry.options === 'object'
+                      ? JSON.stringify(inquiry.options)
+                      : inquiry.options}
+                  </p>
+                </div>
+              )}
+
+              {inquiry.message && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-1">요청사항:</p>
+                  <p className="text-sm text-gray-600 line-clamp-2">{inquiry.message}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 문의 상세 모달 */}
+      {selectedInquiry && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedInquiry(null)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-800">문의 상세</h2>
+              <button
+                onClick={() => setSelectedInquiry(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-1">이름</p>
+                <p className="text-base text-gray-800">{selectedInquiry.name}</p>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-1">연락처</p>
+                <p className="text-base text-gray-800">{selectedInquiry.phone}</p>
+              </div>
+
+              {selectedInquiry.products && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-1">상품</p>
+                  <p className="text-base text-gray-800">
+                    {typeof selectedInquiry.products === 'object' && selectedInquiry.products.name
+                      ? selectedInquiry.products.name
+                      : '상품 정보 없음'}
+                  </p>
+                </div>
+              )}
+
+              {selectedInquiry.options && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-1">옵션</p>
+                  <p className="text-base text-gray-800">
+                    {typeof selectedInquiry.options === 'object'
+                      ? JSON.stringify(selectedInquiry.options, null, 2)
+                      : selectedInquiry.options}
+                  </p>
+                </div>
+              )}
+
+              {selectedInquiry.message && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-1">요청사항</p>
+                  <p className="text-base text-gray-800 whitespace-pre-wrap">{selectedInquiry.message}</p>
+                </div>
+              )}
+
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-1">문의일시</p>
+                <p className="text-base text-gray-800">
+                  {new Date(selectedInquiry.created_at).toLocaleString('ko-KR')}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">처리 상태</p>
+                <select
+                  value={selectedInquiry.status || 'pending'}
+                  onChange={async (e) => {
+                    const newStatus = e.target.value
+                    try {
+                      await inquiryApi.updateInquiryStatus(selectedInquiry.id, newStatus)
+                      setInquiries(inquiries.map(inq => 
+                        inq.id === selectedInquiry.id ? { ...inq, status: newStatus } : inq
+                      ))
+                      setSelectedInquiry({ ...selectedInquiry, status: newStatus })
+                      setToast({
+                        isVisible: true,
+                        message: '처리 상태가 업데이트되었습니다.',
+                        type: 'success',
+                      })
+                    } catch (error) {
+                      setToast({
+                        isVisible: true,
+                        message: '처리 상태 업데이트에 실패했습니다. ' + (error?.message || ''),
+                        type: 'error',
+                      })
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pastel-pink"
+                >
+                  <option value="pending">접수 대기</option>
+                  <option value="processing">처리 중</option>
+                  <option value="completed">처리 완료</option>
+                  <option value="cancelled">취소됨</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Toast
+        isVisible={toast.isVisible}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+      />
+    </div>
+  )
+}
+
+export default Inquiries
+

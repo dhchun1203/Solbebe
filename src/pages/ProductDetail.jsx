@@ -361,21 +361,34 @@ const ProductDetail = () => {
               }
 
               // 장바구니에 추가
-              const result = await addToCart(product, {
-                size: selectedSize,
-                color: selectedColor,
-              })
-
-              if (result.success) {
-                setToast({
-                  isVisible: true,
-                  message: '장바구니에 추가되었습니다!',
-                  type: 'success',
+              console.log('🛒 장바구니 추가 시작:', { productId: product.id, size: selectedSize, color: selectedColor })
+              
+              try {
+                const result = await addToCart(product, {
+                  size: selectedSize,
+                  color: selectedColor,
                 })
-              } else {
+
+                console.log('🛒 장바구니 추가 결과:', result)
+
+                if (result.success) {
+                  setToast({
+                    isVisible: true,
+                    message: '장바구니에 추가되었습니다!',
+                    type: 'success',
+                  })
+                } else {
+                  setToast({
+                    isVisible: true,
+                    message: result.error || '장바구니에 추가하는데 실패했습니다.',
+                    type: 'error',
+                  })
+                }
+              } catch (error) {
+                console.error('🛒 장바구니 추가 중 오류:', error)
                 setToast({
                   isVisible: true,
-                  message: result.error || '장바구니에 추가하는데 실패했습니다.',
+                  message: error?.message || '장바구니에 추가하는데 실패했습니다.',
                   type: 'error',
                 })
               }

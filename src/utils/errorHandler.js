@@ -64,9 +64,22 @@ export const formatError = (error, defaultMessage = ERROR_MESSAGES.UNKNOWN_ERROR
  */
 export const handleApiCall = async (apiCall, errorMessage = ERROR_MESSAGES.UNKNOWN_ERROR) => {
   try {
-    return await apiCall()
+    if (import.meta.env.DEV) {
+      console.log('🔄 API 호출 시작...')
+    }
+    const result = await apiCall()
+    if (import.meta.env.DEV) {
+      console.log('✅ API 호출 성공:', result)
+    }
+    return result
   } catch (error) {
-    console.error('API 호출 실패:', error)
+    console.error('❌ API 호출 실패:', error)
+    console.error('❌ 에러 상세:', {
+      message: error?.message,
+      stack: error?.stack,
+      originalError: error?.originalError,
+      name: error?.name
+    })
     const formattedError = formatError(error, errorMessage)
     throw new Error(formattedError)
   }

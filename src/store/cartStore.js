@@ -9,11 +9,26 @@ export const useCartStore = create((set, get) => ({
   // 장바구니 아이템 로드
   loadCartItems: async () => {
     set({ loading: true, error: null })
+    
+    // 타임아웃 설정 (10초)
+    const timeoutId = setTimeout(() => {
+      console.warn('🛒 장바구니 로드 타임아웃 (10초 초과)')
+      set({ 
+        items: [],
+        loading: false,
+        error: '장바구니를 불러오는데 시간이 오래 걸립니다.',
+      })
+    }, 10000)
+    
     try {
+      console.log('🛒 장바구니 로드 시작...')
       const items = await cartApi.getCartItems()
-      set({ items, loading: false })
+      clearTimeout(timeoutId)
+      console.log('🛒 장바구니 로드 성공:', items?.length || 0)
+      set({ items: items || [], loading: false })
     } catch (error) {
-      console.error('장바구니 로드 실패:', error)
+      clearTimeout(timeoutId)
+      console.error('🛒 장바구니 로드 실패:', error)
       set({ 
         items: [],
         loading: false,
@@ -64,17 +79,24 @@ export const useCartStore = create((set, get) => ({
   removeFromCart: async (itemId) => {
     set({ loading: true, error: null })
     try {
-      await cartApi.removeFromCart(itemId)
-      set((state) => ({
-        items: state.items.filter((item) => item.id !== itemId),
-        loading: false,
-      }))
+      const result = await cartApi.removeFromCart(itemId)
+      // API 호출이 성공한 경우에만 로컬 상태 업데이트
+      if (result?.success) {
+        set((state) => ({
+          items: state.items.filter((item) => item.id !== itemId),
+          loading: false,
+        }))
+      } else {
+        throw new Error('장바구니 삭제에 실패했습니다.')
+      }
     } catch (error) {
       console.error('장바구니 삭제 실패:', error)
       set({
         loading: false,
         error: error.message || '장바구니에서 삭제하는데 실패했습니다.',
       })
+      // 에러 발생 시 로컬 상태는 변경하지 않음
+      throw error // 에러를 다시 throw하여 UI에서 처리할 수 있도록
     }
   },
   
@@ -111,14 +133,21 @@ export const useCartStore = create((set, get) => ({
   clearCart: async () => {
     set({ loading: true, error: null })
     try {
-      await cartApi.clearCart()
-      set({ items: [], loading: false })
+      const result = await cartApi.clearCart()
+      // API 호출이 성공한 경우에만 로컬 상태 업데이트
+      if (result?.success) {
+        set({ items: [], loading: false })
+      } else {
+        throw new Error('장바구니 비우기에 실패했습니다.')
+      }
     } catch (error) {
       console.error('장바구니 비우기 실패:', error)
       set({
         loading: false,
         error: error.message || '장바구니를 비우는데 실패했습니다.',
       })
+      // 에러 발생 시 로컬 상태는 변경하지 않음
+      throw error // 에러를 다시 throw하여 UI에서 처리할 수 있도록
     }
   },
   

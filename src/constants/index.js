@@ -30,9 +30,14 @@ export const ROUTES = {
   CART: '/cart',
   INQUIRY: '/inquiry',
   INQUIRY_SUCCESS: '/inquiry/success',
+  MY_INQUIRIES: '/my-inquiries',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
   EMAIL_CONFIRM: '/auth/confirm',
+  ADMIN: '/admin',
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_PRODUCTS: '/admin/products',
+  ADMIN_INQUIRIES: '/admin/inquiries',
 }
 
 // 에러 메시지
@@ -90,4 +95,12 @@ export const DEFAULTS = {
   PRODUCTS_PER_PAGE: 20,
   MIN_PASSWORD_LENGTH: 6,
 }
+
+// 관리자 이메일 리스트 (환경변수로도 설정 가능)
+export const ADMIN_EMAILS = import.meta.env.VITE_ADMIN_EMAILS
+  ? import.meta.env.VITE_ADMIN_EMAILS.split(',').map(email => email.trim().toLowerCase())
+  : [
+      // 기본 관리자 이메일 (환경변수에 설정하지 않으면 이 이메일 사용)
+      // 예: 'admin@solbebe.com'
+    ]
 

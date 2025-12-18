@@ -15,7 +15,8 @@ const Header = () => {
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
   const totalItems = getTotalItems()
-  const { user, signOut, checkSession } = useAuthStore()
+  const { user, signOut, checkSession, isAdmin } = useAuthStore()
+  const isAdminUser = isAdmin()
 
   // 외부 클릭 감지 훅
   const profileMenuRef = useClickOutside(() => setIsProfileMenuOpen(false), isProfileMenuOpen)
@@ -31,10 +32,45 @@ const Header = () => {
     }
   }, [user, loadCartItems])
 
-  const handleSignOut = async () => {
-    await signOut()
+  const handleSignOut = async (e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    
+    console.log('🔴 로그아웃 버튼 클릭됨')
+    
+    // 메뉴 닫기
     setIsProfileMenuOpen(false)
-    navigate(ROUTES.HOME)
+    
+    try {
+      console.log('🔴 signOut 함수 호출 시작...')
+      
+      // signOut 호출 (즉시 반환됨)
+      const result = await signOut()
+      console.log('🔴 signOut 결과:', result)
+      
+      console.log('🔴 홈으로 이동 중...')
+      
+      // 약간의 딜레이 후 페이지 새로고침 (상태 초기화가 완료되도록)
+      setTimeout(() => {
+        window.location.href = ROUTES.HOME
+      }, 100)
+    } catch (error) {
+      console.error('🔴 로그아웃 중 오류 발생:', error)
+      
+      // 상태 강제 초기화
+      try {
+        localStorage.removeItem('auth-storage')
+      } catch (e) {
+        console.warn('localStorage 제거 실패:', e)
+      }
+      
+      // 에러가 발생해도 홈으로 이동
+      setTimeout(() => {
+        window.location.href = ROUTES.HOME
+      }, 100)
+    }
   }
 
   return (
@@ -153,10 +189,45 @@ const Header = () => {
                         )}
                       </Link>
 
+                      {/* 내 문의 내역 메뉴 */}
+                      <Link
+                        to={ROUTES.MY_INQUIRIES}
+                        onClick={() => setIsProfileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                      >
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                        <span className="text-sm text-gray-700">내 문의 내역</span>
+                      </Link>
+
+                      {/* 관리자 대시보드 메뉴 */}
+                      {isAdminUser && (
+                        <Link
+                          to={ROUTES.ADMIN_DASHBOARD}
+                          onClick={() => setIsProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                        >
+                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                          <span className="text-sm text-gray-700 font-medium">관리자 대시보드</span>
+                        </Link>
+                      )}
+
                       {/* 로그아웃 */}
                       <button
-                        onClick={handleSignOut}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handleSignOut(e)
+                        }}
+                        onMouseDown={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left cursor-pointer"
                       >
                         <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -218,8 +289,13 @@ const Header = () => {
                     <p className="text-sm text-gray-600 mb-1">{user.user_metadata?.name || '사용자'}</p>
                     <p className="text-xs text-gray-500 mb-3">{user.email}</p>
                     <button
-                      onClick={handleSignOut}
-                      className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleSignOut(e)
+                      }}
+                      className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors cursor-pointer"
                     >
                       로그아웃
                     </button>
