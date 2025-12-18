@@ -94,3 +94,6 @@ export const ADMIN_EMAILS = [
 2. Supabase에서 해당 이메일로 계정이 생성되어 있는지 확인
 3. 이메일 인증이 완료되었는지 확인
 
+
+
+

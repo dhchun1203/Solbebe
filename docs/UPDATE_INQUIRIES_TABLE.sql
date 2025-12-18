@@ -55,3 +55,6 @@ CHECK (status IN ('pending', 'processing', 'completed', 'cancelled'));
 -- WHERE table_name = 'inquiries'
 -- ORDER BY ordinal_position;
 
+
+
+

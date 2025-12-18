@@ -56,3 +56,6 @@ CREATE POLICY "Users can delete their own cart items"
 -- 특정 사용자의 장바구니 아이템 수 확인
 -- SELECT COUNT(*) FROM cart_items WHERE user_id = 'USER_ID_HERE';
 
+
+
+
