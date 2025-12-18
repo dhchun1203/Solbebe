@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard'
 import CategoryCard from '../components/common/CategoryCard'
@@ -11,49 +11,62 @@ const Home = () => {
   const timeoutRef = useRef(null)
   const isMountedRef = useRef(true)
 
-  useEffect(() => {
-    isMountedRef.current = true
+  // 카테고리 리스트 메모이제이션
+  const categoriesList = useMemo(() => CATEGORIES, [])
 
-    const fetchRecommendedProducts = async () => {
-      try {
+  // 상품 조회 함수 메모이제이션
+  const fetchRecommendedProducts = useCallback(async () => {
+    try {
+      if (import.meta.env.DEV) {
         console.log('상품 조회 시작...')
-        const products = await productApi.getRecommendedProducts(DEFAULTS.RECOMMENDED_PRODUCTS_LIMIT)
+      }
+      const products = await productApi.getRecommendedProducts(DEFAULTS.RECOMMENDED_PRODUCTS_LIMIT)
+      
+      if (import.meta.env.DEV) {
         console.log('상품 조회 성공:', products)
-        
-        // 타임아웃 취소 (성공 시)
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current)
-          timeoutRef.current = null
-        }
-        
-        if (isMountedRef.current) {
-          setRecommendedProducts(products || [])
-          setLoading(false)
-        }
-      } catch (error) {
+      }
+      
+      // 타임아웃 취소 (성공 시)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+      
+      if (isMountedRef.current) {
+        setRecommendedProducts(products || [])
+        setLoading(false)
+      }
+    } catch (error) {
+      if (import.meta.env.DEV) {
         console.error('상품 조회 실패:', error)
         console.error('에러 상세:', {
           message: error?.message,
           stack: error?.stack,
           originalError: error?.originalError
         })
-        
-        // 타임아웃 취소 (실패 시)
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current)
-          timeoutRef.current = null
-        }
-        
-        if (isMountedRef.current) {
-          setRecommendedProducts([])
-          setLoading(false)
-        }
+      }
+      
+      // 타임아웃 취소 (실패 시)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+      
+      if (isMountedRef.current) {
+        setRecommendedProducts([])
+        setLoading(false)
       }
     }
+  }, [])
+
+  useEffect(() => {
+    isMountedRef.current = true
 
     // 타임아웃 설정 (10초 후에도 응답이 없으면 에러 처리)
     timeoutRef.current = setTimeout(() => {
-      console.error('상품 조회 타임아웃 (10초 초과)')
+      if (import.meta.env.DEV) {
+        console.error('상품 조회 타임아웃 (10초 초과)')
+      }
       if (isMountedRef.current) {
         setLoading(false)
         setRecommendedProducts([])
@@ -69,7 +82,7 @@ const Home = () => {
         timeoutRef.current = null
       }
     }
-  }, [])
+  }, [fetchRecommendedProducts])
 
   return (
     <div className="w-full bg-white">
@@ -109,7 +122,7 @@ const Home = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {CATEGORIES.map((category) => (
+          {categoriesList.map((category) => (
             <CategoryCard
               key={category.value}
               category={category.name}
@@ -161,7 +174,10 @@ const Home = () => {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {recommendedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+              />
             ))}
           </div>
         )}
@@ -175,6 +191,8 @@ const Home = () => {
               src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800"
               alt="Brand Story"
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <div className="space-y-3 md:space-y-4 order-1 md:order-2">

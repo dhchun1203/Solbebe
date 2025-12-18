@@ -1,20 +1,42 @@
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
-import Home from '../pages/Home'
-import ProductList from '../pages/ProductList'
-import ProductDetail from '../pages/ProductDetail'
-import Inquiry from '../pages/Inquiry'
-import InquirySuccess from '../pages/InquirySuccess'
-import Cart from '../pages/Cart'
-import MyInquiries from '../pages/MyInquiries'
-import ForgotPassword from '../pages/ForgotPassword'
-import ResetPassword from '../pages/ResetPassword'
-import EmailConfirm from '../pages/EmailConfirm'
-import AdminLayout from '../pages/Admin/AdminLayout'
-import AdminDashboard from '../pages/Admin/Dashboard'
-import AdminProducts from '../pages/Admin/Products'
-import AdminInquiries from '../pages/Admin/Inquiries'
 import { ROUTES } from '../constants'
+
+// 코드 스플리팅: 홈 페이지는 즉시 로드, 나머지는 레이지 로드
+import Home from '../pages/Home'
+
+// 레이지 로딩된 페이지들
+const ProductList = lazy(() => import('../pages/ProductList'))
+const ProductDetail = lazy(() => import('../pages/ProductDetail'))
+const Inquiry = lazy(() => import('../pages/Inquiry'))
+const InquirySuccess = lazy(() => import('../pages/InquirySuccess'))
+const Cart = lazy(() => import('../pages/Cart'))
+const MyInquiries = lazy(() => import('../pages/MyInquiries'))
+const ForgotPassword = lazy(() => import('../pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('../pages/ResetPassword'))
+const EmailConfirm = lazy(() => import('../pages/EmailConfirm'))
+const AdminLayout = lazy(() => import('../pages/Admin/AdminLayout'))
+const AdminDashboard = lazy(() => import('../pages/Admin/Dashboard'))
+const AdminProducts = lazy(() => import('../pages/Admin/Products'))
+const AdminInquiries = lazy(() => import('../pages/Admin/Inquiries'))
+
+// 로딩 컴포넌트
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-center">
+      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pastel-pink-text mb-4"></div>
+      <p className="text-gray-600">로딩 중...</p>
+    </div>
+  </div>
+)
+
+// Suspense 래퍼 컴포넌트
+const SuspenseWrapper = ({ children }) => (
+  <Suspense fallback={<LoadingFallback />}>
+    {children}
+  </Suspense>
+)
 
 export const router = createBrowserRouter(
   [
@@ -28,45 +50,85 @@ export const router = createBrowserRouter(
         },
         {
           path: 'products',
-          element: <ProductList />,
+          element: (
+            <SuspenseWrapper>
+              <ProductList />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'products/:id',
-          element: <ProductDetail />,
+          element: (
+            <SuspenseWrapper>
+              <ProductDetail />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'inquiry',
-          element: <Inquiry />,
+          element: (
+            <SuspenseWrapper>
+              <Inquiry />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'inquiry/success',
-          element: <InquirySuccess />,
+          element: (
+            <SuspenseWrapper>
+              <InquirySuccess />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'cart',
-          element: <Cart />,
+          element: (
+            <SuspenseWrapper>
+              <Cart />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'my-inquiries',
-          element: <MyInquiries />,
+          element: (
+            <SuspenseWrapper>
+              <MyInquiries />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'forgot-password',
-          element: <ForgotPassword />,
+          element: (
+            <SuspenseWrapper>
+              <ForgotPassword />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'reset-password',
-          element: <ResetPassword />,
+          element: (
+            <SuspenseWrapper>
+              <ResetPassword />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'auth/confirm',
-          element: <EmailConfirm />,
+          element: (
+            <SuspenseWrapper>
+              <EmailConfirm />
+            </SuspenseWrapper>
+          ),
         },
       ],
     },
     {
       path: '/admin',
-      element: <AdminLayout />,
+      element: (
+        <SuspenseWrapper>
+          <AdminLayout />
+        </SuspenseWrapper>
+      ),
       children: [
         {
           index: true,
@@ -74,15 +136,27 @@ export const router = createBrowserRouter(
         },
         {
           path: 'dashboard',
-          element: <AdminDashboard />,
+          element: (
+            <SuspenseWrapper>
+              <AdminDashboard />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'products',
-          element: <AdminProducts />,
+          element: (
+            <SuspenseWrapper>
+              <AdminProducts />
+            </SuspenseWrapper>
+          ),
         },
         {
           path: 'inquiries',
-          element: <AdminInquiries />,
+          element: (
+            <SuspenseWrapper>
+              <AdminInquiries />
+            </SuspenseWrapper>
+          ),
         },
       ],
     },

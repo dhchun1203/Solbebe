@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SearchModal from '../common/SearchModal'
 import LoginModal from '../common/LoginModal'
@@ -14,13 +14,23 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
-  const totalItems = getTotalItems()
   const { user, signOut, checkSession, isAdmin } = useAuthStore()
-  const isAdminUser = isAdmin()
+  
+  // 메모이제이션된 값들
+  const totalItems = useMemo(() => getTotalItems(), [getTotalItems, items])
+  const isAdminUser = useMemo(() => isAdmin(), [isAdmin, user])
+
+  // 메뉴 토글 함수들 메모이제이션
+  const toggleMobileMenu = useCallback(() => setIsMobileMenuOpen(prev => !prev), [])
+  const openSearch = useCallback(() => setIsSearchOpen(true), [])
+  const openLogin = useCallback(() => setIsLoginOpen(true), [])
+  const toggleProfileMenu = useCallback(() => setIsProfileMenuOpen(prev => !prev), [])
 
   // 외부 클릭 감지 훅
-  const profileMenuRef = useClickOutside(() => setIsProfileMenuOpen(false), isProfileMenuOpen)
-  const mobileMenuRef = useClickOutside(() => setIsMobileMenuOpen(false), isMobileMenuOpen)
+  const closeProfileMenu = useCallback(() => setIsProfileMenuOpen(false), [])
+  const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), [])
+  const profileMenuRef = useClickOutside(closeProfileMenu, isProfileMenuOpen)
+  const mobileMenuRef = useClickOutside(closeMobileMenu, isMobileMenuOpen)
 
   useEffect(() => {
     checkSession()
@@ -32,38 +42,48 @@ const Header = () => {
     }
   }, [user, loadCartItems])
 
-  const handleSignOut = async (e) => {
+  const handleSignOut = useCallback(async (e) => {
     if (e) {
       e.preventDefault()
       e.stopPropagation()
     }
     
-    console.log('🔴 로그아웃 버튼 클릭됨')
+    if (import.meta.env.DEV) {
+      console.log('🔴 로그아웃 버튼 클릭됨')
+    }
     
     // 메뉴 닫기
     setIsProfileMenuOpen(false)
     
     try {
-      console.log('🔴 signOut 함수 호출 시작...')
+      if (import.meta.env.DEV) {
+        console.log('🔴 signOut 함수 호출 시작...')
+      }
       
       // signOut 호출 (즉시 반환됨)
       const result = await signOut()
-      console.log('🔴 signOut 결과:', result)
       
-      console.log('🔴 홈으로 이동 중...')
+      if (import.meta.env.DEV) {
+        console.log('🔴 signOut 결과:', result)
+        console.log('🔴 홈으로 이동 중...')
+      }
       
       // 약간의 딜레이 후 페이지 새로고침 (상태 초기화가 완료되도록)
       setTimeout(() => {
         window.location.href = ROUTES.HOME
       }, 100)
     } catch (error) {
-      console.error('🔴 로그아웃 중 오류 발생:', error)
+      if (import.meta.env.DEV) {
+        console.error('🔴 로그아웃 중 오류 발생:', error)
+      }
       
       // 상태 강제 초기화
       try {
         localStorage.removeItem('auth-storage')
       } catch (e) {
-        console.warn('localStorage 제거 실패:', e)
+        if (import.meta.env.DEV) {
+          console.warn('localStorage 제거 실패:', e)
+        }
       }
       
       // 에러가 발생해도 홈으로 이동
@@ -71,7 +91,7 @@ const Header = () => {
         window.location.href = ROUTES.HOME
       }, 100)
     }
-  }
+  }, [signOut])
 
   return (
     <>
@@ -87,6 +107,8 @@ const Header = () => {
                   src="/logo.png" 
                   alt="Solbebe" 
                   className="h-10 md:h-12 max-h-12 md:max-h-14 w-auto object-contain"
+                  loading="eager"
+                  decoding="async"
                   onError={(e) => {
                     // 이미지 로드 실패 시 텍스트로 대체
                     e.target.style.display = 'none'
@@ -119,7 +141,7 @@ const Header = () => {
 
               {/* 모바일 햄버거 메뉴 버튼 */}
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={toggleMobileMenu}
                 className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors"
                 aria-label="메뉴"
               >
@@ -137,7 +159,7 @@ const Header = () => {
             <div className="flex items-center gap-3 md:gap-4">
               {/* 검색 버튼 */}
               <button
-                onClick={() => setIsSearchOpen(true)}
+                onClick={openSearch}
                 className="text-gray-800 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
                 aria-label="검색"
               >
@@ -150,7 +172,7 @@ const Header = () => {
               {user ? (
                 <div className="relative" ref={profileMenuRef}>
                   <button
-                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                    onClick={toggleProfileMenu}
                     className="text-gray-800 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
                     aria-label="프로필 메뉴"
                   >
@@ -240,7 +262,7 @@ const Header = () => {
               ) : (
                 /* 로그인 버튼 (프로필 아이콘) */
                 <button
-                  onClick={() => setIsLoginOpen(true)}
+                  onClick={openLogin}
                   className="text-gray-800 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
                   aria-label="로그인"
                 >

@@ -1,10 +1,20 @@
+import { memo, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { formatPriceWithUnit } from '../../utils/formatters'
 import { ROUTES } from '../../constants'
 
-const ProductCard = ({ product }) => {
+const ProductCard = memo(({ product }) => {
   const { id, name, price, images, category } = product
-  const mainImage = images && images.length > 0 ? images[0] : 'https://via.placeholder.com/400x400?text=Product+Image'
+  
+  // 메인 이미지 메모이제이션
+  const mainImage = useMemo(() => {
+    return images && images.length > 0 
+      ? images[0] 
+      : 'https://via.placeholder.com/400x400?text=Product+Image'
+  }, [images])
+
+  // 포맷된 가격 메모이제이션
+  const formattedPrice = useMemo(() => formatPriceWithUnit(price), [price])
 
   return (
     <Link 
@@ -17,6 +27,8 @@ const ProductCard = ({ product }) => {
           src={mainImage} 
           alt={name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -29,12 +41,14 @@ const ProductCard = ({ product }) => {
           {name}
         </h3>
         <p className="text-base md:text-xl font-medium text-pastel-pink-text mt-2">
-          {formatPriceWithUnit(price)}
+          {formattedPrice}
         </p>
       </div>
     </Link>
   )
-}
+})
+
+ProductCard.displayName = 'ProductCard'
 
 export default ProductCard
 
