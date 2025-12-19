@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Gamja Flower', 'Hi Melody', 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: 'Gowun Dodum', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   @apply bg-white text-gray-800;
 }
 
-/* 모든 텍스트 요소에 귀여운 한글 폰트 적용 */
+/* 모든 텍스트 요소에 고운 도움 폰트 적용 */
 * {
-  font-family: 'Gamja Flower', 'Hi Melody', 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: 'Gowun Dodum', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
-/* 제목에 더 귀여운 폰트 강조 */
+/* 제목 스타일 */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Gamja Flower', 'Hi Melody', 'SUIT', sans-serif;
+  font-family: 'Gowun Dodum', sans-serif;
   font-weight: 400;
   letter-spacing: -0.01em;
 }

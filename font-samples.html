@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>폰트 샘플 - Solbebe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 폰트 1: 나눔손글씨 펜체 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    
+    <!-- 폰트 2: Gamja Flower -->
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+    
+    <!-- 폰트 3: Hi Melody -->
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&display=swap" rel="stylesheet">
+    
+    <!-- 폰트 4: Gowun Dodum -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    
+    <!-- 폰트 5: Noto Sans KR (가독성 좋음) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 폰트 6: Pretendard (가독성 좋음) -->
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    
+    <!-- 폰트 7: SUIT -->
+    <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
+    
+    <!-- 폰트 8: Gmarket Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #fff, #ffe5e5);
+            padding: 40px 20px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+            font-size: 2.5rem;
+        }
+        
+        .font-sample {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 2px solid #ffe5e5;
+        }
+        
+        .font-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff6b9d;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffe5e5;
+        }
+        
+        .sample-text {
+            margin-bottom: 15px;
+        }
+        
+        .title-sample {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .body-sample {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #666;
+        }
+        
+        .small-sample {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        /* 폰트 1: 나눔손글씨 펜체 */
+        .font-1 .sample-text {
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* 폰트 2: Gamja Flower */
+        .font-2 .sample-text {
+            font-family: 'Gamja Flower', cursive;
+        }
+        
+        /* 폰트 3: Hi Melody */
+        .font-3 .sample-text {
+            font-family: 'Hi Melody', cursive;
+        }
+        
+        /* 폰트 4: Gowun Dodum */
+        .font-4 .sample-text {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+        
+        /* 폰트 5: Noto Sans KR */
+        .font-5 .sample-text {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        /* 폰트 6: Pretendard */
+        .font-6 .sample-text {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        
+        /* 폰트 7: SUIT */
+        .font-7 .sample-text {
+            font-family: 'SUIT', sans-serif;
+        }
+        
+        /* 폰트 8: Gmarket Sans */
+        .font-8 .sample-text {
+            font-family: 'Gmarket Sans', sans-serif;
+        }
+        
+        .rating {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #999;
+        }
+        
+        .rating-item {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        
+        .badge-cute {
+            background: #ffe5e5;
+            color: #ff6b9d;
+        }
+        
+        .badge-readable {
+            background: #e5f3ff;
+            color: #4a90e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Solbebe 폰트 샘플</h1>
+        
+        <!-- 폰트 1: 나눔손글씨 펜체 -->
+        <div class="font-sample font-1">
+            <div class="font-name">
+                1. 나눔손글씨 펜체 (Nanum Pen Script)
+                <span class="badge badge-cute">귀여움 ⭐⭐⭐⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 손글씨 느낌의 귀여운 폰트, 가독성은 보통
+            </div>
+        </div>
+        
+        <!-- 폰트 2: Gamja Flower -->
+        <div class="font-sample font-2">
+            <div class="font-name">
+                2. 감자꽃체 (Gamja Flower)
+                <span class="badge badge-cute">귀여움 ⭐⭐⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 둥글고 부드러운 느낌, 귀여우면서도 읽기 편함
+            </div>
+        </div>
+        
+        <!-- 폰트 3: Hi Melody -->
+        <div class="font-sample font-3">
+            <div class="font-name">
+                3. 하이 멜로디 (Hi Melody)
+                <span class="badge badge-cute">귀여움 ⭐⭐⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 발랄하고 귀여운 느낌, 가독성은 보통
+            </div>
+        </div>
+        
+        <!-- 폰트 4: Gowun Dodum -->
+        <div class="font-sample font-4">
+            <div class="font-name">
+                4. 고운 도움 (Gowun Dodum)
+                <span class="badge badge-cute">귀여움 ⭐⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 깔끔하고 부드러운 느낌, 가독성 우수
+            </div>
+        </div>
+        
+        <!-- 폰트 5: Noto Sans KR -->
+        <div class="font-sample font-5">
+            <div class="font-name">
+                5. Noto Sans KR
+                <span class="badge badge-cute">귀여움 ⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 표준적인 한글 폰트, 가독성 최고
+            </div>
+        </div>
+        
+        <!-- 폰트 6: Pretendard -->
+        <div class="font-sample font-6">
+            <div class="font-name">
+                6. Pretendard
+                <span class="badge badge-cute">귀여움 ⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 현대적이고 깔끔한 폰트, 가독성 최고
+            </div>
+        </div>
+        
+        <!-- 폰트 7: SUIT -->
+        <div class="font-sample font-7">
+            <div class="font-name">
+                7. SUIT
+                <span class="badge badge-cute">귀여움 ⭐⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 둥근 느낌의 현대적 폰트, 귀여움과 가독성의 균형
+            </div>
+        </div>
+        
+        <!-- 폰트 8: Gmarket Sans -->
+        <div class="font-sample font-8">
+            <div class="font-name">
+                8. Gmarket Sans
+                <span class="badge badge-cute">귀여움 ⭐⭐⭐</span>
+                <span class="badge badge-readable">가독성 ⭐⭐⭐⭐</span>
+            </div>
+            <div class="sample-text title-sample">Soft & Cozy Babywear</div>
+            <div class="sample-text title-sample">부드럽고 따뜻한 아기 의류</div>
+            <div class="sample-text body-sample">
+                우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요. 
+                모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로 만들어집니다.
+            </div>
+            <div class="sample-text small-sample">가격: 29,000원 | 카테고리: 상의</div>
+            <div class="rating">
+                💡 둥근 느낌의 깔끔한 폰트, 귀여움과 가독성의 좋은 균형
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <h2 style="color: #ff6b9d; margin-bottom: 15px;">💡 추천</h2>
+            <p style="color: #666; line-height: 1.8;">
+                <strong>귀여움과 가독성의 균형:</strong> Gowun Dodum, SUIT, Gmarket Sans<br>
+                <strong>가독성 우선:</strong> Noto Sans KR, Pretendard<br>
+                <strong>귀여움 우선:</strong> 나눔손글씨 펜체, Gamja Flower, Hi Melody
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
