@@ -55,26 +55,26 @@ const Products = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 md:py-8">
         <div className="text-center">로딩 중...</div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">상품 관리</h1>
+    <div className="container mx-auto px-4 py-4 md:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">상품 관리</h1>
         <Link
           to={ROUTES.ADMIN_PRODUCTS + '/new'}
-          className="bg-pastel-pink-text text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-pastel-pink transition-colors"
+          className="bg-pastel-pink-text text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-pastel-pink transition-colors w-full sm:w-auto text-center"
         >
           + 새 상품 추가
         </Link>
       </div>
 
       {products.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl shadow-md">
+        <div className="text-center py-12 bg-white rounded-xl shadow-md px-4">
           <p className="text-gray-500 mb-4">등록된 상품이 없습니다.</p>
           <Link
             to={ROUTES.ADMIN_PRODUCTS + '/new'}
@@ -84,76 +84,129 @@ const Products = () => {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">이미지</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">상품명</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">카테고리</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">가격</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">작성일</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">작업</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3">
-                      {product.images && product.images.length > 0 ? (
-                        <img
-                          src={product.images[0]}
-                          alt={product.name}
-                          className="w-16 h-16 object-cover rounded-lg"
-                          onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/64x64?text=No+Image'
-                          }}
-                        />
-                      ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                          <span className="text-xs text-gray-400">이미지 없음</span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="font-medium text-gray-800">{product.name}</p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm text-gray-600">{product.category}</span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm font-semibold text-gray-800">
-                        {product.price?.toLocaleString()}원
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm text-gray-600">
-                        {new Date(product.created_at).toLocaleDateString('ko-KR')}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          to={ROUTES.ADMIN_PRODUCTS + '/' + product.id + '/edit'}
-                          className="text-sm text-pastel-pink-text hover:text-pastel-pink transition-colors"
-                        >
-                          수정
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(product.id, product.name)}
-                          className="text-sm text-red-600 hover:text-red-700 transition-colors"
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          {/* 모바일 카드 뷰 */}
+          <div className="md:hidden space-y-4">
+            {products.map((product) => (
+              <div key={product.id} className="bg-white rounded-xl shadow-md p-4 border border-gray-100">
+                <div className="flex gap-4 mb-3">
+                  {product.images && product.images.length > 0 ? (
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/80x80?text=No+Image'
+                      }}
+                    />
+                  ) : (
+                    <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs text-gray-400">이미지 없음</span>
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-800 mb-1 truncate">{product.name}</h3>
+                    <p className="text-xs text-gray-600 mb-1">{product.category}</p>
+                    <p className="text-sm font-semibold text-gray-800">
+                      {product.price?.toLocaleString()}원
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                  <span className="text-xs text-gray-500">
+                    {new Date(product.created_at).toLocaleDateString('ko-KR')}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      to={ROUTES.ADMIN_PRODUCTS + '/' + product.id + '/edit'}
+                      className="text-sm text-pastel-pink-text hover:text-pastel-pink transition-colors"
+                    >
+                      수정
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(product.id, product.name)}
+                      className="text-sm text-red-600 hover:text-red-700 transition-colors"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+
+          {/* 데스크탑 테이블 뷰 */}
+          <div className="hidden md:block bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">이미지</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">상품명</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">카테고리</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">가격</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">작성일</th>
+                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">작업</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {products.map((product) => (
+                    <tr key={product.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        {product.images && product.images.length > 0 ? (
+                          <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="w-16 h-16 object-cover rounded-lg"
+                            onError={(e) => {
+                              e.target.src = 'https://via.placeholder.com/64x64?text=No+Image'
+                            }}
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                            <span className="text-xs text-gray-400">이미지 없음</span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-gray-800">{product.name}</p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm text-gray-600">{product.category}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm font-semibold text-gray-800">
+                          {product.price?.toLocaleString()}원
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm text-gray-600">
+                          {new Date(product.created_at).toLocaleDateString('ko-KR')}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            to={ROUTES.ADMIN_PRODUCTS + '/' + product.id + '/edit'}
+                            className="text-sm text-pastel-pink-text hover:text-pastel-pink transition-colors"
+                          >
+                            수정
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(product.id, product.name)}
+                            className="text-sm text-red-600 hover:text-red-700 transition-colors"
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
       )}
 
       <Toast

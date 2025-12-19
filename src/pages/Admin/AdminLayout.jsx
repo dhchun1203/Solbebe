@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import { ROUTES } from '../../constants'
@@ -7,6 +8,8 @@ const AdminLayout = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { signOut, loading } = useAuthStore()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const sidebarRef = useRef(null)
 
   const handleSignOut = async () => {
     try {
@@ -60,33 +63,74 @@ const AdminLayout = () => {
     setTimeout(() => {
       console.log('🔵 이동 후 경로:', window.location.pathname)
     }, 100)
+    
+    // 모바일에서 메뉴 클릭 시 사이드바 닫기
+    setIsSidebarOpen(false)
   }
+
+  // 외부 클릭 시 사이드바 닫기
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        // 햄버거 버튼 클릭은 제외
+        if (!event.target.closest('[data-sidebar-toggle]')) {
+          setIsSidebarOpen(false)
+        }
+      }
+    }
+
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isSidebarOpen])
 
   return (
     <AdminRoute>
       <div className="min-h-screen bg-gray-50">
         {/* 관리자 헤더 */}
-        <header className="bg-white shadow-md border-b border-gray-200">
-          <div className="container mx-auto px-4 py-4">
+        <header className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
+          <div className="container mx-auto px-4 py-3 md:py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Link to={ROUTES.HOME} className="text-xl font-bold text-gray-800">
+              <div className="flex items-center gap-2 md:gap-4">
+                {/* 모바일 햄버거 메뉴 버튼 */}
+                <button
+                  data-sidebar-toggle
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors p-2"
+                  aria-label="메뉴"
+                  type="button"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {isSidebarOpen ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    )}
+                  </svg>
+                </button>
+                
+                <Link to={ROUTES.HOME} className="text-lg md:text-xl font-bold text-gray-800">
                   Solbebe
                 </Link>
-                <span className="text-gray-400">|</span>
-                <span className="text-sm text-gray-600">관리자 페이지</span>
+                <span className="hidden sm:inline text-gray-400">|</span>
+                <span className="hidden sm:inline text-xs md:text-sm text-gray-600">관리자</span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4">
                 <Link
                   to={ROUTES.HOME}
-                  className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                  className="text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 md:px-0 md:py-0"
                 >
-                  홈으로
+                  <span className="hidden sm:inline">홈으로</span>
+                  <span className="sm:hidden">홈</span>
                 </Link>
                 <button
                   onClick={handleSignOut}
                   disabled={loading}
-                  className="text-sm text-gray-600 hover:text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1 md:px-0 md:py-0"
                 >
                   {loading ? '로그아웃 중...' : '로그아웃'}
                 </button>
@@ -95,11 +139,24 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row gap-6">
+        {/* 모바일 오버레이 */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        <div className="container mx-auto px-4 py-4 md:py-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* 사이드바 */}
-            <aside className="w-full md:w-64 flex-shrink-0">
-              <nav className="bg-white rounded-xl shadow-md p-4">
+            <aside 
+              ref={sidebarRef}
+              className={`fixed md:static inset-y-0 left-0 z-50 md:z-auto w-64 md:w-64 flex-shrink-0 transform transition-transform duration-300 ease-in-out ${
+                isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+              }`}
+            >
+              <nav className="bg-white rounded-xl shadow-md p-4 h-full md:h-auto overflow-y-auto relative z-50">
                 <ul className="space-y-2">
                   {menuItems.map((item) => {
                     // 경로 매칭 개선: /admin과 /admin/dashboard 모두 대시보드로 인식
@@ -111,15 +168,19 @@ const AdminLayout = () => {
                       <li key={item.path}>
                         <button
                           type="button"
-                          onClick={() => handleMenuClick(item.path)}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleMenuClick(item.path)
+                          }}
                           className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left ${
                             isActive
                               ? 'bg-pastel-pink text-white font-semibold'
                               : 'text-gray-700 hover:bg-gray-100'
                           }`}
                         >
-                          <span>{item.icon}</span>
-                          <span>{item.label}</span>
+                          <span className="text-lg">{item.icon}</span>
+                          <span className="text-sm md:text-base">{item.label}</span>
                         </button>
                       </li>
                     )

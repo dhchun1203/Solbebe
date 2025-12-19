@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SearchModal from '../common/SearchModal'
 import LoginModal from '../common/LoginModal'
@@ -15,22 +15,53 @@ const Header = () => {
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
   const { user, signOut, checkSession, isAdmin } = useAuthStore()
+  const mobileMenuButtonRef = useRef(null)
   
   // 메모이제이션된 값들
   const totalItems = useMemo(() => getTotalItems(), [getTotalItems, items])
   const isAdminUser = useMemo(() => isAdmin(), [isAdmin, user])
 
   // 메뉴 토글 함수들 메모이제이션
-  const toggleMobileMenu = useCallback(() => setIsMobileMenuOpen(prev => !prev), [])
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(prev => !prev)
+  }, [])
   const openSearch = useCallback(() => setIsSearchOpen(true), [])
   const openLogin = useCallback(() => setIsLoginOpen(true), [])
   const toggleProfileMenu = useCallback(() => setIsProfileMenuOpen(prev => !prev), [])
 
-  // 외부 클릭 감지 훅
+  // 외부 클릭 감지 훅 (버튼 제외)
   const closeProfileMenu = useCallback(() => setIsProfileMenuOpen(false), [])
-  const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), [])
+  const closeMobileMenu = useCallback((event) => {
+    // 버튼 클릭은 제외
+    if (mobileMenuButtonRef.current && mobileMenuButtonRef.current.contains(event?.target)) {
+      return
+    }
+    setIsMobileMenuOpen(false)
+  }, [])
   const profileMenuRef = useClickOutside(closeProfileMenu, isProfileMenuOpen)
-  const mobileMenuRef = useClickOutside(closeMobileMenu, isMobileMenuOpen)
+  
+  // 모바일 메뉴 외부 클릭 감지 (커스텀)
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const handleClickOutside = (event) => {
+      // 메뉴 영역과 버튼 영역 모두 제외
+      const menuElement = document.querySelector('[data-mobile-menu]')
+      if (
+        menuElement && 
+        !menuElement.contains(event.target) &&
+        mobileMenuButtonRef.current &&
+        !mobileMenuButtonRef.current.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMobileMenuOpen])
 
   useEffect(() => {
     checkSession()
@@ -138,14 +169,23 @@ const Header = () => {
                   상품
                 </Link>
               </nav>
+            </div>
 
+            {/* 아이콘 버튼들 */}
+            <div className="flex items-center gap-3 md:gap-4">
               {/* 모바일 햄버거 메뉴 버튼 */}
               <button
-                onClick={toggleMobileMenu}
-                className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors"
-                aria-label="메뉴"
+                ref={mobileMenuButtonRef}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsMobileMenuOpen(!isMobileMenuOpen)
+                }}
+                className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors z-50 relative flex items-center justify-center w-6 h-6"
+                aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+                type="button"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {isMobileMenuOpen ? (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   ) : (
@@ -153,10 +193,7 @@ const Header = () => {
                   )}
                 </svg>
               </button>
-            </div>
 
-            {/* 아이콘 버튼들 */}
-            <div className="flex items-center gap-3 md:gap-4">
               {/* 검색 버튼 */}
               <button
                 onClick={openSearch}
@@ -275,9 +312,19 @@ const Header = () => {
           </div>
 
           {/* 모바일 메뉴 */}
-          {isMobileMenuOpen && (
-            <div ref={mobileMenuRef} className="md:hidden border-t border-gray-200 mt-3 pt-3">
-              <nav className="flex flex-col gap-4">
+          <div 
+            data-mobile-menu
+            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              isMobileMenuOpen 
+                ? 'max-h-96 opacity-100 border-t border-gray-200 mt-3 pt-3' 
+                : 'max-h-0 opacity-0 mt-0 pt-0 border-t-0'
+            }`}
+          >
+            <nav className={`flex flex-col gap-4 transition-all duration-300 ${
+              isMobileMenuOpen 
+                ? 'translate-y-0' 
+                : '-translate-y-4'
+            }`}>
                 <Link 
                   to={ROUTES.HOME} 
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -309,18 +356,7 @@ const Header = () => {
                 {user ? (
                   <div className="pt-2 border-t border-gray-200">
                     <p className="text-sm text-gray-600 mb-1">{user.user_metadata?.name || '사용자'}</p>
-                    <p className="text-xs text-gray-500 mb-3">{user.email}</p>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        handleSignOut(e)
-                      }}
-                      className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors cursor-pointer"
-                    >
-                      로그아웃
-                    </button>
+                    <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
                 ) : (
                   <button
@@ -335,7 +371,6 @@ const Header = () => {
                 )}
               </nav>
             </div>
-          )}
         </div>
       </header>
 

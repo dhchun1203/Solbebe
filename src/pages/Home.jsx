@@ -87,23 +87,25 @@ const Home = () => {
   return (
     <div className="w-full bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-pastel-pink to-white py-12 md:py-20 lg:py-32">
+      <section className="relative bg-gradient-to-b from-pastel-pink/30 via-pastel-pink/10 to-white py-16 md:py-24 lg:py-32">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center">
             {/* 프리미엄 태그 */}
-            <div className="inline-block bg-transparent rounded-lg px-3 py-1.5 md:px-4 md:py-2 mb-4 md:mb-6">
-              <span className="text-xs md:text-sm font-medium text-gray-800">프리미엄 베이비웨어</span>
+            <div className="inline-block bg-pastel-pink/20 rounded-full px-4 py-1.5 md:px-5 md:py-2 mb-6 md:mb-8">
+              <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
+                Premium Babywear
+              </span>
             </div>
             
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-800 mb-3 md:mb-4">
-              Soft & Cozy Babywear
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
+              Soft & Cozy<br />Babywear
             </h1>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-6 md:mb-8 px-2">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
               우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요
             </p>
             <Link
               to={ROUTES.PRODUCTS}
-              className="inline-block bg-gray-800 text-white px-6 py-3 md:px-8 md:py-4 rounded-xl text-sm md:text-base font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+              className="inline-block bg-pastel-pink-text text-white px-8 py-4 md:px-10 md:py-5 rounded-2xl text-base md:text-lg font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
             >
               지금 보러가기
             </Link>
@@ -112,16 +114,21 @@ const Home = () => {
       </section>
 
       {/* Category Quick Menu */}
-      <section className="container mx-auto px-4 py-8 md:py-12 bg-white">
-        <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-            카테고리
-          </h2>
-          <p className="text-sm md:text-base text-gray-600">
+      <section className="container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-pink/10">
+        <div className="text-center mb-10 md:mb-12">
+          <div className="inline-block bg-pastel-pink/20 rounded-full px-4 py-1.5 mb-4">
+            <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
+              Categories
+            </span>
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
             아기에게 필요한 모든 것
+          </h2>
+          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+            부드럽고 안전한 소재로 만든 다양한 카테고리의 의류를 만나보세요
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {categoriesList.map((category) => (
             <CategoryCard
               key={category.value}
@@ -134,13 +141,18 @@ const Home = () => {
       </section>
 
       {/* Recommended Products */}
-      <section className="container mx-auto px-4 py-8 md:py-12 bg-white">
-        <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+      <section className="container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-pastel-pink/10 to-white">
+        <div className="text-center mb-10 md:mb-12">
+          <div className="inline-block bg-pastel-blue/20 rounded-full px-4 py-1.5 mb-4">
+            <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
+              Featured Products
+            </span>
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
             추천 상품
           </h2>
-          <p className="text-sm md:text-base text-gray-600">
-            엄선된 베스트 아이템
+          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+            엄선된 베스트 아이템으로 우리 아기를 더욱 특별하게
           </p>
         </div>
         {loading ? (
@@ -172,7 +184,7 @@ const Home = () => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {recommendedProducts.map((product) => (
               <ProductCard 
                 key={product.id} 
@@ -184,27 +196,55 @@ const Home = () => {
       </section>
 
       {/* Brand Story Section */}
-      <section className="container mx-auto px-4 py-8 md:py-12 bg-white">
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
-          <div className="rounded-xl overflow-hidden shadow-md order-2 md:order-1">
+      <section className="container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-beige/20">
+        <div className="text-center mb-10 md:mb-12">
+          <div className="inline-block bg-pastel-beige/30 rounded-full px-4 py-1.5 mb-4">
+            <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
+              Our Story
+            </span>
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
+            Solbebe 이야기
+          </h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
+          <div className="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 order-2 md:order-1 group">
             <img
               src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800"
               alt="Brand Story"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
               decoding="async"
             />
           </div>
-          <div className="space-y-3 md:space-y-4 order-1 md:order-2">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Solbebe 이야기</h2>
-            <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+          <div className="space-y-4 md:space-y-6 order-1 md:order-2">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+              우리의 약속
+            </h3>
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed">
               Solbebe는 우리 아이들이 가장 편안하고 건강하게 자랄 수 있도록
               최고의 소재와 디자인으로 제작된 아기 의류를 제공합니다.
             </p>
-            <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed">
               모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로
               만들어지며, 세탁 후에도 변형이 적고 오래 지속됩니다.
             </p>
+            <div className="pt-4">
+              <div className="flex flex-wrap gap-3">
+                <div className="flex items-center gap-2 bg-pastel-pink/20 rounded-full px-4 py-2">
+                  <span className="text-2xl">✨</span>
+                  <span className="text-sm font-medium text-gray-700">프리미엄 소재</span>
+                </div>
+                <div className="flex items-center gap-2 bg-pastel-blue/20 rounded-full px-4 py-2">
+                  <span className="text-2xl">🌿</span>
+                  <span className="text-sm font-medium text-gray-700">친환경</span>
+                </div>
+                <div className="flex items-center gap-2 bg-pastel-beige/30 rounded-full px-4 py-2">
+                  <span className="text-2xl">💝</span>
+                  <span className="text-sm font-medium text-gray-700">사랑으로 제작</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

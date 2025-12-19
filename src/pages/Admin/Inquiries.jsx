@@ -35,37 +35,37 @@ const Inquiries = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 md:py-8">
         <div className="text-center">로딩 중...</div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">문의 관리</h1>
+    <div className="container mx-auto px-4 py-4 md:py-8">
+      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 md:mb-6 lg:mb-8">문의 관리</h1>
 
       {inquiries.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl shadow-md">
-          <p className="text-gray-500">등록된 문의가 없습니다.</p>
+        <div className="text-center py-8 md:py-12 bg-white rounded-xl shadow-md px-4">
+          <p className="text-sm md:text-base text-gray-500">등록된 문의가 없습니다.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
           {inquiries.map((inquiry) => (
             <div
               key={inquiry.id}
-              className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100 hover:shadow-lg transition-shadow cursor-pointer"
+              className="bg-white rounded-xl shadow-md p-3 md:p-4 lg:p-6 border border-gray-100 hover:shadow-lg transition-shadow cursor-pointer"
               onClick={() => setSelectedInquiry(inquiry)}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="font-semibold text-gray-800 mb-1">{inquiry.name}</p>
-                  <p className="text-sm text-gray-600">{inquiry.phone}</p>
+              <div className="flex items-start justify-between mb-2 md:mb-3 gap-2">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm md:text-base text-gray-800 mb-1 truncate">{inquiry.name}</p>
+                  <p className="text-xs md:text-sm text-gray-600 truncate">{inquiry.phone}</p>
                   {inquiry.email && (
-                    <p className="text-xs text-gray-500">{inquiry.email}</p>
+                    <p className="text-xs text-gray-500 truncate">{inquiry.email}</p>
                   )}
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   <span className={`inline-block px-2 py-1 rounded text-xs font-medium mb-1 ${
                     inquiry.status === 'completed' ? 'bg-green-100 text-green-800' :
                     inquiry.status === 'processing' ? 'bg-blue-100 text-blue-800' :
@@ -77,16 +77,16 @@ const Inquiries = () => {
                      inquiry.status === 'cancelled' ? '취소됨' :
                      '접수 대기'}
                   </span>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 whitespace-nowrap">
                     {new Date(inquiry.created_at).toLocaleDateString('ko-KR')}
                   </p>
                 </div>
               </div>
 
               {inquiry.products && (
-                <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-700 mb-1">상품:</p>
-                  <p className="text-sm text-gray-600">
+                <div className="mb-2 md:mb-3">
+                  <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">상품:</p>
+                  <p className="text-xs md:text-sm text-gray-600 truncate">
                     {typeof inquiry.products === 'object' && inquiry.products.name
                       ? inquiry.products.name
                       : '상품 정보 없음'}
@@ -95,9 +95,9 @@ const Inquiries = () => {
               )}
 
               {inquiry.options && (
-                <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-700 mb-1">옵션:</p>
-                  <p className="text-sm text-gray-600">
+                <div className="mb-2 md:mb-3">
+                  <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">옵션:</p>
+                  <p className="text-xs md:text-sm text-gray-600 line-clamp-1">
                     {typeof inquiry.options === 'object'
                       ? JSON.stringify(inquiry.options)
                       : inquiry.options}
@@ -107,8 +107,8 @@ const Inquiries = () => {
 
               {inquiry.message && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">요청사항:</p>
-                  <p className="text-sm text-gray-600 line-clamp-2">{inquiry.message}</p>
+                  <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">요청사항:</p>
+                  <p className="text-xs md:text-sm text-gray-600 line-clamp-2">{inquiry.message}</p>
                 </div>
               )}
             </div>
@@ -123,11 +123,11 @@ const Inquiries = () => {
           onClick={() => setSelectedInquiry(null)}
         >
           <div
-            className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6"
+            className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 md:p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-800">문의 상세</h2>
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <h2 className="text-lg md:text-xl font-bold text-gray-800">문의 상세</h2>
               <button
                 onClick={() => setSelectedInquiry(null)}
                 className="text-gray-500 hover:text-gray-700"
@@ -138,21 +138,21 @@ const Inquiries = () => {
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-1">이름</p>
-                <p className="text-base text-gray-800">{selectedInquiry.name}</p>
+                <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">이름</p>
+                <p className="text-sm md:text-base text-gray-800">{selectedInquiry.name}</p>
               </div>
 
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-1">연락처</p>
-                <p className="text-base text-gray-800">{selectedInquiry.phone}</p>
+                <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">연락처</p>
+                <p className="text-sm md:text-base text-gray-800">{selectedInquiry.phone}</p>
               </div>
 
               {selectedInquiry.products && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">상품</p>
-                  <p className="text-base text-gray-800">
+                  <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">상품</p>
+                  <p className="text-sm md:text-base text-gray-800">
                     {typeof selectedInquiry.products === 'object' && selectedInquiry.products.name
                       ? selectedInquiry.products.name
                       : '상품 정보 없음'}
@@ -162,8 +162,8 @@ const Inquiries = () => {
 
               {selectedInquiry.options && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">옵션</p>
-                  <p className="text-base text-gray-800">
+                  <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">옵션</p>
+                  <p className="text-xs md:text-sm text-gray-800 break-words">
                     {typeof selectedInquiry.options === 'object'
                       ? JSON.stringify(selectedInquiry.options, null, 2)
                       : selectedInquiry.options}
@@ -173,20 +173,20 @@ const Inquiries = () => {
 
               {selectedInquiry.message && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">요청사항</p>
-                  <p className="text-base text-gray-800 whitespace-pre-wrap">{selectedInquiry.message}</p>
+                  <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">요청사항</p>
+                  <p className="text-sm md:text-base text-gray-800 whitespace-pre-wrap break-words">{selectedInquiry.message}</p>
                 </div>
               )}
 
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-1">문의일시</p>
-                <p className="text-base text-gray-800">
+                <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">문의일시</p>
+                <p className="text-sm md:text-base text-gray-800">
                   {new Date(selectedInquiry.created_at).toLocaleString('ko-KR')}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">처리 상태</p>
+                <p className="text-xs md:text-sm font-medium text-gray-700 mb-2">처리 상태</p>
                 <select
                   value={selectedInquiry.status || 'pending'}
                   onChange={async (e) => {
