@@ -1,17 +1,22 @@
-@import url('https://cdn.jsdelivr.net/gh/fonts-archive/Cafe24@1.0/Cafe24ClassicType.css');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Cafe24ClassicType', 'Cafe24', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: 'Gamja Flower', 'Hi Melody', 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   @apply bg-white text-gray-800;
 }
 
-/* 모든 텍스트 요소에 Cafe24 폰트 적용 */
+/* 모든 텍스트 요소에 귀여운 한글 폰트 적용 */
 * {
-  font-family: 'Cafe24ClassicType', 'Cafe24', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: 'Gamja Flower', 'Hi Melody', 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 제목에 더 귀여운 폰트 강조 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Gamja Flower', 'Hi Melody', 'SUIT', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 /* 스크롤바 숨김 유틸리티 클래스 */

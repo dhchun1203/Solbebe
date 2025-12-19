@@ -16,7 +16,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        sans: ['Gamja Flower', 'Hi Melody', 'SUIT', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        display: ['Gamja Flower', 'Hi Melody', 'SUIT', 'sans-serif'],
       },
     },
   },
