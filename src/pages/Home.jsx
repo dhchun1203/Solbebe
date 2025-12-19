@@ -7,6 +7,7 @@ import { CATEGORIES, DEFAULTS, ROUTES } from '../constants'
 
 const Home = () => {
   const [recommendedProducts, setRecommendedProducts] = useState([])
+  const [allProducts, setAllProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const timeoutRef = useRef(null)
   const isMountedRef = useRef(true)
@@ -14,12 +15,25 @@ const Home = () => {
   // 카테고리 리스트 메모이제이션
   const categoriesList = useMemo(() => CATEGORIES, [])
 
+  // 카테고리별 대표 이미지 찾기
+  const getCategoryImage = useCallback((categoryValue) => {
+    const categoryProduct = allProducts.find(
+      (product) => product.category === categoryValue && product.images && product.images.length > 0
+    )
+    return categoryProduct?.images?.[0] || null
+  }, [allProducts])
+
   // 상품 조회 함수 메모이제이션
   const fetchRecommendedProducts = useCallback(async () => {
     try {
       if (import.meta.env.DEV) {
         console.log('상품 조회 시작...')
       }
+      
+      // 모든 상품 조회 (카테고리 이미지용)
+      const allProductsData = await productApi.getAllProducts()
+      
+      // 추천 상품 조회
       const products = await productApi.getRecommendedProducts(DEFAULTS.RECOMMENDED_PRODUCTS_LIMIT)
       
       if (import.meta.env.DEV) {
@@ -33,6 +47,7 @@ const Home = () => {
       }
       
       if (isMountedRef.current) {
+        setAllProducts(allProductsData || [])
         setRecommendedProducts(products || [])
         setLoading(false)
       }
@@ -53,6 +68,7 @@ const Home = () => {
       }
       
       if (isMountedRef.current) {
+        setAllProducts([])
         setRecommendedProducts([])
         setLoading(false)
       }
@@ -133,8 +149,8 @@ const Home = () => {
             <CategoryCard
               key={category.value}
               category={category.name}
-              icon={category.icon}
               description={category.description}
+              bgImage={getCategoryImage(category.value)}
             />
           ))}
         </div>
