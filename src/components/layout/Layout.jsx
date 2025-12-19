@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
+import ScrollToTop from '../common/ScrollToTop'
 
 const Layout = () => {
   const navigate = useNavigate()
@@ -27,6 +28,7 @@ const Layout = () => {
         <Outlet />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   )
 }
