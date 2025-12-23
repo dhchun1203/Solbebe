@@ -80,35 +80,50 @@ const ProductList = () => {
       </h1>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl shadow-md p-3 md:p-4 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 justify-between">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-          <label className="text-sm md:text-base text-gray-700 font-medium whitespace-nowrap">카테고리:</label>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full sm:w-auto px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
-          >
+      <div className="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6 md:mb-8 space-y-4 md:space-y-6">
+        {/* 카테고리 필터 */}
+        <div className="space-y-3">
+          <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">카테고리</label>
+          <div className="flex flex-nowrap gap-1.5 md:gap-2 overflow-x-auto scrollbar-hide pb-1 justify-center md:justify-start">
             {Object.entries(CATEGORY_MAP).map(([value, label]) => (
-              <option key={value} value={value}>
+              <button
+                key={value}
+                onClick={() => setSelectedCategory(value)}
+                className={`px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
+                  selectedCategory === value
+                    ? 'bg-pastel-pink-text text-white shadow-md scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                }`}
+              >
                 {label}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-          <label className="text-sm md:text-base text-gray-700 font-medium whitespace-nowrap">정렬:</label>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="w-full sm:w-auto px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink"
-          >
+        {/* 정렬 필터 */}
+        <div className="space-y-3 border-t border-gray-100 pt-4">
+          <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">정렬</label>
+          <div className="flex flex-nowrap gap-1.5 md:gap-2 overflow-x-auto scrollbar-hide pb-1 justify-center md:justify-start">
             {SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
+              <button
+                key={option.value}
+                onClick={() => setSortBy(option.value)}
+                className={`px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-200 flex items-center gap-1 md:gap-2 whitespace-nowrap flex-shrink-0 ${
+                  sortBy === option.value
+                    ? 'bg-pastel-blue text-white shadow-md scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                }`}
+              >
+                {sortBy === option.value && (
+                  <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
                 {option.label}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
       </div>
 
