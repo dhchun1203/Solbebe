@@ -111,7 +111,7 @@ const ProductList = () => {
                 onClick={() => setSortBy(option.value)}
                 className={`px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-200 flex items-center gap-1 md:gap-2 whitespace-nowrap flex-shrink-0 ${
                   sortBy === option.value
-                    ? 'bg-pastel-blue text-white shadow-md scale-105'
+                    ? 'bg-blue-400 text-white shadow-md scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
                 }`}
               >
