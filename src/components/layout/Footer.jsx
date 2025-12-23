@@ -59,7 +59,7 @@ const Footer = () => {
             <div className="flex gap-4">
               <a 
                 href="#" 
-                className="w-10 h-10 rounded-full bg-white/80 hover:bg-pastel-pink hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-sm hover:shadow-md group"
+                className="w-10 h-10 rounded-full bg-white/80 hover:bg-pink-400 hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-sm hover:shadow-md group"
                 aria-label="Instagram"
                 draggable="false"
                 onDragStart={(e) => e.preventDefault()}
@@ -70,7 +70,7 @@ const Footer = () => {
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 rounded-full bg-white/80 hover:bg-pastel-blue hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-sm hover:shadow-md group"
+                className="w-10 h-10 rounded-full bg-white/80 hover:bg-blue-400 hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-sm hover:shadow-md group"
                 aria-label="Facebook"
                 draggable="false"
                 onDragStart={(e) => e.preventDefault()}

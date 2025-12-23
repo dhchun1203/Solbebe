@@ -16,6 +16,21 @@ const Home = () => {
   
   // 인터렉티브 요소를 위한 훅들
   const heroRef = useRef(null)
+  const [isDesktop, setIsDesktop] = useState(false)
+  
+  // 데스크탑 여부 확인
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768)
+    }
+    
+    checkDesktop()
+    window.addEventListener('resize', checkDesktop)
+    
+    return () => {
+      window.removeEventListener('resize', checkDesktop)
+    }
+  }, [])
   
   // 스크롤 애니메이션
   const categorySection = useScrollAnimation({ threshold: 0.1, triggerOnce: true })
@@ -27,9 +42,13 @@ const Home = () => {
   const productCount = useCounter(50, 2000, brandSection.isVisible)
   const yearCount = useCounter(5, 2000, brandSection.isVisible)
   
-  // Hero 섹션 마우스 커서 추적 효과
+  // Hero 섹션 마우스 커서 추적 효과 (데스크탑만)
   useEffect(() => {
     if (!heroRef.current) return
+    
+    // 모바일에서는 비활성화 (768px 미만)
+    const isMobile = window.innerWidth < 768
+    if (isMobile) return
     
     const handleMouseMove = (e) => {
       const heroElement = heroRef.current
@@ -155,7 +174,9 @@ const Home = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div 
             ref={heroRef}
-            className="max-w-3xl mx-auto text-center cursor-follow transition-transform duration-300 ease-out"
+            className={`max-w-3xl mx-auto text-center transition-transform duration-300 ease-out ${
+              isDesktop ? 'cursor-follow' : ''
+            }`}
           >
             {/* 프리미엄 태그 */}
             <div className="inline-block bg-pastel-pink/20 rounded-full px-4 py-1.5 md:px-5 md:py-2 mb-6 md:mb-8 animate-fade-in">
