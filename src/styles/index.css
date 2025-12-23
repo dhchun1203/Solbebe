@@ -109,7 +109,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
+  animation: fade-in-up 0.2s ease-out forwards;
 }
 
 .animate-fade-in {
@@ -168,6 +168,41 @@ h1, h2, h3, h4, h5, h6 {
 /* 마우스 커서 추적 효과 */
 .cursor-follow {
   transition: transform 0.1s ease-out;
+}
+
+/* 서브메뉴 애니메이션 */
+@keyframes slide-down-menu {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+}
+
+@keyframes slide-up-menu {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+}
+
+.animate-slide-down-menu {
+  animation: slide-down-menu 0.3s ease-out forwards;
+}
+
+.animate-slide-up-menu {
+  animation: slide-up-menu 0.2s ease-in forwards;
 }
 
 

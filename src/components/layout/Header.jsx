@@ -4,13 +4,15 @@ import LoginModal from '../common/LoginModal'
 import { useCartStore } from '../../store/cartStore'
 import { useAuthStore } from '../../store/authStore'
 import { useClickOutside } from '../../hooks/useClickOutside'
-import { ROUTES } from '../../constants'
+import { ROUTES, CATEGORIES } from '../../constants'
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isProductMenuOpen, setIsProductMenuOpen] = useState(false)
+  const [isMobileProductMenuOpen, setIsMobileProductMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
@@ -18,6 +20,8 @@ const Header = () => {
   const mobileMenuButtonRef = useRef(null)
   const searchButtonRef = useRef(null)
   const searchInputRef = useRef(null)
+  const productMenuRef = useRef(null)
+  const productMenuButtonRef = useRef(null)
   
   // 메모이제이션된 값들
   const totalItems = useMemo(() => getTotalItems(), [getTotalItems, items])
@@ -50,6 +54,9 @@ const Header = () => {
   }, [])
   const profileMenuRef = useClickOutside(closeProfileMenu, isProfileMenuOpen)
   
+  // 상품 메뉴 외부 클릭 감지 (버튼 제외)
+  const closeProductMenu = useCallback(() => setIsProductMenuOpen(false), [])
+  
   // 검색 드롭다운 외부 클릭 감지 (버튼 제외)
   const searchRef = useRef(null)
   useEffect(() => {
@@ -71,6 +78,27 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isSearchOpen])
+  
+  // 상품 메뉴 외부 클릭 감지 (버튼 제외)
+  useEffect(() => {
+    if (!isProductMenuOpen) return
+
+    const handleClickOutside = (event) => {
+      if (
+        productMenuRef.current && 
+        !productMenuRef.current.contains(event.target) &&
+        productMenuButtonRef.current &&
+        !productMenuButtonRef.current.contains(event.target)
+      ) {
+        setIsProductMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isProductMenuOpen])
   
   // 검색 제출 핸들러
   const handleSearchSubmit = useCallback((e) => {
@@ -213,12 +241,52 @@ const Header = () => {
                 >
                   홈
                 </Link>
-                <Link 
-                  to={ROUTES.PRODUCTS} 
-                  className="text-lg text-gray-800 hover:text-pastel-pink-text transition-colors"
+                <div 
+                  className="relative" 
+                  ref={productMenuRef}
+                  onMouseEnter={() => setIsProductMenuOpen(true)}
+                  onMouseLeave={() => setIsProductMenuOpen(false)}
                 >
-                  상품
-                </Link>
+                  <button
+                    ref={productMenuButtonRef}
+                    className="text-lg text-gray-800 hover:text-pastel-pink-text transition-colors flex items-center gap-1"
+                  >
+                    상품
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-150 ${isProductMenuOpen ? 'rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* 카테고리 서브메뉴 */}
+                  {isProductMenuOpen && (
+                    <div 
+                      className="absolute top-full left-0 pt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 animate-fade-in-up"
+                    >
+                      <Link
+                        to={ROUTES.PRODUCTS}
+                        onClick={() => setIsProductMenuOpen(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:text-pastel-pink-text hover:bg-pastel-pink/10 transition-colors"
+                      >
+                        전체 상품
+                      </Link>
+                      {CATEGORIES.map((category) => (
+                        <Link
+                          key={category.value}
+                          to={`${ROUTES.PRODUCTS}?category=${category.value}`}
+                          onClick={() => setIsProductMenuOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:text-pastel-pink-text hover:bg-pastel-pink/10 transition-colors"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </nav>
             </div>
 
@@ -414,7 +482,7 @@ const Header = () => {
         }`}
       >
         {/* 사이드 메뉴 헤더 */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 shadow-sm">
           <Link 
             to={ROUTES.HOME} 
             onClick={() => setIsMobileMenuOpen(false)}
@@ -452,7 +520,7 @@ const Header = () => {
         {/* 사이드 메뉴 네비게이션 */}
         <nav className="flex flex-col h-[calc(100vh-73px)] overflow-y-auto">
           {/* 검색 폼 */}
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-white">
             <form onSubmit={handleSearchSubmit} className="space-y-2">
               <div className="flex items-center gap-2">
                 <div className="flex-1 relative">
@@ -490,16 +558,60 @@ const Header = () => {
               <span>홈</span>
             </Link>
             
-            <Link 
-              to={ROUTES.PRODUCTS} 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-              <span>상품</span>
-            </Link>
+            <div>
+              <button
+                onClick={() => setIsMobileProductMenuOpen(!isMobileProductMenuOpen)}
+                className="w-full flex items-center justify-between gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
+              >
+                <div className="flex items-center gap-3">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <span>상품</span>
+                </div>
+                <svg 
+                  className={`w-4 h-4 transition-transform duration-200 ${isMobileProductMenuOpen ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {/* 카테고리 서브메뉴 */}
+              <div 
+                className={`pl-4 mt-1 space-y-1 overflow-hidden transition-all duration-150 ease-out ${
+                  isMobileProductMenuOpen 
+                    ? 'max-h-96 opacity-100' 
+                    : 'max-h-0 opacity-0'
+                }`}
+              >
+                  <Link
+                    to={ROUTES.PRODUCTS}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      setIsMobileProductMenuOpen(false)
+                    }}
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-lg transition-all duration-200"
+                  >
+                    전체 상품
+                  </Link>
+                  {CATEGORIES.map((category) => (
+                    <Link
+                      key={category.value}
+                      to={`${ROUTES.PRODUCTS}?category=${category.value}`}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false)
+                        setIsMobileProductMenuOpen(false)
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-lg transition-all duration-200"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+              </div>
+            </div>
 
             {user && (
               <>
