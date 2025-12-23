@@ -245,8 +245,8 @@ const Header = () => {
                 </svg>
               </button>
 
-              {/* 검색 버튼 및 드롭다운 */}
-              <div className="relative" ref={searchRef}>
+              {/* 검색 버튼 및 드롭다운 (데스크탑만) */}
+              <div className="relative hidden md:block" ref={searchRef}>
                 <button
                   ref={searchButtonRef}
                   onClick={toggleSearch}
@@ -260,7 +260,7 @@ const Header = () => {
                 
                 {/* 검색 드롭다운 */}
                 {isSearchOpen && (
-                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 md:w-96 max-w-md bg-white rounded-xl shadow-lg border border-gray-100 py-3 z-50 animate-fade-in-up">
+                  <div className="absolute right-0 mt-2 w-80 md:w-96 max-w-md bg-white rounded-xl shadow-lg border border-gray-100 py-3 z-50 animate-fade-in-up">
                     <form onSubmit={handleSearchSubmit} className="px-4">
                       <div className="flex items-center gap-2">
                         <div className="flex-1 relative">
@@ -451,6 +451,33 @@ const Header = () => {
 
         {/* 사이드 메뉴 네비게이션 */}
         <nav className="flex flex-col h-[calc(100vh-73px)] overflow-y-auto">
+          {/* 검색 폼 */}
+          <div className="p-4 border-b border-gray-200">
+            <form onSubmit={handleSearchSubmit} className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="flex-1 relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="상품을 검색하세요..."
+                    className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pastel-pink-text focus:border-transparent"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-4 py-2.5 text-sm bg-pastel-pink-text text-white rounded-lg hover:bg-pastel-pink-text/90 transition-colors whitespace-nowrap flex items-center justify-center"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  검색
+                </button>
+              </div>
+            </form>
+          </div>
+          
           <div className="p-4 space-y-1">
             <Link 
               to={ROUTES.HOME} 
