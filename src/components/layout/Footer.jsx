@@ -4,7 +4,7 @@ import { ROUTES } from '../../constants'
 const Footer = () => {
   return (
     <footer 
-      className="bg-gradient-to-b from-white via-pastel-pink/30 to-pastel-pink/50 border-t border-white mt-12 md:mt-20 select-none"
+      className="bg-gradient-to-b from-white via-pastel-pink/30 to-pastel-pink/50 border-t border-white mt-12 md:mt-20 select-none pb-safe"
       draggable="false"
       onDragStart={(e) => e.preventDefault()}
     >

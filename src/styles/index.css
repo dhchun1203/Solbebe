@@ -170,6 +170,19 @@ h1, h2, h3, h4, h5, h6 {
   transition: transform 0.1s ease-out;
 }
 
+/* Safe Area 지원 (모바일 브라우저 주소창 대응) */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+}
+
+.mb-safe {
+  margin-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+}
+
+.bottom-safe {
+  bottom: max(1.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)));
+}
+
 /* 서브메뉴 애니메이션 */
 @keyframes slide-down-menu {
   from {

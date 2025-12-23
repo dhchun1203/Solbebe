@@ -62,11 +62,12 @@ const ScrollToTop = () => {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-12 h-12 md:w-14 md:h-14 bg-pastel-pink-text text-white rounded-full shadow-2xl hover:shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group hover:bg-opacity-90 ${
+      className={`fixed right-6 md:bottom-8 md:right-8 z-50 w-12 h-12 md:w-14 md:h-14 bg-pastel-pink-text text-white rounded-full shadow-2xl hover:shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group hover:bg-opacity-90 ${
         isVisible ? 'animate-slide-up' : 'animate-slide-down'
       }`}
       style={{
         boxShadow: '0 10px 25px -5px rgba(255, 107, 157, 0.4), 0 10px 10px -5px rgba(255, 107, 157, 0.2)',
+        bottom: 'max(1.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)))',
       }}
       aria-label="맨 위로"
     >
