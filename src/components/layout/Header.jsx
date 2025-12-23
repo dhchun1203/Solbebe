@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import SearchModal from '../common/SearchModal'
 import LoginModal from '../common/LoginModal'
 import { useCartStore } from '../../store/cartStore'
 import { useAuthStore } from '../../store/authStore'
@@ -12,10 +11,13 @@ const Header = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
   const { items, loadCartItems, getTotalItems } = useCartStore()
   const { user, signOut, checkSession, isAdmin } = useAuthStore()
   const mobileMenuButtonRef = useRef(null)
+  const searchButtonRef = useRef(null)
+  const searchInputRef = useRef(null)
   
   // 메모이제이션된 값들
   const totalItems = useMemo(() => getTotalItems(), [getTotalItems, items])
@@ -25,12 +27,20 @@ const Header = () => {
   const toggleMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(prev => !prev)
   }, [])
-  const openSearch = useCallback(() => setIsSearchOpen(true), [])
+  const toggleSearch = useCallback(() => {
+    setIsSearchOpen(prev => {
+      if (!prev && searchInputRef.current) {
+        setTimeout(() => searchInputRef.current?.focus(), 100)
+      }
+      return !prev
+    })
+  }, [])
   const openLogin = useCallback(() => setIsLoginOpen(true), [])
   const toggleProfileMenu = useCallback(() => setIsProfileMenuOpen(prev => !prev), [])
 
   // 외부 클릭 감지 훅 (버튼 제외)
   const closeProfileMenu = useCallback(() => setIsProfileMenuOpen(false), [])
+  const closeSearch = useCallback(() => setIsSearchOpen(false), [])
   const closeMobileMenu = useCallback((event) => {
     // 버튼 클릭은 제외
     if (mobileMenuButtonRef.current && mobileMenuButtonRef.current.contains(event?.target)) {
@@ -40,26 +50,67 @@ const Header = () => {
   }, [])
   const profileMenuRef = useClickOutside(closeProfileMenu, isProfileMenuOpen)
   
-  // 모바일 메뉴 외부 클릭 감지 (커스텀)
+  // 검색 드롭다운 외부 클릭 감지 (버튼 제외)
+  const searchRef = useRef(null)
   useEffect(() => {
-    if (!isMobileMenuOpen) return
+    if (!isSearchOpen) return
 
     const handleClickOutside = (event) => {
-      // 메뉴 영역과 버튼 영역 모두 제외
-      const menuElement = document.querySelector('[data-mobile-menu]')
       if (
-        menuElement && 
-        !menuElement.contains(event.target) &&
-        mobileMenuButtonRef.current &&
-        !mobileMenuButtonRef.current.contains(event.target)
+        searchRef.current && 
+        !searchRef.current.contains(event.target) &&
+        searchButtonRef.current &&
+        !searchButtonRef.current.contains(event.target)
       ) {
-        setIsMobileMenuOpen(false)
+        setIsSearchOpen(false)
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isSearchOpen])
+  
+  // 검색 제출 핸들러
+  const handleSearchSubmit = useCallback((e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
+      setIsSearchOpen(false)
+      setSearchQuery('')
+    }
+  }, [searchQuery, navigate])
+  
+  // ESC 키로 검색 닫기
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isSearchOpen) {
+        setIsSearchOpen(false)
+        setSearchQuery('')
+      }
+    }
+    
+    if (isSearchOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown)
+      }
+    }
+  }, [isSearchOpen])
+  
+  // 모바일 메뉴 body 스크롤 제어
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // body 스크롤 방지
+      document.body.style.overflow = 'hidden'
+    } else {
+      // body 스크롤 복원
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
     }
   }, [isMobileMenuOpen])
 
@@ -194,16 +245,46 @@ const Header = () => {
                 </svg>
               </button>
 
-              {/* 검색 버튼 */}
-              <button
-                onClick={openSearch}
-                className="text-gray-800 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
-                aria-label="검색"
-              >
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
+              {/* 검색 버튼 및 드롭다운 */}
+              <div className="relative" ref={searchRef}>
+                <button
+                  ref={searchButtonRef}
+                  onClick={toggleSearch}
+                  className="text-gray-800 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
+                  aria-label="검색"
+                >
+                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+                
+                {/* 검색 드롭다운 */}
+                {isSearchOpen && (
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 md:w-96 max-w-md bg-white rounded-xl shadow-lg border border-gray-100 py-3 z-50 animate-fade-in-up">
+                    <form onSubmit={handleSearchSubmit} className="px-4">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 relative">
+                          <input
+                            ref={searchInputRef}
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="상품을 검색하세요..."
+                            className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pastel-pink-text focus:border-transparent"
+                            autoFocus
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="px-4 py-2.5 text-sm bg-pastel-pink-text text-white rounded-lg hover:bg-pastel-pink-text/90 transition-colors whitespace-nowrap"
+                        >
+                          검색
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
 
               {/* 프로필 메뉴 (로그인한 사용자) */}
               {user ? (
@@ -311,72 +392,181 @@ const Header = () => {
             </div>
           </div>
 
-          {/* 모바일 메뉴 */}
-          <div 
-            data-mobile-menu
-            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-              isMobileMenuOpen 
-                ? 'max-h-96 opacity-100 border-t border-gray-200 mt-3 pt-3' 
-                : 'max-h-0 opacity-0 mt-0 pt-0 border-t-0'
-            }`}
-          >
-            <nav className={`flex flex-col gap-4 transition-all duration-300 ${
-              isMobileMenuOpen 
-                ? 'translate-y-0' 
-                : '-translate-y-4'
-            }`}>
-                <Link 
-                  to={ROUTES.HOME} 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
-                >
-                  홈
-                </Link>
-                <Link 
-                  to={ROUTES.PRODUCTS} 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2"
-                >
-                  상품
-                </Link>
-                {user && (
-                  <Link 
-                    to={ROUTES.CART} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2 flex items-center gap-2"
-                  >
-                    장바구니
-                    {totalItems > 0 && (
-                      <span className="bg-pastel-pink-text text-white text-xs font-bold rounded-full px-2 py-0.5">
-                        {totalItems > 9 ? '9+' : totalItems}
-                      </span>
-                    )}
-                  </Link>
-                )}
-                {user ? (
-                  <div className="pt-2 border-t border-gray-200">
-                    <p className="text-sm text-gray-600 mb-1">{user.user_metadata?.name || '사용자'}</p>
-                    <p className="text-xs text-gray-500">{user.email}</p>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      setIsLoginOpen(true)
-                    }}
-                    className="text-base text-gray-800 hover:text-pastel-pink-text transition-colors py-2 text-left"
-                  >
-                    로그인
-                  </button>
-                )}
-              </nav>
-            </div>
         </div>
       </header>
 
-      {/* 검색 모달 */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      
+      {/* 모바일 사이드 메뉴 오버레이 */}
+      {isMobileMenuOpen && (
+        <div
+          data-mobile-overlay
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 bg-black/50 z-[9998] md:hidden transition-opacity duration-300"
+        />
+      )}
+
+      {/* 모바일 사이드 메뉴 */}
+      <div 
+        data-mobile-menu
+        className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[9999] md:hidden transform transition-transform duration-300 ease-in-out ${
+          isMobileMenuOpen 
+            ? 'translate-x-0' 
+            : '-translate-x-full'
+        }`}
+      >
+        {/* 사이드 메뉴 헤더 */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <Link 
+            to={ROUTES.HOME} 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center"
+          >
+            <img 
+              src="/logo.png" 
+              alt="Solbebe" 
+              className="h-8 w-auto object-contain"
+              loading="eager"
+              decoding="async"
+              onError={(e) => {
+                e.target.style.display = 'none'
+                const textElement = e.target.nextElementSibling
+                if (textElement) {
+                  textElement.style.display = 'block'
+                }
+              }}
+            />
+            <span className="text-lg font-bold text-gray-800 ml-2" style={{ display: 'none' }}>
+              Solbebe
+            </span>
+          </Link>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="text-gray-800 hover:text-pastel-pink-text transition-colors p-2"
+            aria-label="메뉴 닫기"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* 사이드 메뉴 네비게이션 */}
+        <nav className="flex flex-col h-[calc(100vh-73px)] overflow-y-auto">
+          <div className="p-4 space-y-1">
+            <Link 
+              to={ROUTES.HOME} 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span>홈</span>
+            </Link>
+            
+            <Link 
+              to={ROUTES.PRODUCTS} 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+              <span>상품</span>
+            </Link>
+
+            {user && (
+              <>
+                <Link 
+                  to={ROUTES.CART} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
+                >
+                  <div className="flex items-center gap-3">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span>장바구니</span>
+                  </div>
+                  {totalItems > 0 && (
+                    <span className="bg-pastel-pink-text text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[24px] text-center">
+                      {totalItems > 9 ? '9+' : totalItems}
+                    </span>
+                  )}
+                </Link>
+
+                <Link 
+                  to={ROUTES.MY_INQUIRIES} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                  <span>내 문의 내역</span>
+                </Link>
+
+                {isAdminUser && (
+                  <Link 
+                    to={ROUTES.ADMIN_DASHBOARD} 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>관리자 대시보드</span>
+                  </Link>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* 사용자 정보 섹션 */}
+          {user ? (
+            <div className="mt-auto p-4 border-t border-gray-200 bg-gray-50">
+              <div className="px-4 py-3">
+                <p className="text-sm font-semibold text-gray-800">
+                  {user.user_metadata?.name || '사용자'}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {user.email}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsMobileMenuOpen(false)
+                  handleSignOut(e)
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>로그아웃</span>
+              </button>
+            </div>
+          ) : (
+            <div className="mt-auto p-4 border-t border-gray-200">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false)
+                  setIsLoginOpen(true)
+                }}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 text-base text-white bg-pastel-pink-text hover:bg-pastel-pink-text/90 rounded-xl transition-all duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span>로그인</span>
+              </button>
+            </div>
+          )}
+        </nav>
+      </div>
+
       {/* 로그인 모달 */}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </>

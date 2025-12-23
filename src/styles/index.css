@@ -76,5 +76,99 @@ h1, h2, h3, h4, h5, h6 {
   animation: slide-down 0.3s ease-in;
 }
 
+/* 스크롤 애니메이션 */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+}
+
+/* 스크롤 애니메이션 지연 */
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* 애니메이션은 forwards로 끝 상태 유지 */
+.animate-fade-in-up {
+  animation-fill-mode: forwards;
+}
+
+.animate-fade-in {
+  animation-fill-mode: forwards;
+}
+
+.animate-scale-in {
+  animation-fill-mode: forwards;
+}
+
+/* 호버 시 부드러운 리프트 효과 */
+.hover-lift {
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* 파라랙스 효과 */
+.parallax-slow {
+  transition: transform 0.3s ease-out;
+}
+
+/* 마우스 커서 추적 효과 */
+.cursor-follow {
+  transition: transform 0.1s ease-out;
+}
+
 
 

@@ -95,7 +95,7 @@ const Footer = () => {
         </div>
 
         {/* 구분선 */}
-        <div className="border-t border-white pt-6 md:pt-8">
+        <div className="border-t border-pastel-pink/20 pt-6 md:pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             {/* 카피라이트 */}
             <div className="text-xs text-gray-500 text-center md:text-left">
