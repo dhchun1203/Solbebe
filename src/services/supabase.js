@@ -25,39 +25,32 @@ export const supabase = createClient(
   supabaseAnonKey || 'placeholder-key'
 )
 
-// 개발 모드에서 연결 상태 확인
+// 개발 모드에서 연결 상태 확인 (비동기, 에러 무시)
 if (import.meta.env.DEV) {
   console.log('🔗 Supabase 클라이언트 초기화:', {
     url: supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : '설정되지 않음',
     hasKey: !!supabaseAnonKey
   })
   
-  // 연결 테스트 (타임아웃 포함)
-  const testPromise = supabase
-    .from('products')
-    .select('count')
-    .limit(1)
-  
-  const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error('연결 테스트 타임아웃')), 5000)
-  })
-  
-  Promise.race([testPromise, timeoutPromise])
-    .then(({ data, error }) => {
-      if (error) {
-        console.error('❌ Supabase 연결 실패:', error)
-        console.error('❌ 에러 코드:', error.code)
-        console.error('❌ 에러 메시지:', error.message)
-        console.error('❌ 해결 방법: Supabase SQL Editor에서 실행:')
-        console.error('   ALTER TABLE products DISABLE ROW LEVEL SECURITY;')
-      } else {
-        console.log('✅ Supabase 연결 성공')
-      }
-    })
-    .catch((err) => {
-      console.error('❌ Supabase 연결 오류:', err)
-      console.error('❌ 해결 방법: Supabase SQL Editor에서 실행:')
-      console.error('   ALTER TABLE products DISABLE ROW LEVEL SECURITY;')
-    })
+  // 연결 테스트는 백그라운드에서 실행하고 에러는 무시
+  // (실제 API 호출 시 에러가 발생하면 그때 처리)
+  setTimeout(() => {
+    supabase
+      .from('products')
+      .select('count')
+      .limit(1)
+      .then(({ data, error }) => {
+        if (error) {
+          console.warn('⚠️ Supabase 연결 테스트 실패 (무시됨):', error.message)
+          console.warn('⚠️ 실제 API 호출 시 문제가 발생하면 Supabase SQL Editor에서 실행:')
+          console.warn('   ALTER TABLE products DISABLE ROW LEVEL SECURITY;')
+        } else {
+          console.log('✅ Supabase 연결 테스트 성공')
+        }
+      })
+      .catch(() => {
+        // 타임아웃이나 네트워크 에러는 무시 (실제 사용 시 처리)
+      })
+  }, 1000) // 1초 후 백그라운드에서 실행
 }
 

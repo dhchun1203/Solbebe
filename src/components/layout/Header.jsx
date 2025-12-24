@@ -23,6 +23,29 @@ const Header = () => {
   const productMenuRef = useRef(null)
   const productMenuButtonRef = useRef(null)
   
+  // 중첩된 user_metadata에서 가장 깊은 값을 가져오는 함수
+  const extractDeepestValue = useCallback((obj, key) => {
+    if (!obj || typeof obj !== 'object') return ''
+    
+    // 1. 가장 깊은 중첩 구조에서 찾기 (우선순위 1 - 재귀적으로)
+    if (obj.user_metadata && typeof obj.user_metadata === 'object') {
+      const nestedValue = extractDeepestValue(obj.user_metadata, key)
+      // 중첩된 값이 있으면 우선 반환 (빈 문자열이 아닌 경우)
+      if (nestedValue && nestedValue !== '') return nestedValue
+    }
+    
+    // 2. 현재 레벨에서 직접 찾기 (우선순위 2 - 중첩된 값이 없을 때만)
+    if (obj[key] && obj[key] !== null && obj[key] !== '') return obj[key]
+    
+    return ''
+  }, [])
+
+  // 사용자 이름 가져오기 (중첩된 user_metadata 처리)
+  const userName = useMemo(() => {
+    if (!user?.user_metadata) return '사용자'
+    return extractDeepestValue(user.user_metadata, 'name') || '사용자'
+  }, [user?.user_metadata, extractDeepestValue])
+
   // 메모이제이션된 값들
   const totalItems = useMemo(() => getTotalItems(), [getTotalItems, items])
   const isAdminUser = useMemo(() => isAdmin(), [isAdmin, user])
@@ -209,7 +232,7 @@ const Header = () => {
         <div className="container mx-auto px-4 py-2 md:py-3">
           <div className="flex items-center justify-between">
             {/* 로고 및 메뉴 */}
-            <div className="flex items-center gap-4 md:gap-8">
+            <div className="flex items-center gap-3 md:gap-8">
               {/* 로고 */}
               <Link to={ROUTES.HOME} className="flex items-center">
                 {/* 로고 이미지가 있으면 이미지 사용, 없으면 텍스트 표시 */}
@@ -232,6 +255,27 @@ const Header = () => {
                   Solbebe
                 </span>
               </Link>
+
+              {/* 모바일 햄버거 메뉴 버튼 */}
+              <button
+                ref={mobileMenuButtonRef}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsMobileMenuOpen(!isMobileMenuOpen)
+                }}
+                className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors z-50 relative flex items-center justify-center w-6 h-6"
+                aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+                type="button"
+              >
+                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
 
               {/* 데스크탑 메뉴 */}
               <nav className="hidden md:flex items-center gap-8">
@@ -292,27 +336,6 @@ const Header = () => {
 
             {/* 아이콘 버튼들 */}
             <div className="flex items-center gap-3 md:gap-4">
-              {/* 모바일 햄버거 메뉴 버튼 */}
-              <button
-                ref={mobileMenuButtonRef}
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  setIsMobileMenuOpen(!isMobileMenuOpen)
-                }}
-                className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors z-50 relative flex items-center justify-center w-6 h-6"
-                aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
-                type="button"
-              >
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {isMobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-
               {/* 검색 버튼 및 드롭다운 (데스크탑만) */}
               <div className="relative hidden md:block" ref={searchRef}>
                 <button
@@ -371,14 +394,18 @@ const Header = () => {
                   {isProfileMenuOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                       {/* 프로필 정보 */}
-                      <div className="px-4 py-3 border-b border-gray-100">
+                      <Link
+                        to={ROUTES.PROFILE}
+                        onClick={() => setIsProfileMenuOpen(false)}
+                        className="block px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                      >
                         <p className="text-sm font-semibold text-gray-800">
-                          {user.user_metadata?.name || '사용자'}
+                          {userName}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
                           {user.email}
                         </p>
-                      </div>
+                      </Link>
 
                       {/* 장바구니 메뉴 */}
                       <Link
@@ -663,14 +690,18 @@ const Header = () => {
           {/* 사용자 정보 섹션 */}
           {user ? (
             <div className="mt-auto p-4 border-t border-gray-200 bg-gray-50">
-              <div className="px-4 py-3">
+              <Link
+                to={ROUTES.PROFILE}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+              >
                 <p className="text-sm font-semibold text-gray-800">
-                  {user.user_metadata?.name || '사용자'}
+                  {userName}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   {user.email}
                 </p>
-              </div>
+              </Link>
               <button
                 type="button"
                 onClick={(e) => {

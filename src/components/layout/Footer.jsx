@@ -1,7 +1,13 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import TermsModal from '../common/TermsModal'
+import PrivacyModal from '../common/PrivacyModal'
 
 const Footer = () => {
+  const [isTermsOpen, setIsTermsOpen] = useState(false)
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false)
+
   return (
     <footer 
       className="bg-gradient-to-b from-white via-pastel-pink/30 to-pastel-pink/50 border-t border-white mt-12 md:mt-20 select-none pb-safe"
@@ -104,16 +110,26 @@ const Footer = () => {
             
             {/* 추가 정보 */}
             <div className="flex flex-wrap justify-center md:justify-end gap-4 text-xs text-gray-500">
-              <Link to="#" className="hover:text-pastel-pink-text transition-colors">
+              <button 
+                onClick={() => setIsTermsOpen(true)}
+                className="hover:text-pastel-pink-text transition-colors"
+              >
                 이용약관
-              </Link>
-              <Link to="#" className="hover:text-pastel-pink-text transition-colors">
+              </button>
+              <button 
+                onClick={() => setIsPrivacyOpen(true)}
+                className="hover:text-pastel-pink-text transition-colors"
+              >
                 개인정보처리방침
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* 모달 */}
+      <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
+      <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
     </footer>
   )
 }

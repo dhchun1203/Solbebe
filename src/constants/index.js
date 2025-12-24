@@ -31,6 +31,7 @@ export const ROUTES = {
   INQUIRY: '/inquiry',
   INQUIRY_SUCCESS: '/inquiry/success',
   MY_INQUIRIES: '/my-inquiries',
+  PROFILE: '/profile',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
   EMAIL_CONFIRM: '/auth/confirm',

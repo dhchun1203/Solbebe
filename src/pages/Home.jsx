@@ -330,24 +330,24 @@ const Home = () => {
         </div>
         
         {/* 통계 카드 */}
-        <div className="grid grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16 max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-pastel-pink-text mb-2">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mb-12 md:mb-16 max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-pastel-pink-text mb-1 sm:mb-2">
               {customerCount.toLocaleString()}+
             </div>
-            <div className="text-sm md:text-base text-gray-600">만족한 고객</div>
+            <div className="text-xs sm:text-sm md:text-base text-gray-600 whitespace-nowrap">만족한 고객</div>
           </div>
-          <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-pastel-blue-text mb-2">
+          <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-pastel-blue-text mb-1 sm:mb-2">
               {productCount}+
             </div>
-            <div className="text-sm md:text-base text-gray-600">다양한 상품</div>
+            <div className="text-xs sm:text-sm md:text-base text-gray-600 whitespace-nowrap">다양한 상품</div>
           </div>
-          <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-pastel-beige-text mb-2">
+          <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-pastel-beige-text mb-1 sm:mb-2">
               {yearCount}년
             </div>
-            <div className="text-sm md:text-base text-gray-600">경험과 노하우</div>
+            <div className="text-xs sm:text-sm md:text-base text-gray-600 whitespace-nowrap">경험과 노하우</div>
           </div>
         </div>
         

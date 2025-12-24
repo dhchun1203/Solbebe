@@ -13,6 +13,7 @@ const Inquiry = lazy(() => import('../pages/Inquiry'))
 const InquirySuccess = lazy(() => import('../pages/InquirySuccess'))
 const Cart = lazy(() => import('../pages/Cart'))
 const MyInquiries = lazy(() => import('../pages/MyInquiries'))
+const Profile = lazy(() => import('../pages/Profile'))
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('../pages/ResetPassword'))
 const EmailConfirm = lazy(() => import('../pages/EmailConfirm'))
@@ -93,6 +94,14 @@ export const router = createBrowserRouter(
           element: (
             <SuspenseWrapper>
               <MyInquiries />
+            </SuspenseWrapper>
+          ),
+        },
+        {
+          path: 'profile',
+          element: (
+            <SuspenseWrapper>
+              <Profile />
             </SuspenseWrapper>
           ),
         },
