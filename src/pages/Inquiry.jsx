@@ -161,18 +161,18 @@ const Inquiry = () => {
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8 max-w-2xl">
-      <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">구매 문의</h1>
+      <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-8">구매 문의</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 border border-transparent dark:border-gray-800">
         {/* 상품 정보 (읽기 전용) */}
         {isFromCart && cartItems.length > 0 ? (
           <div className="bg-pastel-beige rounded-xl p-3 md:p-4">
-            <h2 className="text-sm md:text-base font-semibold text-gray-800 mb-3">장바구니 상품 정보</h2>
+            <h2 className="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 mb-3">장바구니 상품 정보</h2>
             <div className="space-y-2">
               {cartItems.map((item, index) => (
                 <div key={index} className="border-b border-gray-200 pb-2 last:border-0 last:pb-0">
                   <p className="text-sm md:text-base text-gray-700 font-medium">{item.productName}</p>
-                  <div className="mt-1 flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs md:text-sm text-gray-600">
+                  <div className="mt-1 flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs md:text-sm text-gray-600 dark:text-gray-300">
                     {item.size && <span>사이즈: {item.size}</span>}
                     {item.color && <span>색상: {item.color}</span>}
                     <span>수량: {item.quantity}개</span>
@@ -184,9 +184,9 @@ const Inquiry = () => {
           </div>
         ) : selectedProduct && (
           <div className="bg-pastel-beige rounded-xl p-3 md:p-4">
-            <h2 className="text-sm md:text-base font-semibold text-gray-800 mb-2">상품 정보</h2>
+            <h2 className="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">상품 정보</h2>
             <p className="text-sm md:text-base text-gray-700">{selectedProduct.name}</p>
-            <div className="mt-2 flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs md:text-sm text-gray-600">
+            <div className="mt-2 flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs md:text-sm text-gray-600 dark:text-gray-300">
               {selectedSize && <span>사이즈: {selectedSize}</span>}
               {selectedColor && <span>색상: {selectedColor}</span>}
             </div>

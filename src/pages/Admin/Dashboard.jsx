@@ -76,17 +76,17 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8">
-      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 md:mb-6 lg:mb-8">
+      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-6 lg:mb-8">
         관리자 대시보드
       </h1>
 
       {/* 통계 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-        <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-gray-600 mb-1">전체 상품</p>
-              <p className="text-xl md:text-2xl font-bold text-gray-800">{stats.totalProducts}</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-1">전체 상품</p>
+              <p className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">{stats.totalProducts}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-pink rounded-full flex items-center justify-center flex-shrink-0">
               <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,11 +96,11 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-gray-600 mb-1">전체 문의</p>
-              <p className="text-xl md:text-2xl font-bold text-gray-800">{stats.totalInquiries}</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-1">전체 문의</p>
+              <p className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">{stats.totalInquiries}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full flex items-center justify-center flex-shrink-0">
               <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,11 +110,11 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-gray-600 mb-1">최근 7일 문의</p>
-              <p className="text-xl md:text-2xl font-bold text-gray-800">{stats.recentInquiries}</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-1">최근 7일 문의</p>
+              <p className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">{stats.recentInquiries}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-beige rounded-full flex items-center justify-center flex-shrink-0">
               <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,12 +126,12 @@ const Dashboard = () => {
       </div>
 
       {/* 빠른 액션 */}
-      <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100">
-        <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-4">빠른 액션</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 border border-gray-100 dark:border-gray-800">
+        <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 md:mb-4">빠른 액션</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           <button
             onClick={() => handleNavigate(ROUTES.ADMIN_PRODUCTS)}
-            className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg border-2 border-gray-200 hover:border-pastel-pink hover:bg-pastel-pink/5 transition-all cursor-pointer text-left w-full"
+            className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg border-2 border-gray-200 dark:border-gray-800 hover:border-pastel-pink hover:bg-pastel-pink/5 dark:hover:bg-gray-800/60 transition-all cursor-pointer text-left w-full"
           >
             <div className="w-8 h-8 md:w-10 md:h-10 bg-pastel-pink rounded-lg flex items-center justify-center flex-shrink-0">
               <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,8 +139,8 @@ const Dashboard = () => {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm md:text-base text-gray-800">상품 관리</p>
-              <p className="text-xs md:text-sm text-gray-600">상품 추가, 수정, 삭제</p>
+              <p className="font-semibold text-sm md:text-base text-gray-800 dark:text-gray-100">상품 관리</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">상품 추가, 수정, 삭제</p>
             </div>
             <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -149,7 +149,7 @@ const Dashboard = () => {
 
           <button
             onClick={() => handleNavigate(ROUTES.ADMIN_INQUIRIES)}
-            className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg border-2 border-gray-200 hover:border-pastel-blue hover:bg-pastel-blue/5 transition-all cursor-pointer text-left w-full"
+            className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg border-2 border-gray-200 dark:border-gray-800 hover:border-pastel-blue hover:bg-pastel-blue/5 dark:hover:bg-gray-800/60 transition-all cursor-pointer text-left w-full"
           >
             <div className="w-8 h-8 md:w-10 md:h-10 bg-pastel-blue rounded-lg flex items-center justify-center flex-shrink-0">
               <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,8 +157,8 @@ const Dashboard = () => {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm md:text-base text-gray-800">문의 관리</p>
-              <p className="text-xs md:text-sm text-gray-600">고객 문의 확인 및 관리</p>
+              <p className="font-semibold text-sm md:text-base text-gray-800 dark:text-gray-100">문의 관리</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">고객 문의 확인 및 관리</p>
             </div>
             <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

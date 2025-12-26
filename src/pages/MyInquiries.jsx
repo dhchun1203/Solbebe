@@ -62,7 +62,7 @@ const MyInquiries = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-16">
-          <p className="text-gray-600">로딩 중...</p>
+          <p className="text-gray-600 dark:text-gray-300">로딩 중...</p>
         </div>
       </div>
     )
@@ -70,12 +70,12 @@ const MyInquiries = () => {
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8">
-      <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">내 문의 내역</h1>
+      <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-8">내 문의 내역</h1>
 
       {inquiries.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl shadow-md">
+        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl shadow-md border border-transparent dark:border-gray-800">
           <div className="text-4xl md:text-6xl mb-4">📝</div>
-          <p className="text-gray-500 text-base md:text-lg mb-4">등록된 문의가 없습니다.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-base md:text-lg mb-4">등록된 문의가 없습니다.</p>
           <button
             onClick={() => navigate(ROUTES.PRODUCTS)}
             className="inline-block bg-gray-800 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-xl text-sm md:text-base hover:bg-gray-700 transition-colors"
@@ -88,17 +88,17 @@ const MyInquiries = () => {
           {inquiries.map((inquiry) => (
             <div
               key={inquiry.id}
-              className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100 hover:shadow-lg transition-shadow cursor-pointer"
+              className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow cursor-pointer"
               onClick={() => setSelectedInquiry(inquiry)}
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <p className="font-semibold text-gray-800 mb-1 text-sm md:text-base">
+                  <p className="font-semibold text-gray-800 dark:text-gray-100 mb-1 text-sm md:text-base">
                     {inquiry.name}
                   </p>
-                  <p className="text-xs md:text-sm text-gray-600">{inquiry.phone}</p>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">{inquiry.phone}</p>
                 </div>
-                <span className="text-xs text-gray-500 whitespace-nowrap ml-2">
+                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap ml-2">
                   {new Date(inquiry.created_at).toLocaleDateString('ko-KR', {
                     year: 'numeric',
                     month: 'short',
@@ -108,9 +108,9 @@ const MyInquiries = () => {
               </div>
 
               {inquiry.product && (
-                <div className="mb-3 pb-3 border-b border-gray-100">
+                <div className="mb-3 pb-3 border-b border-gray-100 dark:border-gray-800">
                   <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">상품:</p>
-                  <p className="text-xs md:text-sm text-gray-600">
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
                     {inquiry.product.name || '상품 정보 없음'}
                   </p>
                   {inquiry.product.images && inquiry.product.images.length > 0 && (
@@ -149,12 +149,12 @@ const MyInquiries = () => {
               {inquiry.message && (
                 <div>
                   <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">요청사항:</p>
-                  <p className="text-xs md:text-sm text-gray-600 line-clamp-2">{inquiry.message}</p>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{inquiry.message}</p>
                 </div>
               )}
 
               {/* 처리 상태 표시 */}
-              <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                 <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                   inquiry.status === 'completed' ? 'bg-green-100 text-green-800' :
                   inquiry.status === 'processing' ? 'bg-blue-100 text-blue-800' :
@@ -179,14 +179,14 @@ const MyInquiries = () => {
           onClick={() => setSelectedInquiry(null)}
         >
           <div
-            className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 md:p-6"
+            className="bg-white dark:bg-gray-900 rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 md:p-6 border border-transparent dark:border-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg md:text-xl font-bold text-gray-800">문의 상세</h2>
+              <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">문의 상세</h2>
               <button
                 onClick={() => setSelectedInquiry(null)}
-                className="text-gray-500 hover:text-gray-800 transition-colors"
+                className="text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -197,12 +197,12 @@ const MyInquiries = () => {
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-1">이름</p>
-                <p className="text-sm text-gray-800">{selectedInquiry.name}</p>
+                <p className="text-sm text-gray-800 dark:text-gray-100">{selectedInquiry.name}</p>
               </div>
 
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-1">연락처</p>
-                <p className="text-sm text-gray-800">{selectedInquiry.phone}</p>
+                <p className="text-sm text-gray-800 dark:text-gray-100">{selectedInquiry.phone}</p>
               </div>
 
               {selectedInquiry.product && (
@@ -217,11 +217,11 @@ const MyInquiries = () => {
                       />
                     )}
                     <div>
-                      <p className="text-sm text-gray-800 font-medium">
+                      <p className="text-sm text-gray-800 dark:text-gray-100 font-medium">
                         {selectedInquiry.product.name}
                       </p>
                       {selectedInquiry.product.price && (
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
                           {selectedInquiry.product.price.toLocaleString()}원
                         </p>
                       )}
@@ -256,7 +256,7 @@ const MyInquiries = () => {
               {selectedInquiry.message && (
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-1">요청사항</p>
-                  <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                  <p className="text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap">
                     {selectedInquiry.message}
                   </p>
                 </div>
@@ -264,7 +264,7 @@ const MyInquiries = () => {
 
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-1">문의 일시</p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-gray-600 dark:text-gray-300">
                   {new Date(selectedInquiry.created_at).toLocaleString('ko-KR')}
                 </p>
               </div>

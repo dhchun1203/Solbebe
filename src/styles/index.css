@@ -4,7 +4,7 @@
 
 body {
   font-family: 'Gowun Dodum', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  @apply bg-white text-gray-800;
+  @apply bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100;
 }
 
 /* 모든 텍스트 요소에 고운 도움 폰트 적용 */

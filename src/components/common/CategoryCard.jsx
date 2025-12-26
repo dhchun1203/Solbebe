@@ -15,7 +15,7 @@ const CategoryCard = memo(({ category, description, bgImage }) => {
   return (
     <Link
       to={linkUrl}
-      className="group relative block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border border-gray-100"
+      className="group relative block bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border border-gray-100 dark:border-gray-800"
     >
       {/* 배경 이미지 (블러 처리) */}
       {bgImage && (
@@ -42,14 +42,14 @@ const CategoryCard = memo(({ category, description, bgImage }) => {
         <h3 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-3 transition-colors duration-300 ${
           bgImage 
             ? 'text-white drop-shadow-lg group-hover:text-pastel-pink-text' 
-            : 'text-gray-800 group-hover:text-pastel-pink-text'
+            : 'text-gray-800 dark:text-gray-100 group-hover:text-pastel-pink-text'
         }`}>
           {category}
         </h3>
         <p className={`text-sm md:text-base lg:text-lg leading-relaxed ${
           bgImage 
             ? 'text-white/90 drop-shadow-md' 
-            : 'text-gray-600'
+            : 'text-gray-600 dark:text-gray-300'
         }`}>
           {description}
         </p>

@@ -19,7 +19,7 @@ const ProductCard = memo(({ product }) => {
   return (
     <Link 
       to={`${ROUTES.PRODUCTS}/${id}`}
-      className="group block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+      className="group block bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800"
     >
       {/* 이미지 */}
       <div className="aspect-square overflow-hidden bg-pastel-beige relative">
@@ -39,7 +39,7 @@ const ProductCard = memo(({ product }) => {
         <span className="text-xs text-pastel-pink-text font-medium uppercase tracking-wide">
           {category}
         </span>
-        <h3 className="text-sm md:text-lg font-semibold text-gray-800 mt-1 line-clamp-2 group-hover:text-pastel-pink-text transition-colors duration-300">
+        <h3 className="text-sm md:text-lg font-semibold text-gray-800 dark:text-gray-100 mt-1 line-clamp-2 group-hover:text-pastel-pink-text transition-colors duration-300">
           {name}
         </h3>
         <p className="text-base md:text-xl font-medium text-pastel-pink-text mt-2">

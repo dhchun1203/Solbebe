@@ -58,7 +58,7 @@ const ResetPassword = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">비밀번호 재설정</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">비밀번호 재설정</h1>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

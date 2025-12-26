@@ -90,9 +90,9 @@ const AdminLayout = () => {
 
   return (
     <AdminRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         {/* 관리자 헤더 */}
-        <header className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
+        <header className="bg-white dark:bg-gray-950 shadow-md border-b border-gray-200 dark:border-gray-800/60 sticky top-0 z-40">
           <div className="container mx-auto px-4 py-3 md:py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 md:gap-4">
@@ -100,7 +100,7 @@ const AdminLayout = () => {
                 <button
                   data-sidebar-toggle
                   onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                  className="md:hidden text-gray-800 hover:text-pastel-pink-text transition-colors p-2"
+                  className="md:hidden text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors p-2"
                   aria-label="메뉴"
                   type="button"
                 >
@@ -113,16 +113,16 @@ const AdminLayout = () => {
                   </svg>
                 </button>
                 
-                <Link to={ROUTES.HOME} className="text-lg md:text-xl font-bold text-gray-800">
+                <Link to={ROUTES.HOME} className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">
                   Solbebe
                 </Link>
                 <span className="hidden sm:inline text-gray-400">|</span>
-                <span className="hidden sm:inline text-xs md:text-sm text-gray-600">관리자</span>
+                <span className="hidden sm:inline text-xs md:text-sm text-gray-600 dark:text-gray-300">관리자</span>
               </div>
               <div className="flex items-center gap-2 md:gap-4">
                 <Link
                   to={ROUTES.HOME}
-                  className="text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 md:px-0 md:py-0"
+                  className="text-xs md:text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors px-2 py-1 md:px-0 md:py-0"
                 >
                   <span className="hidden sm:inline">홈으로</span>
                   <span className="sm:hidden">홈</span>
@@ -130,7 +130,7 @@ const AdminLayout = () => {
                 <button
                   onClick={handleSignOut}
                   disabled={loading}
-                  className="text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1 md:px-0 md:py-0"
+                  className="text-xs md:text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1 md:px-0 md:py-0"
                 >
                   {loading ? '로그아웃 중...' : '로그아웃'}
                 </button>
@@ -156,7 +156,7 @@ const AdminLayout = () => {
                 isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
               }`}
             >
-              <nav className="bg-white rounded-xl shadow-md p-4 h-full md:h-auto overflow-y-auto relative z-50">
+              <nav className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 h-full md:h-auto overflow-y-auto relative z-50 border border-transparent dark:border-gray-800">
                 <ul className="space-y-2">
                   {menuItems.map((item) => {
                     // 경로 매칭 개선: /admin과 /admin/dashboard 모두 대시보드로 인식
@@ -176,7 +176,7 @@ const AdminLayout = () => {
                           className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left ${
                             isActive
                               ? 'bg-pastel-pink text-white font-semibold'
-                              : 'text-gray-700 hover:bg-gray-100'
+                              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/60'
                           }`}
                         >
                           <span className="text-lg">{item.icon}</span>

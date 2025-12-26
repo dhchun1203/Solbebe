@@ -49,25 +49,43 @@ const Home = () => {
     // 모바일에서는 비활성화 (768px 미만)
     const isMobile = window.innerWidth < 768
     if (isMobile) return
+
+    // 사용자가 모션 감소를 켜둔 경우 비활성화
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) return
     
-    const handleMouseMove = (e) => {
+    let rafId = null
+    let lastClientX = 0
+    let lastClientY = 0
+
+    const applyTransform = () => {
+      rafId = null
       const heroElement = heroRef.current
       if (!heroElement) return
-      
+
       const rect = heroElement.getBoundingClientRect()
       const centerX = rect.left + rect.width / 2
       const centerY = rect.top + rect.height / 2
-      
-      const moveX = (e.clientX - centerX) / 30
-      const moveY = (e.clientY - centerY) / 30
-      
+
+      const moveX = (lastClientX - centerX) / 30
+      const moveY = (lastClientY - centerY) / 30
+
       heroElement.style.transform = `translate(${moveX}px, ${moveY}px)`
+    }
+
+    const handleMouseMove = (e) => {
+      lastClientX = e.clientX
+      lastClientY = e.clientY
+      if (rafId) return
+      rafId = window.requestAnimationFrame(applyTransform)
     }
     
     window.addEventListener('mousemove', handleMouseMove)
     
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      if (rafId) window.cancelAnimationFrame(rafId)
+      if (heroRef.current) heroRef.current.style.transform = ''
     }
   }, [])
   
@@ -162,9 +180,9 @@ const Home = () => {
   }, [fetchRecommendedProducts])
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white dark:bg-gray-950">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-pastel-pink/30 via-pastel-pink/10 to-white py-16 md:py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-b from-pastel-pink/30 via-pastel-pink/10 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 py-16 md:py-24 lg:py-32 overflow-hidden">
         {/* 배경 장식 요소 */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-10 w-32 h-32 bg-pastel-pink/20 rounded-full blur-3xl animate-pulse"></div>
@@ -185,16 +203,16 @@ const Home = () => {
               </span>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight animate-fade-in-up animate-delay-100">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-6 leading-tight animate-fade-in-up animate-delay-100">
               Soft & Cozy<br />Babywear
             </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
               우리 아기를 위한 최고의 선택, 부드럽고 편안한 의류를 만나보세요
             </p>
             <div className="animate-fade-in-up animate-delay-300">
               <Link
                 to={ROUTES.PRODUCTS}
-                className="inline-block bg-pastel-pink-text text-white px-8 py-4 md:px-10 md:py-5 rounded-2xl text-base md:text-lg font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 transform hover:rotate-1"
+                className="inline-block bg-pastel-pink-text text-white px-8 py-4 md:px-10 md:py-5 rounded-2xl text-base md:text-lg font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 transform"
               >
                 지금 보러가기
               </Link>
@@ -206,7 +224,7 @@ const Home = () => {
       {/* Category Quick Menu */}
       <section 
         ref={categorySection.ref}
-        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-pink/10 transition-all duration-700 ${
+        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-pink/10 dark:from-gray-950 dark:to-gray-950 transition-all duration-700 ${
           categorySection.isVisible ? 'animate-fade-in-up' : 'opacity-0'
         }`}
       >
@@ -216,10 +234,10 @@ const Home = () => {
               Categories
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 md:mb-4">
             아기에게 필요한 모든 것
           </h2>
-          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             부드럽고 안전한 소재로 만든 다양한 카테고리의 의류를 만나보세요
           </p>
         </div>
@@ -247,7 +265,7 @@ const Home = () => {
       {/* Recommended Products */}
       <section 
         ref={productSection.ref}
-        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-pastel-pink/10 to-white transition-all duration-700 ${
+        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-pastel-pink/10 to-white dark:from-gray-950 dark:to-gray-950 transition-all duration-700 ${
           productSection.isVisible ? 'animate-fade-in-up' : 'opacity-0'
         }`}
       >
@@ -257,25 +275,25 @@ const Home = () => {
               Featured Products
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 md:mb-4">
             추천 상품
           </h2>
-          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             엄선된 베스트 아이템으로 우리 아기를 더욱 특별하게
           </p>
         </div>
         {loading ? (
           <div className="text-center py-8 md:py-12">
-            <div className="mb-4">로딩 중...</div>
-            <div className="text-sm text-gray-500">
+            <div className="mb-4 text-gray-800 dark:text-gray-100">로딩 중...</div>
+            <div className="text-sm text-gray-500 dark:text-gray-300">
               {import.meta.env.DEV && (
-                <div className="mt-4 p-4 bg-yellow-50 rounded-lg text-left max-w-2xl mx-auto">
+                <div className="mt-4 p-4 bg-yellow-50 dark:bg-gray-900 rounded-lg text-left max-w-2xl mx-auto border border-transparent dark:border-gray-800">
                   <p className="font-semibold mb-2">🔍 디버깅 정보:</p>
                   <p className="text-xs mb-1">1. 브라우저 개발자 도구 (F12) → Network 탭 열기</p>
                   <p className="text-xs mb-1">2. "products" 요청 찾기</p>
                   <p className="text-xs mb-1">3. Status Code 확인:</p>
                   <p className="text-xs ml-4">- 401/403: RLS 정책 문제 → Supabase SQL Editor에서 실행:</p>
-                  <p className="text-xs ml-8 font-mono bg-gray-100 p-1 rounded">ALTER TABLE products DISABLE ROW LEVEL SECURITY;</p>
+                  <p className="text-xs ml-8 font-mono bg-gray-100 dark:bg-gray-800 p-1 rounded">ALTER TABLE products DISABLE ROW LEVEL SECURITY;</p>
                   <p className="text-xs ml-4">- pending: 네트워크 문제</p>
                   <p className="text-xs ml-4">- 200: 정상 (데이터 확인 필요)</p>
                 </div>
@@ -284,9 +302,9 @@ const Home = () => {
           </div>
         ) : recommendedProducts.length === 0 ? (
           <div className="text-center py-8 md:py-12">
-            <p className="text-gray-500 mb-4">상품이 없습니다.</p>
+            <p className="text-gray-500 dark:text-gray-300 mb-4">상품이 없습니다.</p>
             {import.meta.env.DEV && (
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-gray-400 dark:text-gray-400">
                 <p>Supabase에서 상품 데이터를 확인하세요.</p>
                 <p className="mt-2">Table Editor → products 테이블</p>
               </div>
@@ -314,7 +332,7 @@ const Home = () => {
       {/* Brand Story Section */}
       <section 
         ref={brandSection.ref}
-        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-beige/20 transition-all duration-700 ${
+        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-beige/20 dark:from-gray-950 dark:to-gray-950 transition-all duration-700 ${
           brandSection.isVisible ? 'animate-fade-in-up' : 'opacity-0'
         }`}
       >
@@ -324,30 +342,30 @@ const Home = () => {
               Our Story
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 md:mb-4">
             Solbebe 이야기
           </h2>
         </div>
         
         {/* 통계 카드 */}
         <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mb-12 md:mb-16 max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center border border-transparent dark:border-gray-800">
             <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-pastel-pink-text mb-1 sm:mb-2">
               {customerCount.toLocaleString()}+
             </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 whitespace-nowrap">만족한 고객</div>
+            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 whitespace-nowrap">만족한 고객</div>
           </div>
-          <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center border border-transparent dark:border-gray-800">
             <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-pastel-blue-text mb-1 sm:mb-2">
               {productCount}+
             </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 whitespace-nowrap">다양한 상품</div>
+            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 whitespace-nowrap">다양한 상품</div>
           </div>
-          <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center border border-transparent dark:border-gray-800">
             <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-pastel-beige-text mb-1 sm:mb-2">
               {yearCount}년
             </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 whitespace-nowrap">경험과 노하우</div>
+            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 whitespace-nowrap">경험과 노하우</div>
           </div>
         </div>
         
@@ -362,30 +380,30 @@ const Home = () => {
             />
           </div>
           <div className="space-y-4 md:space-y-6 order-1 md:order-2">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               우리의 약속
             </h3>
-            <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
               Solbebe는 우리 아이들이 가장 편안하고 건강하게 자랄 수 있도록
               최고의 소재와 디자인으로 제작된 아기 의류를 제공합니다.
             </p>
-            <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
               모든 제품은 아기의 부드러운 피부를 고려하여 선택된 원단으로
               만들어지며, 세탁 후에도 변형이 적고 오래 지속됩니다.
             </p>
             <div className="pt-4">
               <div className="flex flex-wrap gap-3">
-                <div className="flex items-center gap-2 bg-pastel-pink/20 rounded-full px-4 py-2 hover:bg-pastel-pink/30 transition-colors duration-300 cursor-default">
+                <div className="flex items-center gap-2 bg-pastel-pink/20 dark:bg-gray-800/60 rounded-full px-4 py-2 hover:bg-pastel-pink/30 dark:hover:bg-gray-800 transition-colors duration-300 cursor-default">
                   <span className="text-2xl">✨</span>
-                  <span className="text-sm font-medium text-gray-700">프리미엄 소재</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">프리미엄 소재</span>
                 </div>
-                <div className="flex items-center gap-2 bg-pastel-blue/20 rounded-full px-4 py-2 hover:bg-pastel-blue/30 transition-colors duration-300 cursor-default">
+                <div className="flex items-center gap-2 bg-pastel-blue/20 dark:bg-gray-800/60 rounded-full px-4 py-2 hover:bg-pastel-blue/30 dark:hover:bg-gray-800 transition-colors duration-300 cursor-default">
                   <span className="text-2xl">🌿</span>
-                  <span className="text-sm font-medium text-gray-700">친환경</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">친환경</span>
                 </div>
-                <div className="flex items-center gap-2 bg-pastel-beige/30 rounded-full px-4 py-2 hover:bg-pastel-beige/40 transition-colors duration-300 cursor-default">
+                <div className="flex items-center gap-2 bg-pastel-beige/30 dark:bg-gray-800/60 rounded-full px-4 py-2 hover:bg-pastel-beige/40 dark:hover:bg-gray-800 transition-colors duration-300 cursor-default">
                   <span className="text-2xl">💝</span>
-                  <span className="text-sm font-medium text-gray-700">사랑으로 제작</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">사랑으로 제작</span>
                 </div>
               </div>
             </div>

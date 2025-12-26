@@ -156,9 +156,9 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <p className="text-xl font-semibold text-gray-700 mb-2">상품을 찾을 수 없습니다.</p>
-        <p className="text-gray-500 mb-4">상품 ID: {id}</p>
-        <p className="text-sm text-gray-400">
+        <p className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">상품을 찾을 수 없습니다.</p>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">상품 ID: {id}</p>
+        <p className="text-sm text-gray-400 dark:text-gray-500">
           브라우저 콘솔(F12)에서 에러 메시지를 확인해주세요.
         </p>
       </div>
@@ -227,7 +227,7 @@ const ProductDetail = () => {
                       className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 select-none min-w-[64px] md:min-w-[80px] ${
                         selectedImageIndex === index
                           ? 'border-pastel-pink'
-                          : 'border-transparent hover:border-gray-300'
+                          : 'border-transparent hover:border-gray-300 dark:hover:border-gray-600'
                       }`}
                     >
                       <img
@@ -244,20 +244,20 @@ const ProductDetail = () => {
                 </div>
               )}
               {selectedColor && filteredImages.length === 0 && (
-                <p className="text-sm text-gray-500 mt-2 text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-300 mt-2 text-center">
                   {selectedColor} 색상의 이미지를 찾을 수 없습니다.
                 </p>
               )}
             </>
           ) : product.images && product.images.length > 0 ? (
             <div className="aspect-square bg-pastel-beige rounded-xl flex items-center justify-center">
-              <p className="text-gray-400">
+              <p className="text-gray-400 dark:text-gray-300">
                 {selectedColor ? `${selectedColor} 색상의 이미지를 선택해주세요.` : '이미지 준비 중입니다'}
               </p>
             </div>
           ) : (
             <div className="aspect-square bg-pastel-beige rounded-xl flex items-center justify-center">
-              <p className="text-gray-400">이미지 준비 중입니다</p>
+              <p className="text-gray-400 dark:text-gray-300">이미지 준비 중입니다</p>
             </div>
           )}
         </div>
@@ -267,7 +267,7 @@ const ProductDetail = () => {
           <span className="text-xs md:text-sm text-pastel-pink-text font-medium uppercase">
             {product.category}
           </span>
-          <h1 className="text-xl md:text-3xl font-bold text-gray-800 mt-2 mb-3 md:mb-4">
+          <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mt-2 mb-3 md:mb-4">
             {product.name}
           </h1>
           <p className="text-2xl md:text-3xl font-bold text-pastel-pink-text mb-4 md:mb-6">
@@ -279,12 +279,12 @@ const ProductDetail = () => {
             <div className="flex text-yellow-400">
               {'★'.repeat(5)}
             </div>
-            <span className="text-sm text-gray-500">(4.8)</span>
+            <span className="text-sm text-gray-500 dark:text-gray-300">(4.8)</span>
           </div>
 
           {/* 사이즈 선택 */}
           <div className="mb-4 md:mb-6">
-            <label className="block text-sm md:text-base text-gray-700 font-medium mb-2">사이즈</label>
+            <label className="block text-sm md:text-base text-gray-700 dark:text-gray-200 font-medium mb-2">사이즈</label>
             <div className="flex flex-wrap gap-2">
               {product.sizes?.map((size) => (
                 <button
@@ -293,7 +293,7 @@ const ProductDetail = () => {
                   className={`px-3 md:px-5 py-1.5 md:py-2 text-xs md:text-sm rounded-xl border-2 transition-all ${
                     selectedSize === size
                       ? 'border-pastel-pink-text bg-pastel-pink-text text-white'
-                      : 'border-gray-300 hover:border-pastel-pink'
+                      : 'border-gray-300 dark:border-gray-700 hover:border-pastel-pink dark:hover:border-pastel-pink bg-white/70 dark:bg-gray-900/40'
                   }`}
                 >
                   {size}
@@ -304,7 +304,7 @@ const ProductDetail = () => {
 
           {/* 색상 선택 */}
           <div className="mb-6 md:mb-8">
-            <label className="block text-sm md:text-base text-gray-700 font-medium mb-2">색상</label>
+            <label className="block text-sm md:text-base text-gray-700 dark:text-gray-200 font-medium mb-2">색상</label>
             <div className="flex flex-wrap gap-2">
               {product.colors?.map((color) => (
                 <button
@@ -313,7 +313,7 @@ const ProductDetail = () => {
                   className={`px-3 md:px-5 py-1.5 md:py-2 text-xs md:text-sm rounded-xl border-2 transition-all ${
                     selectedColor === color
                       ? 'border-pastel-pink-text bg-pastel-pink-text text-white'
-                      : 'border-gray-300 hover:border-pastel-pink'
+                      : 'border-gray-300 dark:border-gray-700 hover:border-pastel-pink dark:hover:border-pastel-pink bg-white/70 dark:bg-gray-900/40'
                   }`}
                 >
                   {color}
@@ -413,13 +413,13 @@ const ProductDetail = () => {
 
       {/* 설명 탭 */}
       <div className="mb-6 md:mb-8">
-        <div className="flex gap-2 md:gap-4 border-b border-gray-200 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 md:gap-4 border-b border-gray-200 dark:border-gray-800 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setActiveTab('info')}
             className={`px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium transition-colors whitespace-nowrap ${
               activeTab === 'info'
                 ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
-                : 'text-gray-500'
+                : 'text-gray-500 dark:text-gray-300'
             }`}
           >
             상품 정보
@@ -429,7 +429,7 @@ const ProductDetail = () => {
             className={`px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium transition-colors whitespace-nowrap ${
               activeTab === 'material'
                 ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
-                : 'text-gray-500'
+                : 'text-gray-500 dark:text-gray-300'
             }`}
           >
             원단 정보
@@ -439,22 +439,22 @@ const ProductDetail = () => {
             className={`px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium transition-colors whitespace-nowrap ${
               activeTab === 'shipping'
                 ? 'text-pastel-pink-text border-b-2 border-pastel-pink'
-                : 'text-gray-500'
+                : 'text-gray-500 dark:text-gray-300'
             }`}
           >
             배송 안내
           </button>
         </div>
 
-        <div className="mt-4 md:mt-6 p-4 md:p-6 bg-white rounded-xl shadow-md">
+        <div className="mt-4 md:mt-6 p-4 md:p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md border border-transparent dark:border-gray-800">
           {activeTab === 'info' && (
-            <p className="text-sm md:text-base text-gray-600 leading-relaxed">{product.description}</p>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-200 leading-relaxed">{product.description}</p>
           )}
           {activeTab === 'material' && (
-            <p className="text-sm md:text-base text-gray-600 leading-relaxed">{product.material}</p>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-200 leading-relaxed">{product.material}</p>
           )}
           {activeTab === 'shipping' && (
-            <div className="text-sm md:text-base text-gray-600 leading-relaxed space-y-2">
+            <div className="text-sm md:text-base text-gray-600 dark:text-gray-200 leading-relaxed space-y-2">
               <p>• 배송비: 3,000원 (50,000원 이상 구매 시 무료배송)</p>
               <p>• 배송 소요: 2-3일</p>
               <p>• 제주 및 도서산간 지역 추가 배송비 발생</p>

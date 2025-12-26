@@ -29,7 +29,7 @@ const Cart = () => {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center py-16">
-          <p className="text-gray-600">로딩 중...</p>
+          <p className="text-gray-600 dark:text-gray-300">로딩 중...</p>
         </div>
       </div>
     )
@@ -38,10 +38,10 @@ const Cart = () => {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
-        <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">장바구니</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-8">장바구니</h1>
         <div className="text-center py-8 md:py-16">
           <div className="text-4xl md:text-6xl mb-3 md:mb-4">🛒</div>
-          <p className="text-base md:text-xl text-gray-600 mb-4">장바구니가 비어있습니다</p>
+          <p className="text-base md:text-xl text-gray-600 dark:text-gray-300 mb-4">장바구니가 비어있습니다</p>
           <Link
             to="/products"
             className="inline-block bg-gray-800 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-xl text-sm md:text-base hover:bg-gray-700 transition-colors"
@@ -56,10 +56,10 @@ const Cart = () => {
   return (
     <div className="container mx-auto px-4 py-4 md:py-8">
       <div className="flex items-center justify-between mb-4 md:mb-8">
-        <h1 className="text-xl md:text-3xl font-bold text-gray-800">장바구니</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100">장바구니</h1>
         <button
           onClick={clearCart}
-          className="text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors"
+          className="text-xs md:text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors"
         >
           전체 삭제
         </button>
@@ -71,7 +71,7 @@ const Cart = () => {
           {items.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md p-3 md:p-4 flex flex-col sm:flex-row gap-3 md:gap-4"
+              className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-3 md:p-4 flex flex-col sm:flex-row gap-3 md:gap-4 border border-transparent dark:border-gray-800"
             >
               {/* 상품 이미지 */}
               <Link
@@ -89,11 +89,11 @@ const Cart = () => {
               <div className="flex-1 min-w-0">
                 <Link
                   to={`/products/${item.productId}`}
-                  className="text-base md:text-lg font-semibold text-gray-800 hover:text-pastel-pink-text transition-colors block mb-1"
+                  className="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-pastel-pink-text transition-colors block mb-1"
                 >
                   {item.product.name}
                 </Link>
-                <div className="text-xs md:text-sm text-gray-600 mb-3 md:mb-0">
+                <div className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-3 md:mb-0">
                   {item.size && <span>사이즈: {item.size} </span>}
                   {item.color && <span>색상: {item.color}</span>}
                 </div>
@@ -132,19 +132,19 @@ const Cart = () => {
 
         {/* 주문 요약 */}
         <div className="md:col-span-1">
-          <div className="bg-white rounded-xl shadow-md p-4 md:p-6 sticky top-20 md:top-24">
-            <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-4">주문 요약</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 sticky top-20 md:top-24 border border-transparent dark:border-gray-800">
+            <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 md:mb-4">주문 요약</h2>
             <div className="space-y-2 mb-3 md:mb-4">
-              <div className="flex justify-between text-sm md:text-base text-gray-600">
+              <div className="flex justify-between text-sm md:text-base text-gray-600 dark:text-gray-300">
                 <span>상품 금액</span>
                 <span>{totalPrice.toLocaleString()}원</span>
               </div>
-              <div className="flex justify-between text-sm md:text-base text-gray-600">
+              <div className="flex justify-between text-sm md:text-base text-gray-600 dark:text-gray-300">
                 <span>배송비</span>
                 <span>무료</span>
               </div>
               <div className="border-t border-gray-200 pt-2 mt-2">
-                <div className="flex justify-between text-base md:text-lg font-bold text-gray-800">
+                <div className="flex justify-between text-base md:text-lg font-bold text-gray-800 dark:text-gray-100">
                   <span>총 결제금액</span>
                   <span className="text-pastel-pink-text">
                     {totalPrice.toLocaleString()}원
@@ -174,7 +174,7 @@ const Cart = () => {
             </button>
             <Link
               to="/products"
-              className="block text-center text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors mt-3 md:mt-4"
+              className="block text-center text-xs md:text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors mt-3 md:mt-4"
             >
               쇼핑 계속하기
             </Link>

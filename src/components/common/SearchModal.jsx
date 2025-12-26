@@ -36,7 +36,7 @@ const SearchModal = ({ isOpen, onClose }) => {
       onKeyDown={handleKeyDown}
     >
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-2xl"
+        className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-2xl border border-transparent dark:border-gray-800"
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit} className="p-4 md:p-6">
@@ -48,7 +48,7 @@ const SearchModal = ({ isOpen, onClose }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="상품을 검색하세요..."
-                className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base border border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                 onKeyDown={handleKeyDown}
               />
             </div>
@@ -62,7 +62,7 @@ const SearchModal = ({ isOpen, onClose }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 md:py-3 text-sm md:text-base text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-4 py-2.5 md:py-3 text-sm md:text-base text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors"
               >
                 취소
               </button>

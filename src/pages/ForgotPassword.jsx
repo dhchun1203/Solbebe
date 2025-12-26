@@ -56,8 +56,8 @@ const ForgotPassword = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">비밀번호 찾기</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">비밀번호 찾기</h1>
+        <p className="text-gray-600 dark:text-gray-300 mb-6">
           가입하신 이메일 주소를 입력하시면 비밀번호 재설정 링크를 보내드립니다.
         </p>
         

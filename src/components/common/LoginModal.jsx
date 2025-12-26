@@ -64,18 +64,18 @@ const LoginModal = ({ isOpen, onClose }) => {
       onKeyDown={handleKeyDown}
     >
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-md my-auto"
+        className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-md my-auto border border-transparent dark:border-gray-800"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 md:p-6">
           {/* 헤더 */}
           <div className="flex items-center justify-between mb-4 md:mb-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
               {isLogin ? '로그인' : '회원가입'}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-800 transition-colors"
+              className="text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -87,7 +87,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             {!isLogin && (
               <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   이름
                 </label>
                 <input
@@ -95,14 +95,14 @@ const LoginModal = ({ isOpen, onClose }) => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="이름을 입력하세요"
-                  className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                  className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                   required={!isLogin}
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 이메일
               </label>
               <input
@@ -110,13 +110,13 @@ const LoginModal = ({ isOpen, onClose }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일을 입력하세요"
-                className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 비밀번호
               </label>
               <input
@@ -124,14 +124,14 @@ const LoginModal = ({ isOpen, onClose }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                 required
               />
             </div>
 
             {!isLogin && (
               <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   비밀번호 확인
                 </label>
                 <input
@@ -139,7 +139,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="비밀번호를 다시 입력하세요"
-                  className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+                  className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink-text bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                   required={!isLogin}
                 />
               </div>
@@ -166,7 +166,7 @@ const LoginModal = ({ isOpen, onClose }) => {
               <Link
                 to="/forgot-password"
                 onClick={onClose}
-                className="text-xs md:text-sm text-gray-600 hover:text-pastel-pink-text transition-colors"
+                className="text-xs md:text-sm text-gray-600 dark:text-gray-300 hover:text-pastel-pink-text transition-colors"
               >
                 비밀번호를 잊으셨나요?
               </Link>
@@ -180,7 +180,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                 setIsLogin(!isLogin)
                 clearError()
               }}
-              className="text-xs md:text-sm text-gray-600 hover:text-pastel-pink-text transition-colors"
+              className="text-xs md:text-sm text-gray-600 dark:text-gray-300 hover:text-pastel-pink-text transition-colors"
             >
               {isLogin ? (
                 <>

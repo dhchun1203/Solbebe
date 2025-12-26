@@ -24,10 +24,10 @@ const InquirySuccess = () => {
         </div>
 
         {/* 성공 메시지 */}
-        <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-3 md:mb-4 px-2">
+        <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-3 md:mb-4 px-2">
           문의가 정상적으로 접수되었습니다!
         </h1>
-        <p className="text-sm md:text-base text-gray-600 mb-6 md:mb-8 px-2">
+        <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-6 md:mb-8 px-2">
           입력해주신 연락처로 빠른 시일 내에 답변 드리겠습니다.
           감사합니다.
         </p>

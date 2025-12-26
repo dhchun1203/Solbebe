@@ -126,7 +126,7 @@ const EmailConfirm = () => {
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto border-4 border-pastel-pink border-t-transparent rounded-full animate-spin"></div>
             </div>
-            <p className="text-lg text-gray-600">{message}</p>
+            <p className="text-lg text-gray-600 dark:text-gray-300">{message}</p>
           </>
         ) : status === 'success' ? (
           <>
@@ -147,10 +147,10 @@ const EmailConfirm = () => {
                 </svg>
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               인증 완료!
             </h1>
-            <p className="text-gray-600 mb-8">{message}</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-8">{message}</p>
           </>
         ) : (
           <>
@@ -171,10 +171,10 @@ const EmailConfirm = () => {
                 </svg>
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               인증 실패
             </h1>
-            <p className="text-gray-600 mb-8">{message}</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-8">{message}</p>
             <button
               onClick={() => navigate('/')}
               className="inline-block bg-gray-800 text-white px-8 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors"

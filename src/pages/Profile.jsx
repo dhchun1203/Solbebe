@@ -762,7 +762,7 @@ const Profile = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-16">
-          <p className="text-gray-600">로딩 중...</p>
+          <p className="text-gray-600 dark:text-gray-300">로딩 중...</p>
         </div>
       </div>
     )
@@ -770,7 +770,7 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8">
-      <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">내 프로필</h1>
+      <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6 md:mb-8">내 프로필</h1>
 
       {/* 탭 메뉴 */}
       <div className="flex gap-2 mb-6 border-b border-gray-200">
@@ -779,7 +779,7 @@ const Profile = () => {
           className={`px-4 py-2 text-sm md:text-base font-medium transition-colors ${
             activeTab === 'info'
               ? 'text-pastel-pink-text border-b-2 border-pastel-pink-text'
-              : 'text-gray-600 hover:text-gray-800'
+              : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'
           }`}
         >
           가입정보
@@ -789,7 +789,7 @@ const Profile = () => {
           className={`px-4 py-2 text-sm md:text-base font-medium transition-colors ${
             activeTab === 'edit'
               ? 'text-pastel-pink-text border-b-2 border-pastel-pink-text'
-              : 'text-gray-600 hover:text-gray-800'
+              : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'
           }`}
         >
           정보 수정
@@ -804,7 +804,7 @@ const Profile = () => {
           className={`px-4 py-2 text-sm md:text-base font-medium transition-colors ${
             activeTab === 'inquiries'
               ? 'text-pastel-pink-text border-b-2 border-pastel-pink-text'
-              : 'text-gray-600 hover:text-gray-800'
+              : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'
           }`}
         >
           구매(문의) 내역
@@ -833,26 +833,26 @@ const Profile = () => {
         const displayPhone = extractValue(flattened, 'phone') || extractValue(user.user_metadata, 'phone') || '미입력'
         
         return (
-          <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800">
             <div className="space-y-6">
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-2 block">이름</label>
-                <p className="text-base text-gray-800">{displayName}</p>
+                <p className="text-base text-gray-800 dark:text-gray-100">{displayName}</p>
               </div>
               
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-2 block">이메일</label>
-                <p className="text-base text-gray-800">{user.email}</p>
+                <p className="text-base text-gray-800 dark:text-gray-100">{user.email}</p>
               </div>
               
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-2 block">전화번호</label>
-                <p className="text-base text-gray-800">{displayPhone}</p>
+                <p className="text-base text-gray-800 dark:text-gray-100">{displayPhone}</p>
               </div>
             
             <div>
               <label className="text-sm font-semibold text-gray-700 mb-2 block">가입일</label>
-              <p className="text-base text-gray-800">
+              <p className="text-base text-gray-800 dark:text-gray-100">
                 {new Date(user.created_at).toLocaleDateString('ko-KR', {
                   year: 'numeric',
                   month: 'long',
@@ -880,7 +880,7 @@ const Profile = () => {
 
       {/* 정보 수정 탭 */}
       {activeTab === 'edit' && (
-        <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800">
           <div className="space-y-6">
             <div>
               <label className="text-sm font-semibold text-gray-700 mb-2 block">이름</label>
@@ -894,13 +894,13 @@ const Profile = () => {
                   placeholder="이름을 입력하세요"
                 />
               ) : (
-                <p className="text-base text-gray-800">{editForm.name || '미입력'}</p>
+                <p className="text-base text-gray-800 dark:text-gray-100">{editForm.name || '미입력'}</p>
               )}
             </div>
             
             <div>
               <label className="text-sm font-semibold text-gray-700 mb-2 block">이메일</label>
-              <p className="text-base text-gray-800">{user.email}</p>
+              <p className="text-base text-gray-800 dark:text-gray-100">{user.email}</p>
               <p className="text-xs text-gray-500 mt-1">이메일은 변경할 수 없습니다.</p>
             </div>
             
@@ -916,7 +916,7 @@ const Profile = () => {
                   placeholder="전화번호를 입력하세요 (예: 010-1234-5678)"
                 />
               ) : (
-                <p className="text-base text-gray-800">{editForm.phone || '미입력'}</p>
+                <p className="text-base text-gray-800 dark:text-gray-100">{editForm.phone || '미입력'}</p>
               )}
             </div>
 
@@ -962,11 +962,11 @@ const Profile = () => {
       {activeTab === 'inquiries' && (
         <div>
           {inquiriesLoading ? (
-            <div className="text-center py-12 bg-white rounded-xl shadow-md">
-              <p className="text-gray-600">로딩 중...</p>
+            <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl shadow-md border border-transparent dark:border-gray-800">
+              <p className="text-gray-600 dark:text-gray-300">로딩 중...</p>
             </div>
           ) : inquiries.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl shadow-md">
+            <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl shadow-md border border-transparent dark:border-gray-800">
               <div className="text-4xl md:text-6xl mb-4">📝</div>
               <p className="text-gray-500 text-base md:text-lg mb-4">등록된 문의가 없습니다.</p>
               <button
@@ -981,14 +981,14 @@ const Profile = () => {
               {inquiries.map((inquiry) => (
                 <div
                   key={inquiry.id}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100 hover:shadow-lg transition-shadow"
+                  className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <p className="font-semibold text-gray-800 mb-1 text-sm md:text-base">
+                      <p className="font-semibold text-gray-800 dark:text-gray-100 mb-1 text-sm md:text-base">
                         {inquiry.name}
                       </p>
-                      <p className="text-xs md:text-sm text-gray-600">{inquiry.phone}</p>
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">{inquiry.phone}</p>
                     </div>
                     <span className="text-xs text-gray-500 whitespace-nowrap ml-2">
                       {new Date(inquiry.created_at).toLocaleDateString('ko-KR', {
@@ -1000,9 +1000,9 @@ const Profile = () => {
                   </div>
 
                   {inquiry.product && (
-                    <div className="mb-3 pb-3 border-b border-gray-100">
+                    <div className="mb-3 pb-3 border-b border-gray-100 dark:border-gray-800">
                       <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">상품:</p>
-                      <p className="text-xs md:text-sm text-gray-600">
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
                         {inquiry.product.name || '상품 정보 없음'}
                       </p>
                       {inquiry.product.images && inquiry.product.images.length > 0 && (
@@ -1041,12 +1041,12 @@ const Profile = () => {
                   {inquiry.message && (
                     <div>
                       <p className="text-xs md:text-sm font-medium text-gray-700 mb-1">요청사항:</p>
-                      <p className="text-xs md:text-sm text-gray-600 line-clamp-2">{inquiry.message}</p>
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{inquiry.message}</p>
                     </div>
                   )}
 
                   {/* 처리 상태 표시 */}
-                  <div className="mt-3 pt-3 border-t border-gray-100">
+                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                     <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                       inquiry.status === 'completed' ? 'bg-green-100 text-green-800' :
                       inquiry.status === 'processing' ? 'bg-blue-100 text-blue-800' :

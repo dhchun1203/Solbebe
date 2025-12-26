@@ -75,15 +75,15 @@ const ProductList = () => {
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8">
-      <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-8">
+      <h1 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-8">
         {searchQuery ? `"${searchQuery}" 검색 결과` : '상품 목록'}
       </h1>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6 md:mb-8 space-y-4 md:space-y-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 md:mb-8 space-y-4 md:space-y-6 border border-transparent dark:border-gray-800">
         {/* 카테고리 필터 */}
         <div className="space-y-3">
-          <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">카테고리</label>
+          <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">카테고리</label>
           <div className="flex flex-nowrap gap-1.5 md:gap-2 overflow-x-auto scrollbar-hide pb-1 justify-center md:justify-start">
             {Object.entries(CATEGORY_MAP).map(([value, label]) => (
               <button
@@ -92,7 +92,7 @@ const ProductList = () => {
                 className={`px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
                   selectedCategory === value
                     ? 'bg-pastel-pink-text text-white shadow-md scale-105'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105'
                 }`}
               >
                 {label}
@@ -102,8 +102,8 @@ const ProductList = () => {
         </div>
 
         {/* 정렬 필터 */}
-        <div className="space-y-3 border-t border-gray-100 pt-4">
-          <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">정렬</label>
+        <div className="space-y-3 border-t border-gray-100 dark:border-gray-800 pt-4">
+          <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">정렬</label>
           <div className="flex flex-nowrap gap-1.5 md:gap-2 overflow-x-auto scrollbar-hide pb-1 justify-center md:justify-start">
             {SORT_OPTIONS.map((option) => (
               <button
@@ -112,7 +112,7 @@ const ProductList = () => {
                 className={`px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-200 flex items-center gap-1 md:gap-2 whitespace-nowrap flex-shrink-0 ${
                   sortBy === option.value
                     ? 'bg-blue-400 text-white shadow-md scale-105'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105'
                 }`}
               >
                 {sortBy === option.value && (

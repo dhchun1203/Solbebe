@@ -37,13 +37,13 @@ const PrivacyModal = ({ isOpen, onClose }) => {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       
       {/* 모달 컨테이너 */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col animate-fade-in-up">
+      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col animate-fade-in-up border border-transparent dark:border-gray-800">
         {/* 헤더 */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">개인정보처리방침</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100">개인정보처리방침</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-2 hover:bg-gray-100 dark:hover:bg-gray-800/60 rounded-lg"
             aria-label="닫기"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,9 +54,9 @@ const PrivacyModal = ({ isOpen, onClose }) => {
 
         {/* 본문 */}
         <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
-          <div className="prose prose-sm md:prose-base max-w-none text-gray-700 space-y-6">
+          <div className="prose prose-sm md:prose-base max-w-none text-gray-700 dark:text-gray-200 space-y-6">
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제1조 (개인정보의 처리목적)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제1조 (개인정보의 처리목적)</h3>
               <p className="leading-relaxed mb-2">
                 Solbebe(이하 "회사")는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 
                 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 
@@ -73,7 +73,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제2조 (개인정보의 처리 및 보유기간)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제2조 (개인정보의 처리 및 보유기간)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 법령에 따른 개인정보 보유·이용기간 또는 정보주체로부터 개인정보를 수집 시에 동의받은 
                 개인정보 보유·이용기간 내에서 개인정보를 처리·보유합니다.
@@ -89,13 +89,13 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제3조 (처리하는 개인정보의 항목)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제3조 (처리하는 개인정보의 항목)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 다음의 개인정보 항목을 처리하고 있습니다.
               </p>
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-1">필수항목</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">필수항목</h4>
                   <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
                     <li>이름, 이메일 주소, 전화번호</li>
                     <li>주문 정보: 배송 주소, 결제 정보</li>
@@ -103,7 +103,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-1">선택항목</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">선택항목</h4>
                   <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
                     <li>생년월일, 성별</li>
                     <li>마케팅 수신 동의 시: 마케팅 정보 수신 여부</li>
@@ -113,7 +113,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제4조 (개인정보의 제3자 제공)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제4조 (개인정보의 제3자 제공)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 정보주체의 개인정보를 제1조(개인정보의 처리목적)에서 명시한 범위 내에서만 처리하며, 
                 정보주체의 동의, 법률의 특별한 규정 등 개인정보 보호법 제17조 및 제18조에 해당하는 경우에만 
@@ -130,17 +130,17 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제5조 (개인정보처리의 위탁)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제5조 (개인정보처리의 위탁)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 원활한 개인정보 업무처리를 위하여 다음과 같이 개인정보 처리업무를 위탁하고 있습니다.
               </p>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+              <div className="bg-gray-50 dark:bg-gray-950 rounded-lg p-4 space-y-2 border border-transparent dark:border-gray-800">
                 <div>
-                  <h4 className="font-semibold text-gray-800">위탁업체: 배송업체</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100">위탁업체: 배송업체</h4>
                   <p className="text-sm">위탁업무 내용: 상품 배송 서비스</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800">위탁업체: 결제 대행사</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100">위탁업체: 결제 대행사</h4>
                   <p className="text-sm">위탁업무 내용: 결제 처리 서비스</p>
                 </div>
               </div>
@@ -152,7 +152,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제6조 (정보주체의 권리·의무 및 행사방법)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제6조 (정보주체의 권리·의무 및 행사방법)</h3>
               <p className="leading-relaxed mb-2">
                 정보주체는 다음과 같은 권리를 행사할 수 있습니다.
               </p>
@@ -169,19 +169,19 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제7조 (개인정보의 파기)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제7조 (개인정보의 파기)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 
                 지체 없이 해당 개인정보를 파기합니다.
               </p>
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-1">파기절차</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">파기절차</h4>
                   <p className="text-sm">이용자가 입력한 정보는 목적 달성 후 별도의 DB에 옮겨져(종이의 경우 별도의 서류) 
                   내부 방침 및 기타 관련 법령에 따라 일정기간 저장된 후 혹은 즉시 파기됩니다.</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-1">파기방법</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">파기방법</h4>
                   <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
                     <li>전자적 파일 형태: 복구 및 재생되지 않도록 안전하게 삭제</li>
                     <li>기록물, 인쇄물, 서면 등: 분쇄하거나 소각</li>
@@ -191,14 +191,14 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제8조 (개인정보 보호책임자)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제8조 (개인정보 보호책임자)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 
                 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.
               </p>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+              <div className="bg-gray-50 dark:bg-gray-950 rounded-lg p-4 space-y-2 border border-transparent dark:border-gray-800">
                 <div>
-                  <h4 className="font-semibold text-gray-800">개인정보 보호책임자</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100">개인정보 보호책임자</h4>
                   <p className="text-sm">이메일: privacy@solbebe.com</p>
                   <p className="text-sm">전화: 1588-0000</p>
                 </div>
@@ -206,7 +206,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제9조 (개인정보의 안전성 확보조치)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제9조 (개인정보의 안전성 확보조치)</h3>
               <p className="leading-relaxed mb-2">
                 회사는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.
               </p>
@@ -219,15 +219,15 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </section>
 
             <section>
-              <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">제10조 (개인정보 처리방침 변경)</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">제10조 (개인정보 처리방침 변경)</h3>
               <p className="leading-relaxed">
                 이 개인정보처리방침은 2025년 1월 1일부터 적용되며, 법령 및 방침에 따른 변경내용의 추가, 
                 삭제 및 정정이 있는 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.
               </p>
             </section>
 
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-500">
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 본 개인정보처리방침은 2025년 1월 1일부터 시행됩니다.
               </p>
             </div>
@@ -235,7 +235,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* 푸터 */}
-        <div className="p-6 border-t border-gray-100 flex justify-end">
+        <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end">
           <button
             onClick={onClose}
             className="px-6 py-2.5 bg-pastel-pink-text text-white rounded-lg hover:bg-pastel-pink-text/90 transition-colors font-medium"
