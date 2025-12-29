@@ -21,6 +21,7 @@ const AdminLayout = lazy(() => import('../pages/Admin/AdminLayout'))
 const AdminDashboard = lazy(() => import('../pages/Admin/Dashboard'))
 const AdminProducts = lazy(() => import('../pages/Admin/Products'))
 const AdminInquiries = lazy(() => import('../pages/Admin/Inquiries'))
+const AdminProductForm = lazy(() => import('../pages/Admin/ProductForm'))
 
 // 로딩 컴포넌트
 const LoadingFallback = () => (
@@ -156,6 +157,22 @@ export const router = createBrowserRouter(
           element: (
             <SuspenseWrapper>
               <AdminProducts />
+            </SuspenseWrapper>
+          ),
+        },
+        {
+          path: 'products/new',
+          element: (
+            <SuspenseWrapper>
+              <AdminProductForm mode="create" />
+            </SuspenseWrapper>
+          ),
+        },
+        {
+          path: 'products/:id/edit',
+          element: (
+            <SuspenseWrapper>
+              <AdminProductForm mode="edit" />
             </SuspenseWrapper>
           ),
         },
