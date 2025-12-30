@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '../services/supabase'
 import { formatError } from '../utils/errorHandler'
 import { ERROR_MESSAGES, STORAGE_KEYS, ADMIN_EMAILS } from '../constants'
+import { clearSessionCache } from '../services/api'
 
 export const useAuthStore = create(
   persist(
@@ -40,6 +41,9 @@ export const useAuthStore = create(
             loading: false,
             error: null,
           })
+
+          // 세션 캐시 무효화 (새로운 세션으로 업데이트)
+          clearSessionCache()
 
           return { success: true }
         } catch (error) {
@@ -124,6 +128,9 @@ export const useAuthStore = create(
           loading: false,
           error: null,
         })
+
+        // 세션 캐시 무효화
+        clearSessionCache()
 
         // 3단계: localStorage에서 인증 데이터 제거
         console.log('🔴 localStorage 제거 시작...')

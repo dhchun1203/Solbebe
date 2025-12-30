@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore } from '../store/authStore'
@@ -8,6 +8,8 @@ const Cart = () => {
   const { user } = useAuthStore()
   const { items, loading, loadCartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCartStore()
   const totalPrice = getTotalPrice()
+  // 각 아이템별 로딩 상태 관리
+  const [updatingItems, setUpdatingItems] = useState(new Set())
 
   useEffect(() => {
     // 로그인 체크
@@ -25,7 +27,8 @@ const Cart = () => {
     return null
   }
 
-  if (loading) {
+  // 초기 로딩만 전체 화면 표시 (수량 업데이트는 제외)
+  if (loading && items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center py-16">
@@ -100,17 +103,83 @@ const Cart = () => {
                 <div className="flex items-center justify-between mt-2 md:mt-4">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors text-sm md:text-base"
+                      onClick={async () => {
+                        if (updatingItems.has(item.id) || item.quantity <= 1) return
+                        
+                        // 낙관적 업데이트로 인해 UI가 즉시 업데이트되므로 로딩 표시는 최소화
+                        setUpdatingItems(prev => new Set(prev).add(item.id))
+                        
+                        try {
+                          await updateQuantity(item.id, item.quantity - 1)
+                        } catch (error) {
+                          console.error('수량 감소 실패:', error)
+                          // 에러 발생 시 롤백되므로 사용자에게 알림 필요 없음 (store에서 처리)
+                        } finally {
+                          // 짧은 딜레이 후 로딩 해제 (시각적 피드백)
+                          setTimeout(() => {
+                            setUpdatingItems(prev => {
+                              const next = new Set(prev)
+                              next.delete(item.id)
+                              return next
+                            })
+                          }, 300)
+                        }
+                      }}
+                      disabled={updatingItems.has(item.id) || item.quantity <= 1}
+                      className={`w-7 h-7 md:w-8 md:h-8 rounded-lg border transition-colors text-sm md:text-base flex items-center justify-center ${
+                        updatingItems.has(item.id) || item.quantity <= 1
+                          ? 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                          : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
                     >
-                      -
+                      {updatingItems.has(item.id) ? (
+                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        '-'
+                      )}
                     </button>
                     <span className="w-8 text-center text-sm md:text-base font-medium">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors text-sm md:text-base"
+                      onClick={async () => {
+                        if (updatingItems.has(item.id)) return
+                        
+                        // 낙관적 업데이트로 인해 UI가 즉시 업데이트되므로 로딩 표시는 최소화
+                        setUpdatingItems(prev => new Set(prev).add(item.id))
+                        
+                        try {
+                          await updateQuantity(item.id, item.quantity + 1)
+                        } catch (error) {
+                          console.error('수량 증가 실패:', error)
+                          // 에러 발생 시 롤백되므로 사용자에게 알림 필요 없음 (store에서 처리)
+                        } finally {
+                          // 짧은 딜레이 후 로딩 해제 (시각적 피드백)
+                          setTimeout(() => {
+                            setUpdatingItems(prev => {
+                              const next = new Set(prev)
+                              next.delete(item.id)
+                              return next
+                            })
+                          }, 300)
+                        }
+                      }}
+                      disabled={updatingItems.has(item.id)}
+                      className={`w-7 h-7 md:w-8 md:h-8 rounded-lg border transition-colors text-sm md:text-base flex items-center justify-center ${
+                        updatingItems.has(item.id)
+                          ? 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                          : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
                     >
-                      +
+                      {updatingItems.has(item.id) ? (
+                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        '+'
+                      )}
                     </button>
                   </div>
                   <div className="text-right">

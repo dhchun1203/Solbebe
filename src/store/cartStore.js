@@ -75,57 +75,95 @@ export const useCartStore = create((set, get) => ({
     }
   },
   
-  // 장바구니에서 상품 제거
+  // 장바구니에서 상품 제거 (낙관적 업데이트 적용)
   removeFromCart: async (itemId) => {
-    set({ loading: true, error: null })
+    // 현재 상태 저장 (롤백용)
+    const currentState = get()
+    const currentItem = currentState.items.find(item => item.id === itemId)
+    if (!currentItem) {
+      return // 이미 없으면 무시
+    }
+    
+    // 낙관적 업데이트: UI를 먼저 업데이트
+    set((state) => ({
+      items: state.items.filter((item) => item.id !== itemId),
+      error: null,
+    }))
+    
+    // 백그라운드에서 실제 API 호출
     try {
       const result = await cartApi.removeFromCart(itemId)
-      // API 호출이 성공한 경우에만 로컬 상태 업데이트
-      if (result?.success) {
-        set((state) => ({
-          items: state.items.filter((item) => item.id !== itemId),
-          loading: false,
-        }))
-      } else {
+      if (!result?.success) {
         throw new Error('장바구니 삭제에 실패했습니다.')
       }
+      // 성공 시 상태는 이미 업데이트되었으므로 추가 작업 불필요
     } catch (error) {
       console.error('장바구니 삭제 실패:', error)
+      
+      // 에러 발생 시 원래 상태로 롤백
       set({
-        loading: false,
+        items: currentState.items, // 원래 상태 복원
         error: error.message || '장바구니에서 삭제하는데 실패했습니다.',
       })
-      // 에러 발생 시 로컬 상태는 변경하지 않음
-      throw error // 에러를 다시 throw하여 UI에서 처리할 수 있도록
+      
+      throw error
     }
   },
   
-  // 수량 업데이트
+  // 수량 업데이트 (낙관적 업데이트 적용)
   updateQuantity: async (itemId, quantity) => {
-    set({ loading: true, error: null })
+    set({ error: null })
+    
+    // 현재 아이템 찾기
+    const currentItem = get().items.find(item => item.id === itemId)
+    if (!currentItem) {
+      throw new Error('아이템을 찾을 수 없습니다.')
+    }
+    
+    // 낙관적 업데이트: UI를 먼저 업데이트
+    if (quantity <= 0) {
+      // 삭제 예정
+      set((state) => ({
+        items: state.items.filter((item) => item.id !== itemId),
+      }))
+    } else {
+      // 수량 업데이트 예정
+      set((state) => ({
+        items: state.items.map((item) =>
+          item.id === itemId
+            ? { ...item, quantity } // 임시로 수량만 업데이트
+            : item
+        ),
+      }))
+    }
+    
+    // 백그라운드에서 실제 API 호출
     try {
       const updatedItem = await cartApi.updateCartItemQuantity(itemId, quantity)
       
+      // API 성공 시 실제 데이터로 업데이트
       if (updatedItem) {
         set((state) => ({
           items: state.items.map((item) =>
             item.id === itemId ? updatedItem : item
           ),
-          loading: false,
         }))
       } else {
-        // 삭제된 경우
-        set((state) => ({
-          items: state.items.filter((item) => item.id !== itemId),
-          loading: false,
-        }))
+        // 삭제된 경우 (이미 낙관적 업데이트로 제거됨)
+        // 상태는 이미 업데이트되었으므로 추가 작업 불필요
       }
     } catch (error) {
       console.error('수량 업데이트 실패:', error)
-      set({
-        loading: false,
+      
+      // 에러 발생 시 원래 상태로 롤백
+      set((state) => ({
+        items: state.items.map((item) =>
+          item.id === itemId ? currentItem : item
+        ),
         error: error.message || '수량을 업데이트하는데 실패했습니다.',
-      })
+      }))
+      
+      throw error
     }
   },
   

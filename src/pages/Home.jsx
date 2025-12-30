@@ -255,7 +255,6 @@ const Home = () => {
               <CategoryCard
                 category={category.name}
                 description={category.description}
-                bgImage={getCategoryImage(category.value)}
               />
             </div>
           ))}

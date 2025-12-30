@@ -13,6 +13,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [activeTab, setActiveTab] = useState('info')
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
   
   // 드래그 관련 상태
   const thumbnailContainerRef = useRef(null)
@@ -360,6 +361,9 @@ const ProductDetail = () => {
                 return
               }
 
+              // 로딩 시작
+              setIsAddingToCart(true)
+
               // 장바구니에 추가
               console.log('🛒 장바구니 추가 시작:', { productId: product.id, size: selectedSize, color: selectedColor })
               
@@ -391,11 +395,47 @@ const ProductDetail = () => {
                   message: error?.message || '장바구니에 추가하는데 실패했습니다.',
                   type: 'error',
                 })
+              } finally {
+                // Toast 메시지가 표시될 때까지 약간의 딜레이 후 로딩 종료
+                setTimeout(() => {
+                  setIsAddingToCart(false)
+                }, 300)
               }
             }}
-            className="w-full bg-gray-800 text-white text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold hover:bg-gray-700 transition-all shadow-md hover:shadow-lg mb-3"
+            disabled={isAddingToCart}
+            className={`w-full text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold transition-all shadow-md mb-3 flex items-center justify-center gap-2 ${
+              isAddingToCart
+                ? 'bg-gray-500 text-white cursor-not-allowed'
+                : 'bg-gray-800 text-white hover:bg-gray-700 hover:shadow-lg'
+            }`}
           >
-            장바구니에 추가
+            {isAddingToCart ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span>추가 중...</span>
+              </>
+            ) : (
+              <span>장바구니에 추가</span>
+            )}
           </button>
 
           {/* 구매 문의 버튼 */}

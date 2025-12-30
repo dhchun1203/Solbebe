@@ -2,6 +2,77 @@ import { supabase } from './supabase'
 import { handleApiCall } from '../utils/errorHandler'
 import { ERROR_MESSAGES } from '../constants'
 
+// 세션 캐시 (메모리 캐싱)
+let sessionCache = {
+  session: null,
+  timestamp: 0,
+  ttl: 5 * 60 * 1000, // 5분
+}
+
+// 세션 가져오기 (캐시 우선)
+const getCachedSession = async () => {
+  const now = Date.now()
+  
+  // 캐시가 유효하면 반환
+  if (sessionCache.session && (now - sessionCache.timestamp) < sessionCache.ttl) {
+    return sessionCache.session
+  }
+  
+  // 캐시가 없거나 만료되었으면 localStorage에서 먼저 확인
+  try {
+    const authStorage = localStorage.getItem('auth-storage')
+    if (authStorage) {
+      const authData = JSON.parse(authStorage)
+      const session = authData?.state?.session
+      if (session && session.access_token) {
+        // 캐시 업데이트
+        sessionCache = {
+          session,
+          timestamp: now,
+          ttl: sessionCache.ttl,
+        }
+        return session
+      }
+    }
+  } catch (e) {
+    // localStorage 파싱 실패 무시
+  }
+  
+  // localStorage에도 없으면 getSession 시도 (타임아웃 짧게)
+  try {
+    const sessionPromise = supabase.auth.getSession()
+    const sessionTimeout = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('세션 조회 타임아웃')), 500) // 500ms로 단축
+    })
+    
+    const result = await Promise.race([sessionPromise, sessionTimeout])
+    const session = result.data?.session
+    
+    if (session && session.access_token) {
+      // 캐시 업데이트
+      sessionCache = {
+        session,
+        timestamp: now,
+        ttl: sessionCache.ttl,
+      }
+      return session
+    }
+  } catch (error) {
+    // getSession 실패 무시
+  }
+  
+  return null
+}
+
+// 세션 캐시 무효화
+export const clearSessionCache = () => {
+  sessionCache = {
+    session: null,
+    timestamp: 0,
+    ttl: 5 * 60 * 1000,
+  }
+}
+
 // 공통 에러 처리 헬퍼
 const handleSupabaseError = (error, defaultMessage) => {
   if (error) {
@@ -719,7 +790,7 @@ const getCurrentUser = async () => {
 
 // 장바구니 관련 API
 export const cartApi = {
-  // 현재 사용자의 장바구니 조회
+  // 현재 사용자의 장바구니 조회 (최적화: 세션 캐싱 사용)
   getCartItems: async () => {
     return handleApiCall(async () => {
       if (import.meta.env.DEV) {
@@ -730,35 +801,8 @@ export const cartApi = {
         // 사용자 정보 가져오기
         const user = await getCurrentUser()
         
-        if (import.meta.env.DEV) {
-          console.log('🛒 사용자 ID:', user.id)
-        }
-
-        // 세션에서 액세스 토큰 가져오기 (타임아웃 포함)
-        let session = null
-        try {
-          const sessionPromise = supabase.auth.getSession()
-          const sessionTimeout = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('세션 조회 타임아웃')), 2000)
-          })
-          const result = await Promise.race([sessionPromise, sessionTimeout])
-          session = result.data?.session
-        } catch (sessionError) {
-          // getSession 실패 시 localStorage에서 직접 가져오기
-          if (import.meta.env.DEV) {
-            console.log('🔄 getSession 실패, localStorage에서 세션 정보 가져오기 시도...')
-          }
-          
-          const authStorage = localStorage.getItem('auth-storage')
-          if (authStorage) {
-            try {
-              const authData = JSON.parse(authStorage)
-              session = authData?.state?.session
-            } catch (e) {
-              console.warn('localStorage 파싱 실패:', e)
-            }
-          }
-        }
+        // 캐시된 세션 사용 (빠른 조회)
+        const session = await getCachedSession()
         
         if (!session || !session.access_token) {
           throw new Error(ERROR_MESSAGES.LOGIN_REQUIRED)
@@ -767,29 +811,23 @@ export const cartApi = {
         // 직접 fetch로 조회 (인증 토큰 포함, 타임아웃 포함)
         const cartUrl = `${supabase.supabaseUrl}/rest/v1/cart_items?select=*,products(id,name,price,images,category)&user_id=eq.${user.id}&order=created_at.desc`
         
-        if (import.meta.env.DEV) {
-          console.log('🛒 직접 fetch 시작...')
-          console.log('🛒 요청 URL:', cartUrl)
-        }
-        
         const fetchPromise = fetch(cartUrl, {
           method: 'GET',
           headers: {
             'apikey': supabase.supabaseKey,
             'Authorization': `Bearer ${session.access_token}`,
             'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
           }
         })
         
         const fetchTimeout = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('장바구니 조회 타임아웃')), 5000)
+          setTimeout(() => reject(new Error('장바구니 조회 타임아웃')), 3000) // 3초로 단축
         })
         
         const fetchResponse = await Promise.race([fetchPromise, fetchTimeout])
         
         if (import.meta.env.DEV) {
-          console.log('🛒 Fetch 응답 상태:', fetchResponse.status, fetchResponse.statusText)
+          console.log('🛒 Fetch 응답 상태:', fetchResponse.status)
         }
         
         if (!fetchResponse.ok) {
@@ -1002,42 +1040,97 @@ export const cartApi = {
     }, ERROR_MESSAGES.CART_ADD_FAILED)
   },
 
-  // 장바구니 아이템 수량 업데이트
+  // 장바구니 아이템 수량 업데이트 (최적화: 불필요한 GET 요청 제거)
   updateCartItemQuantity: async (itemId, quantity) => {
     return handleApiCall(async () => {
-      const user = await getCurrentUser()
-
-      if (quantity <= 0) {
-        // 수량이 0 이하면 삭제
-        const { error } = await supabase
-          .from('cart_items')
-          .delete()
-          .eq('id', itemId)
-          .eq('user_id', user.id)
-        
-        handleSupabaseError(error, ERROR_MESSAGES.CART_REMOVE_FAILED)
-        return null
+      if (import.meta.env.DEV) {
+        console.log('🛒 updateCartItemQuantity 호출:', { itemId, quantity })
       }
 
-      const { data, error } = await supabase
-        .from('cart_items')
-        .update({ quantity })
-        .eq('id', itemId)
-        .eq('user_id', user.id)
-        .select(`
-          *,
-          products (
-            id,
-            name,
-            price,
-            images,
-            category
-          )
-        `)
-        .single()
-      
-      handleSupabaseError(error, ERROR_MESSAGES.CART_UPDATE_FAILED)
-      return transformCartItem(data)
+      try {
+        // 사용자 정보 가져오기
+        const user = await getCurrentUser()
+        
+        // 캐시된 세션 사용 (빠른 조회)
+        const session = await getCachedSession()
+        
+        if (!session || !session.access_token) {
+          throw new Error(ERROR_MESSAGES.LOGIN_REQUIRED)
+        }
+
+        if (quantity <= 0) {
+          // 수량이 0 이하면 삭제
+          const deleteUrl = `${supabase.supabaseUrl}/rest/v1/cart_items?id=eq.${itemId}&user_id=eq.${user.id}`
+          
+          const deletePromise = fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'apikey': supabase.supabaseKey,
+              'Authorization': `Bearer ${session.access_token}`,
+              'Content-Type': 'application/json',
+            }
+          })
+          
+          const deleteTimeout = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('삭제 타임아웃')), 3000) // 3초로 단축
+          })
+          
+          const deleteResponse = await Promise.race([deletePromise, deleteTimeout])
+          
+          if (!deleteResponse.ok) {
+            const errorText = await deleteResponse.text()
+            if (import.meta.env.DEV) {
+              console.error('🛒 삭제 실패:', errorText)
+            }
+            throw new Error(`HTTP ${deleteResponse.status}: ${deleteResponse.statusText}`)
+          }
+          
+          return null
+        }
+
+        // 수량 업데이트 (PATCH 응답에 데이터 포함 요청)
+        const updateUrl = `${supabase.supabaseUrl}/rest/v1/cart_items?id=eq.${itemId}&user_id=eq.${user.id}&select=*,products(id,name,price,images,category)`
+        
+        const updatePromise = fetch(updateUrl, {
+          method: 'PATCH',
+          headers: {
+            'apikey': supabase.supabaseKey,
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation' // 응답에 업데이트된 데이터 포함
+          },
+          body: JSON.stringify({ quantity })
+        })
+        
+        const updateTimeout = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('수량 업데이트 타임아웃')), 3000) // 3초로 단축
+        })
+        
+        const updateResponse = await Promise.race([updatePromise, updateTimeout])
+        
+        if (!updateResponse.ok) {
+          const errorText = await updateResponse.text()
+          if (import.meta.env.DEV) {
+            console.error('🛒 수량 업데이트 실패:', errorText)
+          }
+          throw new Error(`HTTP ${updateResponse.status}: ${updateResponse.statusText}`)
+        }
+        
+        // PATCH 응답에서 직접 데이터 가져오기 (GET 요청 불필요)
+        const data = await updateResponse.json()
+        const updatedItem = Array.isArray(data) && data.length > 0 ? data[0] : data
+        
+        if (import.meta.env.DEV) {
+          console.log('🛒 수량 업데이트 성공:', updatedItem)
+        }
+        
+        return transformCartItem(updatedItem)
+      } catch (err) {
+        if (import.meta.env.DEV) {
+          console.error('🛒 수량 업데이트 중 예외 발생:', err)
+        }
+        throw err
+      }
     }, ERROR_MESSAGES.CART_UPDATE_FAILED)
   },
 
