@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 문제 상황
+## 문제 상황
 
 - Authentication User 테이블에 비밀번호 관련 컬럼이 없음
 - 로그인 시 비밀번호가 틀려도 로그인이 성공함
@@ -12,7 +12,7 @@
 
 ---
 
-## 🔧 해결 방법
+## 해결 방법
 
 ### 1. Supabase 대시보드에서 Email Provider 활성화
 
@@ -26,7 +26,7 @@
 
 3. **Email Provider 활성화 확인**
    - **Email** 섹션 찾기
-   - ✅ **"Enable Email provider"** 체크박스가 **반드시 활성화**되어 있어야 함
+   - **"Enable Email provider"** 체크박스가 **반드시 활성화**되어 있어야 함
    - 비활성화되어 있다면 체크박스를 클릭하여 활성화
 
 4. **Password Provider 확인**
@@ -242,7 +242,7 @@ export default ResetPassword
 
 ---
 
-## 🔍 문제 진단
+## 문제 진단
 
 ### 비밀번호가 제대로 작동하지 않는 경우 확인사항
 
@@ -266,7 +266,7 @@ export default ResetPassword
 
 ---
 
-## ✅ 확인 체크리스트
+## 확인 체크리스트
 
 - [ ] Email Provider 활성화됨
 - [ ] 기존 사용자 비밀번호 재설정 또는 삭제 후 재가입
@@ -276,7 +276,7 @@ export default ResetPassword
 
 ---
 
-## 💡 중요 사항
+## 중요 사항
 
 1. **비밀번호는 해시로 저장됨**
    - Supabase는 비밀번호를 평문으로 저장하지 않음
@@ -293,7 +293,7 @@ export default ResetPassword
 
 ---
 
-## 🆘 추가 도움말
+## 추가 도움말
 
 문제가 계속되면:
 1. Supabase 대시보드의 **Settings → API**에서 프로젝트 설정 확인
@@ -302,7 +302,8 @@ export default ResetPassword
 
 ---
 
-이 가이드를 따라 설정하면 비밀번호 인증이 정상적으로 작동합니다! 🔐
+이 가이드를 따라 설정하면 비밀번호 인증이 정상적으로 작동합니다!
+
 
 
 

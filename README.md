@@ -4,20 +4,21 @@ React + Vite + Tailwind CSS + Supabase 기반의 아기 의류 쇼핑몰 MVP 프
 
 파스텔톤의 감성적인 UI/UX로 구현된 포트폴리오용 이커머스 사이트입니다.
 
-## ✨ 주요 기능
+## 주요 기능
 
-- 🛍️ **상품 관리**: 상품 목록, 상세 페이지, 카테고리 필터링, 정렬 기능
-- 🛒 **장바구니**: 상품 추가, 수량 조절, 개별/전체 삭제, 주문 요약
-- 📝 **구매 문의**: 단일 상품 또는 장바구니 전체 문의, 문의 제출 후 장바구니 자동 비우기
-- 👤 **사용자 기능**: 로그인, 회원가입, 내 문의 내역 조회, 처리 상태 확인
-- 👨‍💼 **관리자 페이지**: 상품 CRUD, 문의 관리, 처리 상태 변경, 통계 대시보드
-- 📱 **반응형 디자인**: 모바일 퍼스트 디자인, 모바일/태블릿/데스크탑 지원
-- 🔐 **인증 시스템**: Supabase Auth 기반 로그인/회원가입, 관리자 권한 관리
-- ⚡ **성능 최적화**: 타임아웃 처리, 에러 핸들링, Supabase REST API 직접 사용
+- **상품 관리**: 상품 목록, 상세 페이지, 카테고리 필터링, 정렬 기능
+- **장바구니**: 상품 추가, 수량 조절, 개별/전체 삭제, 주문 요약
+- **구매 문의**: 단일 상품 또는 장바구니 전체 문의, 문의 제출 후 장바구니 자동 비우기
+- **사용자 기능**: 로그인, 회원가입, 내 문의 내역 조회, 처리 상태 확인, 프로필 관리
+- **관리자 페이지**: 상품 CRUD (생성/수정/삭제), 문의 관리, 처리 상태 변경, 통계 대시보드
+- **다크모드**: 라이트/다크 모드 전환, 시스템 설정 자동 감지, 설정 저장
+- **반응형 디자인**: 모바일 퍼스트 디자인, 모바일/태블릿/데스크탑 지원
+- **인증 시스템**: Supabase Auth 기반 로그인/회원가입, 관리자 권한 관리, 비밀번호 재설정
+- **성능 최적화**: 코드 스플리팅, 레이지 로딩, 타임아웃 처리, 에러 핸들링, Supabase REST API 직접 사용
 
 ---
 
-## 📌 프로젝트 개요
+## 프로젝트 개요
 
 **Baby Apparel Store – MVP Portfolio Version**
 
@@ -25,11 +26,18 @@ React + Vite + Tailwind CSS + Supabase 기반의 아기 의류 쇼핑몰 MVP 프
 - **타겟**: 아기/유아 의류에 관심 있는 고객, 모바일 쇼핑 선호 사용자
 - **핵심 플로우**: 
   - **일반 사용자**: Home → Product List → Product Detail → Cart → Inquiry → Success
+  - **로그인 사용자**: Home → Profile → My Inquiries (문의 내역 조회)
   - **관리자**: Home → Admin Dashboard → Products/Inquiries Management
+- **주요 특징**:
+  - 파스텔톤 감성 UI/UX
+  - 다크모드 지원 (라이트/다크 자동 전환)
+  - 모바일 퍼스트 반응형 디자인
+  - 코드 스플리팅 및 레이지 로딩으로 최적화된 성능
+  - Supabase 기반 풀스택 구현
 
 ---
 
-## 🚀 빠른 시작
+## 빠른 시작
 
 ### 1. 프로젝트 클론 및 설치
 
@@ -79,7 +87,7 @@ npm run preview
 
 ---
 
-## 📁 프로젝트 구조
+## 프로젝트 구조
 
 ```
 Solbebe/
@@ -96,9 +104,12 @@ Solbebe/
 │   │   │   ├── AdminRoute.jsx   # 관리자 라우트 보호
 │   │   │   ├── Toast.jsx         # 토스트 알림
 │   │   │   ├── SearchModal.jsx  # 검색 모달
-│   │   │   └── LoginModal.jsx   # 로그인 모달
+│   │   │   ├── LoginModal.jsx   # 로그인 모달
+│   │   │   ├── PrivacyModal.jsx # 개인정보처리방침 모달
+│   │   │   ├── TermsModal.jsx   # 이용약관 모달
+│   │   │   └── ScrollToTop.jsx  # 스크롤 상단 이동
 │   │   ├── layout/              # 레이아웃 컴포넌트
-│   │   │   ├── Header.jsx       # 헤더 (네비게이션, 검색, 로그인, 프로필)
+│   │   │   ├── Header.jsx       # 헤더 (네비게이션, 검색, 로그인, 프로필, 다크모드 토글)
 │   │   │   ├── Footer.jsx       # 푸터
 │   │   │   └── Layout.jsx       # 레이아웃 래퍼
 │   │   └── product/             # 상품 관련 컴포넌트
@@ -112,6 +123,7 @@ Solbebe/
 │   │   ├── Inquiry.jsx          # 구매 문의 페이지
 │   │   ├── InquirySuccess.jsx   # 문의 성공 페이지
 │   │   ├── MyInquiries.jsx      # 내 문의 내역 페이지
+│   │   ├── Profile.jsx          # 프로필 페이지
 │   │   ├── ForgotPassword.jsx   # 비밀번호 찾기
 │   │   ├── ResetPassword.jsx    # 비밀번호 재설정
 │   │   ├── EmailConfirm.jsx     # 이메일 인증 확인
@@ -119,6 +131,7 @@ Solbebe/
 │   │       ├── AdminLayout.jsx  # 관리자 레이아웃
 │   │       ├── Dashboard.jsx    # 대시보드
 │   │       ├── Products.jsx     # 상품 관리
+│   │       ├── ProductForm.jsx  # 상품 생성/수정 폼
 │   │       └── Inquiries.jsx    # 문의 관리
 │   │
 │   ├── services/                # API 서비스
@@ -128,13 +141,19 @@ Solbebe/
 │   ├── store/                   # Zustand 상태 관리
 │   │   ├── productStore.js      # 상품 상태 관리
 │   │   ├── cartStore.js         # 장바구니 상태 관리
-│   │   └── authStore.js         # 인증 상태 관리
+│   │   ├── authStore.js         # 인증 상태 관리
+│   │   └── themeStore.js        # 테마(다크모드) 상태 관리
 │   │
 │   ├── router/                  # 라우터 설정
 │   │   └── index.jsx            # React Router 설정
 │   │
 │   ├── hooks/                   # 커스텀 훅
-│   │   └── useClickOutside.jsx  # 외부 클릭 감지 훅
+│   │   ├── useClickOutside.js  # 외부 클릭 감지 훅
+│   │   ├── useApi.js           # API 호출 훅
+│   │   ├── useDebounce.js      # 디바운스 훅
+│   │   ├── useCounter.js       # 카운터 훅
+│   │   ├── useMousePosition.js # 마우스 위치 추적 훅
+│   │   └── useScrollAnimation.js # 스크롤 애니메이션 훅
 │   │
 │   ├── utils/                   # 유틸리티 함수
 │   │   └── errorHandler.js      # 에러 처리 유틸리티
@@ -160,14 +179,14 @@ Solbebe/
 
 ---
 
-## 🛠 기술 스택
+## 기술 스택
 
 ### Frontend
 - **React 18** - UI 라이브러리
 - **Vite** - 빌드 도구 및 개발 서버
-- **Tailwind CSS** - 유틸리티 CSS 프레임워크
-- **React Router** - 클라이언트 사이드 라우팅
-- **Zustand** - 상태 관리 라이브러리
+- **Tailwind CSS** - 유틸리티 CSS 프레임워크 (다크모드 지원)
+- **React Router v6** - 클라이언트 사이드 라우팅 (코드 스플리팅, 레이지 로딩)
+- **Zustand** - 상태 관리 라이브러리 (경량, 간단한 API)
 
 ### Backend / Database
 - **Supabase** - 백엔드 서비스
@@ -181,7 +200,7 @@ Solbebe/
 
 ---
 
-## 📄 페이지 구성 및 기능
+## 페이지 구성 및 기능
 
 ### 1. Home (홈 페이지)
 - **경로**: `/`
@@ -252,26 +271,36 @@ Solbebe/
 - **인증**: 로그인 필수
 - **접근**: 프로필 드롭다운 메뉴에서 "내 문의 내역" 클릭
 
-### 8. Admin (관리자 페이지)
+### 8. Profile (프로필)
+- **경로**: `/profile`
+- **기능**:
+  - 사용자 정보 표시
+  - 프로필 수정 (이름 등)
+  - 로그아웃
+- **인증**: 로그인 필수
+- **접근**: 프로필 드롭다운 메뉴에서 "프로필" 클릭
+
+### 9. Admin (관리자 페이지)
 - **경로**: `/admin`
 - **인증**: 관리자 이메일로 로그인 필수
 - **접근**: 프로필 드롭다운 메뉴에서 "관리자 대시보드" 클릭 (관리자만 표시)
 
-#### 8-1. Dashboard (대시보드)
+#### 9-1. Dashboard (대시보드)
 - **경로**: `/admin/dashboard`
 - **기능**:
   - 통계 정보 표시 (전체 상품 수, 전체 문의 수)
   - 빠른 액션 버튼 (상품 관리, 문의 관리)
 
-#### 8-2. Products (상품 관리)
+#### 9-2. Products (상품 관리)
 - **경로**: `/admin/products`
 - **기능**:
   - 상품 목록 조회
-  - 상품 추가 (이미지, 가격, 카테고리, 옵션 등)
-  - 상품 수정
+  - 상품 추가 (`/admin/products/new`)
+  - 상품 수정 (`/admin/products/:id/edit`)
   - 상품 삭제
+  - 상품 폼: 상품명, 가격, 카테고리, 사이즈, 색상, 이미지 URL, 설명, 원단 정보, 세탁 방법
 
-#### 8-3. Inquiries (문의 관리)
+#### 9-3. Inquiries (문의 관리)
 - **경로**: `/admin/inquiries`
 - **기능**:
   - 모든 문의 내역 조회
@@ -281,7 +310,7 @@ Solbebe/
 
 ---
 
-## 🧩 컴포넌트 설명
+## 컴포넌트 설명
 
 ### Layout 컴포넌트
 
@@ -316,7 +345,7 @@ Solbebe/
 
 ---
 
-## 🗄 데이터베이스 구조
+## 데이터베이스 구조
 
 ### products 테이블
 
@@ -364,16 +393,28 @@ Solbebe/
 
 ---
 
-## 🎨 디자인 가이드
+## 디자인 가이드
 
 ### 컬러 팔레트
+
+#### 라이트 모드
 - **Cream**: `#FFF8F0` - 배경색
 - **Beige**: `#F5E6D3` - 보조 배경
-- **Pink**: `#FFE5E5` - 주요 액센트 (버튼, 링크)
-- **Blue**: `#E5F3FF` - 보조 액센트
+- **Pink**: `#FFE5E5` - 주요 액센트 (배경)
+- **Pink Text**: `#FF6B9D` - 주요 액센트 (텍스트, 버튼)
+- **Blue**: `#E5F3FF` - 보조 액센트 (배경)
+- **Blue Text**: `#3B82F6` - 보조 액센트 (텍스트)
+- **Beige Text**: `#B08968` - 보조 텍스트
+
+#### 다크 모드
+- **Background**: `gray-900` - 메인 배경
+- **Surface**: `gray-800` - 카드/컨테이너 배경
+- **Text Primary**: `gray-100` - 주요 텍스트
+- **Text Secondary**: `gray-300` - 보조 텍스트
+- **Border**: `gray-700` - 테두리
 
 ### 타이포그래피
-- **폰트**: Pretendard (한글 최적화)
+- **폰트**: Gowun Dodum (한글 최적화)
 - **Fallback**: -apple-system, BlinkMacSystemFont, system-ui
 
 ### 스타일 규칙
@@ -381,15 +422,23 @@ Solbebe/
 - **그림자**: `shadow-md` (은은한 그림자)
 - **반응형**: 모바일 퍼스트 (Mobile First)
 - **그리드**: 모바일 2열, 데스크탑 4열
+- **다크모드**: Tailwind CSS `dark:` 클래스 사용, 시스템 설정 자동 감지
 
 ### 레이아웃
 - **컨테이너**: `container mx-auto px-4`
 - **여백**: 넉넉한 패딩과 마진 사용
 - **이미지**: 큰 이미지 + 얇은 텍스트 조합
 
+### 다크모드 구현
+- **방식**: Tailwind CSS `darkMode: 'class'` 사용
+- **토글**: Header의 다크모드 버튼으로 전환
+- **저장**: 로컬 스토리지에 사용자 설정 저장
+- **자동 감지**: 시스템 설정(`prefers-color-scheme`) 자동 감지
+- **적용 범위**: 모든 페이지 및 컴포넌트에 다크모드 스타일 적용
+
 ---
 
-## 🔌 API 구조
+## API 구조
 
 ### 상품 API (`productApi`)
 
@@ -466,7 +515,7 @@ authApi.updatePassword(newPassword)
 
 ---
 
-## 🔐 환경 변수
+## 환경 변수
 
 프로젝트 루트에 `.env` 파일 생성:
 
@@ -481,11 +530,11 @@ VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
 - `VITE_SUPABASE_ANON_KEY`: Supabase anon public key
 - `VITE_ADMIN_EMAILS`: 관리자 이메일 목록 (쉼표로 구분, 선택사항)
 
-**⚠️ 주의**: `.env` 파일은 Git에 커밋되지 않습니다 (`.gitignore`에 포함됨)
+**주의**: `.env` 파일은 Git에 커밋되지 않습니다 (`.gitignore`에 포함됨)
 
 ---
 
-## 📚 상태 관리 (Zustand)
+## 상태 관리 (Zustand)
 
 ### productStore
 
@@ -543,9 +592,22 @@ VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
 - `checkSession()` - 세션 확인
 - `isAdmin()` - 관리자 여부 확인
 
+### themeStore
+
+```javascript
+{
+  theme: 'light' | 'dark', // 현재 테마
+}
+```
+
+**액션**:
+- `setTheme(theme)` - 테마 설정
+- `toggleTheme()` - 테마 토글
+- **자동 기능**: 시스템 설정 감지, 로컬 스토리지 저장
+
 ---
 
-## 🚀 배포 가이드
+## 배포 가이드
 
 ### Vercel 배포
 
@@ -579,7 +641,7 @@ VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
 
 ---
 
-## 🐛 문제 해결
+## 문제 해결
 
 ### 개발 서버 실행 오류
 
@@ -612,7 +674,7 @@ npm install
 
 ---
 
-## 📖 문서
+## 문서
 
 - **[Supabase 설정 가이드](./docs/SUPABASE_SETUP.md)** - 상세한 Supabase 설정 방법
 - **[빠른 시작 가이드](./docs/QUICK_START.md)** - 빠른 시작 가이드
@@ -626,7 +688,7 @@ npm install
 
 ---
 
-## 🔄 개발 워크플로우
+## 개발 워크플로우
 
 ### 1. 로컬 개발
 
@@ -656,7 +718,7 @@ npm run dev
 
 ---
 
-## ✅ 체크리스트
+## 체크리스트
 
 ### 초기 설정
 - [ ] Node.js 설치 (v18 이상)
@@ -674,7 +736,10 @@ npm run dev
 - [x] 문의 폼 제출 및 데이터 저장 확인
 - [x] 내 문의 내역 조회 기능
 - [x] 관리자 페이지 기능 (상품 관리, 문의 관리)
+- [x] 관리자 상품 생성/수정 폼 기능
 - [x] 로그인/로그아웃 기능
+- [x] 프로필 페이지 기능
+- [x] 다크모드 전환 기능
 - [x] 반응형 디자인 확인 (모바일/데스크탑)
 
 ### 배포 준비
@@ -685,13 +750,16 @@ npm run dev
 
 ---
 
-## 🎯 향후 개선 사항
+## 향후 개선 사항
 
 ### 기능 추가
 - [x] 관리자 페이지 구현
 - [x] Supabase Auth를 통한 로그인
 - [x] 장바구니 기능
 - [x] 내 문의 내역 조회 기능
+- [x] 다크모드 기능
+- [x] 프로필 페이지
+- [x] 관리자 상품 생성/수정 폼
 - [ ] 상품 검색 기능
 - [ ] 찜하기 기능
 - [ ] 상품 리뷰 기능
@@ -699,36 +767,87 @@ npm run dev
 - [ ] 배송 추적 기능
 
 ### UI/UX 개선
-- [ ] 로딩 스피너 추가
-- [ ] 에러 메시지 개선
-- [ ] 애니메이션 효과 추가
+- [x] 로딩 스피너 추가
+- [x] 에러 메시지 개선
+- [x] 애니메이션 효과 추가 (Hero 섹션 마우스 추적 등)
+- [x] 다크모드 UI 개선
 - [ ] 이미지 lazy loading
 - [ ] 무한 스크롤
 
 ### 성능 최적화
 - [ ] 이미지 최적화
-- [ ] 코드 스플리팅
+- [x] 코드 스플리팅 (React.lazy 사용)
+- [x] 레이지 로딩 (페이지별)
 - [ ] 캐싱 전략
 - [ ] SEO 최적화
 
 ---
 
-## 📄 라이선스
+## 라이선스
 
 MIT License
 
 ---
 
-## 👥 기여
+## 기여
 
 이 프로젝트는 포트폴리오용 MVP 프로젝트입니다. 개선 사항이나 버그 리포트는 이슈로 등록해주세요.
 
 ---
 
-## 📞 문의
+## 문의
 
 프로젝트 관련 문의사항이 있으시면 이슈를 등록해주세요.
 
 ---
 
-**Made with ❤️ using React, Vite, Tailwind CSS, and Supabase**
+---
+
+## 아키텍처 및 기술적 특징
+
+### 코드 구조
+- **컴포넌트 기반**: 재사용 가능한 컴포넌트로 구성
+- **페이지 기반 라우팅**: React Router를 통한 SPA 구조
+- **상태 관리**: Zustand를 통한 전역 상태 관리 (경량, 간단한 API)
+- **API 레이어**: `services/api.js`에서 모든 API 호출 중앙화
+- **에러 처리**: 통합 에러 핸들러 및 Toast 알림 시스템
+
+### 성능 최적화
+- **코드 스플리팅**: React.lazy를 통한 페이지별 레이지 로딩
+- **Suspense**: 로딩 상태 관리 및 사용자 경험 개선
+- **이미지 최적화**: 외부 이미지 URL 사용 (향후 CDN 연동 가능)
+- **API 최적화**: Supabase REST API 직접 사용으로 빠른 응답
+
+### 접근성 및 UX
+- **다크모드**: 시스템 설정 자동 감지 및 수동 전환 지원
+- **반응형 디자인**: 모바일 퍼스트 접근 방식
+- **로딩 상태**: 명확한 로딩 인디케이터 제공
+- **에러 처리**: 사용자 친화적인 에러 메시지 표시
+- **폼 검증**: 클라이언트 사이드 폼 검증
+
+### 보안
+- **인증**: Supabase Auth를 통한 안전한 사용자 인증
+- **권한 관리**: 관리자 이메일 기반 권한 체크
+- **RLS**: Supabase Row Level Security 정책 (프로덕션 권장)
+- **환경 변수**: 민감한 정보는 환경 변수로 관리
+
+---
+
+## 개발 노트
+
+### 최근 업데이트
+- 다크모드 기능 추가 (2024)
+- 관리자 상품 생성/수정 폼 구현
+- 프로필 페이지 추가
+- 코드 스플리팅 및 레이지 로딩 적용
+- 커스텀 훅 추가 (useApi, useDebounce, useMousePosition 등)
+- UI/UX 개선 (애니메이션, 로딩 상태 등)
+
+### 알려진 이슈
+- 이미지 lazy loading 미구현 (향후 개선 예정)
+- 검색 기능 UI만 구현됨 (백엔드 연동 필요)
+- 무한 스크롤 미구현 (페이지네이션 사용 중)
+
+---
+
+**Made with React, Vite, Tailwind CSS, and Supabase**

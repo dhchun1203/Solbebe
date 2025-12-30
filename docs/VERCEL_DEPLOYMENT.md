@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 목차
+## 목차
 
 1. [사전 준비](#1-사전-준비)
 2. [GitHub 저장소 준비](#2-github-저장소-준비)
@@ -112,7 +112,7 @@ git push -u origin main
 5. **Output Directory**: `dist` (자동 설정됨)
 6. **Install Command**: `npm install` (자동 설정됨)
 
-**⚠️ 중요**: **"Deploy"** 버튼을 아직 클릭하지 마세요! 먼저 환경 변수를 설정해야 합니다.
+**중요**: **"Deploy"** 버튼을 아직 클릭하지 마세요! 먼저 환경 변수를 설정해야 합니다.
 
 ---
 
@@ -348,7 +348,7 @@ vercel --prod
 
 ---
 
-## 💡 팁
+## 팁
 
 1. **Preview 배포**: Pull Request마다 Preview URL이 생성되어 테스트 가능
 2. **환경 변수 관리**: Production, Preview, Development 환경별로 다른 값 설정 가능
@@ -357,7 +357,7 @@ vercel --prod
 
 ---
 
-## 🆘 추가 도움말
+## 추가 도움말
 
 - [Vercel 공식 문서](https://vercel.com/docs)
 - [Vercel Discord 커뮤니티](https://vercel.com/discord)
@@ -365,7 +365,8 @@ vercel --prod
 
 ---
 
-이 가이드를 따라 설정하면 Solbebe 프로젝트가 Vercel에 성공적으로 배포됩니다! 🚀
+이 가이드를 따라 설정하면 Solbebe 프로젝트가 Vercel에 성공적으로 배포됩니다!
+
 
 
 

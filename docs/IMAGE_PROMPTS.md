@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 사용 방법
+## 사용 방법
 
 1. 원하는 프롬프트 복사
 2. AI 이미지 생성 도구에 붙여넣기
@@ -12,7 +12,7 @@
 
 ---
 
-## 👕 상의 (Top)
+## 상의 (Top)
 
 ### 바디슈트
 
@@ -39,7 +39,7 @@ Baby long-sleeve t-shirt in [색상] color, professional product photography, di
 
 ---
 
-## 👖 하의 (Bottom)
+## 하의 (Bottom)
 
 ### 팬츠
 
@@ -55,7 +55,7 @@ Cute baby shorts in pastel [색상] color, product photography style, clean whit
 
 ---
 
-## 👗 원피스 (Dress)
+## 원피스 (Dress)
 
 ```
 Beautiful baby dress in soft [색상] color with gentle ruffles, professional product photography, displayed on light pink background, showing delicate details and soft fabric, natural lighting, warm and cozy atmosphere, baby clothing commercial photo, high quality, minimalist style
@@ -65,7 +65,7 @@ Beautiful baby dress in soft [색상] color with gentle ruffles, professional pr
 
 ---
 
-## 🧢 악세서리 (Accessory)
+## 악세서리 (Accessory)
 
 ### 모자
 
@@ -81,7 +81,7 @@ Cute baby soft sole shoes in light [색상] color, professional product photogra
 
 ---
 
-## 🎨 각도별 프롬프트
+## 각도별 프롬프트
 
 ### 정면 뷰 (메인 이미지용)
 ```
@@ -100,7 +100,7 @@ Cute baby soft sole shoes in light [색상] color, professional product photogra
 
 ---
 
-## 🌈 색상 옵션
+## 색상 옵션
 
 프롬프트의 `[색상]` 부분을 다음 중에서 선택:
 
@@ -115,7 +115,7 @@ Cute baby soft sole shoes in light [색상] color, professional product photogra
 
 ---
 
-## 💡 고급 프롬프트 (Midjourney용)
+## 고급 프롬프트 (Midjourney용)
 
 ### 스타일 추가
 ```
@@ -129,7 +129,8 @@ Cute baby soft sole shoes in light [색상] color, professional product photogra
 
 ---
 
-복사해서 바로 사용하세요! 🚀
+복사해서 바로 사용하세요!
+
 
 
 

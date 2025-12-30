@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 목차
+## 목차
 
 1. [Supabase Storage 설정](#1-supabase-storage-설정)
 2. [이미지 업로드 방법](#2-이미지-업로드-방법)
@@ -25,7 +25,7 @@
    - **"New bucket"** 또는 **"Create bucket"** 클릭
    - 버킷 정보 입력:
      - **Name**: `product-images`
-     - **Public bucket**: ✅ 체크 (공개 접근 허용)
+     - **Public bucket**: 체크 (공개 접근 허용)
      - **File size limit**: `5 MB` (또는 필요에 따라 조정)
      - **Allowed MIME types**: `image/jpeg, image/png, image/webp`
 
@@ -230,7 +230,7 @@ node scripts/updateImageUrls.js
 
 ---
 
-## 📝 작업 체크리스트
+## 작업 체크리스트
 
 ### 업로드 전
 - [ ] Storage 버킷 생성 완료
@@ -257,7 +257,7 @@ node scripts/updateImageUrls.js
 
 ---
 
-## 🔧 문제 해결
+## 문제 해결
 
 ### 이미지가 표시되지 않는 경우
 
@@ -285,7 +285,7 @@ node scripts/updateImageUrls.js
 
 ---
 
-## 💡 최적화 팁
+## 최적화 팁
 
 1. **이미지 압축**
    - 온라인 도구: [TinyPNG](https://tinypng.com), [Squoosh](https://squoosh.app)
@@ -301,7 +301,8 @@ node scripts/updateImageUrls.js
 
 ---
 
-이 가이드를 따라 이미지를 업로드하고 적용하세요! 🖼️
+이 가이드를 따라 이미지를 업로드하고 적용하세요!
+
 
 
 

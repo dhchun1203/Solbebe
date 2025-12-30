@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 목차
+## 목차
 
 1. [Supabase 프로젝트 생성](#1-supabase-프로젝트-생성)
 2. [데이터베이스 테이블 생성](#2-데이터베이스-테이블-생성)
@@ -123,7 +123,7 @@ VITE_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-⚠️ **주의사항**:
+**주의사항**:
 - `.env` 파일은 `.gitignore`에 추가되어 있어 Git에 커밋되지 않습니다
 - 실제 URL과 키는 위 예시를 자신의 Supabase 프로젝트 값으로 변경하세요
 
@@ -321,7 +321,7 @@ npm run dev
 
 ---
 
-## 📚 추가 리소스
+## 추가 리소스
 
 - [Supabase 공식 문서](https://supabase.com/docs)
 - [Supabase JavaScript 클라이언트 가이드](https://supabase.com/docs/reference/javascript/introduction)
@@ -329,7 +329,7 @@ npm run dev
 
 ---
 
-## 🔧 문제 해결
+## 문제 해결
 
 ### 환경 변수가 적용되지 않는 경우
 
@@ -349,7 +349,7 @@ DROP TABLE IF EXISTS products CASCADE;
 
 ---
 
-## ✅ 체크리스트
+## 체크리스트
 
 설정이 완료되면 다음을 확인하세요:
 
@@ -365,6 +365,7 @@ DROP TABLE IF EXISTS products CASCADE;
 ---
 
 설정이 완료되면 실제 프로덕션 환경에서는 RLS를 활성화하고, 환경 변수를 Vercel 등 배포 플랫폼에 설정하는 것을 권장합니다.
+
 
 
 

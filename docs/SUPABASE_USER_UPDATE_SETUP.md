@@ -1,6 +1,6 @@
 # Supabase 사용자 정보 수정 설정 가이드
 
-## 📌 문제 상황
+## 문제 상황
 
 `updateUser` API 호출이 타임아웃되거나 응답이 없는 경우, 다음 설정들을 확인하세요.
 
@@ -13,11 +13,11 @@
 1. **Supabase 대시보드** → **Authentication** → **Settings** 이동
 2. 다음 항목들을 확인:
 
-#### ✅ Email Auth 활성화 확인
+#### Email Auth 활성화 확인
 - **Enable Email Signup**: 활성화되어 있어야 함
 - **Enable Email Confirmations**: 선택 사항 (개발 중에는 비활성화 가능)
 
-#### ✅ User Management 설정
+#### User Management 설정
 - **Enable Custom SMTP**: 선택 사항
 - **Site URL**: `http://localhost:5173` (개발 환경) 또는 실제 도메인 설정
 
@@ -103,9 +103,9 @@ const handleSave = async () => {
     }
 
     const data = await response.json()
-    console.log('✅ 업데이트 성공:', data)
+    console.log('업데이트 성공:', data)
   } catch (error) {
-    console.error('❌ 업데이트 실패:', error)
+    console.error('업데이트 실패:', error)
   }
 }
 ```

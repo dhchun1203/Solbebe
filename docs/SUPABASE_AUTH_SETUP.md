@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 목차
+## 목차
 
 1. [Supabase 대시보드 접속](#1-supabase-대시보드-접속)
 2. [Authentication 설정 확인](#2-authentication-설정-확인)
@@ -34,7 +34,7 @@
 
 **Email** 섹션에서 다음을 확인하세요:
 
-- ✅ **Enable Email provider** 체크박스가 **활성화**되어 있는지 확인
+- **Enable Email provider** 체크박스가 **활성화**되어 있는지 확인
 - 기본적으로 활성화되어 있지만, 비활성화되어 있다면 체크박스를 클릭하여 활성화
 
 ---
@@ -45,14 +45,14 @@
 
 **Authentication** → **Providers** → **Email** 섹션에서:
 
-#### ✅ 기본 설정 (권장)
+#### 기본 설정 (권장)
 
-1. **Enable Email provider**: ✅ 활성화
+1. **Enable Email provider**: 활성화
 2. **Confirm email**: 
-   - **개발 단계**: ❌ 비활성화 (즉시 로그인 가능)
-   - **프로덕션**: ✅ 활성화 (이메일 확인 필요)
+   - **개발 단계**: 비활성화 (즉시 로그인 가능)
+   - **프로덕션**: 활성화 (이메일 확인 필요)
 
-#### 📧 이메일 확인 설정
+#### 이메일 확인 설정
 
 **"Confirm email"** 옵션:
 
@@ -69,7 +69,7 @@
 
 **Password** 섹션에서:
 
-- **Enable Password provider**: ✅ 활성화 (기본값)
+- **Enable Password provider**: 활성화 (기본값)
 - **Minimum password length**: 6자 이상 (기본값)
 
 ---
@@ -208,19 +208,19 @@ Solbebe 팀
 ### 개발 환경 (Development)
 
 ```
-✅ Enable Email provider: 활성화
-❌ Confirm email: 비활성화 (즉시 로그인)
-✅ Enable Password provider: 활성화
+Enable Email provider: 활성화
+Confirm email: 비활성화 (즉시 로그인)
+Enable Password provider: 활성화
 ```
 
 ### 프로덕션 환경 (Production)
 
 ```
-✅ Enable Email provider: 활성화
-✅ Confirm email: 활성화 (보안 강화)
-✅ Enable Password provider: 활성화
-✅ SMTP Settings: 실제 이메일 서비스 설정
-✅ Minimum password length: 8자 이상 권장
+Enable Email provider: 활성화
+Confirm email: 활성화 (보안 강화)
+Enable Password provider: 활성화
+SMTP Settings: 실제 이메일 서비스 설정
+Minimum password length: 8자 이상 권장
 ```
 
 ---
@@ -269,7 +269,7 @@ Solbebe 팀
 
 ---
 
-## 💡 팁
+## 팁
 
 1. **개발 단계**에서는 이메일 확인을 비활성화하여 빠르게 테스트하세요
 2. **프로덕션 배포 전**에는 반드시 이메일 확인을 활성화하세요
@@ -278,7 +278,8 @@ Solbebe 팀
 
 ---
 
-이 가이드를 따라 설정하면 Solbebe 프로젝트에서 이메일 인증이 정상적으로 작동합니다! 🎉
+이 가이드를 따라 설정하면 Solbebe 프로젝트에서 이메일 인증이 정상적으로 작동합니다!
+
 
 
 

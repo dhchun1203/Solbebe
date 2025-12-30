@@ -4,7 +4,7 @@ Solbebe 프로젝트를 위한 AI 생성 상품 이미지 가이드입니다.
 
 ---
 
-## 📌 목차
+## 목차
 
 1. [AI 이미지 생성 도구 선택](#1-ai-이미지-생성-도구-선택)
 2. [카테고리별 프롬프트 가이드](#2-카테고리별-프롬프트-가이드)
@@ -313,8 +313,8 @@ WHERE id = '상품-id-here';
 ### 5-3. 프롬프트 개선 팁
 
 1. **구체적인 색상 명시**
-   - "soft pink" ❌
-   - "soft rose pink, hex #FFE5E5" ✅
+   - "soft pink" (비권장)
+   - "soft rose pink, hex #FFE5E5" (권장)
 
 2. **스타일 키워드 추가**
    - "commercial product photography"
@@ -341,7 +341,7 @@ WHERE id = '상품-id-here';
 
 ---
 
-## 📝 작업 체크리스트
+## 작업 체크리스트
 
 ### 이미지 생성 전
 - [ ] 각 카테고리별 제품 목록 확인
@@ -363,7 +363,7 @@ WHERE id = '상품-id-here';
 
 ---
 
-## 🎨 색상 팔레트 참고
+## 색상 팔레트 참고
 
 ### 파스텔 컬러 가이드
 
@@ -384,7 +384,7 @@ WHERE id = '상품-id-here';
 
 ---
 
-## 💡 프롬프트 예시 모음
+## 프롬프트 예시 모음
 
 ### 상의 - 바디슈트
 
@@ -422,7 +422,7 @@ natural lighting, minimalist style, high quality commercial photo
 
 ---
 
-## 🔗 유용한 링크
+## 유용한 링크
 
 - [DALL·E 3 가이드](https://openai.com/dall-e-3)
 - [Midjourney 문서](https://docs.midjourney.com)
@@ -431,7 +431,8 @@ natural lighting, minimalist style, high quality commercial photo
 
 ---
 
-이 가이드를 참고하여 일관되고 아름다운 상품 이미지를 생성하세요! 🎨
+이 가이드를 참고하여 일관되고 아름다운 상품 이미지를 생성하세요!
+
 
 
 
