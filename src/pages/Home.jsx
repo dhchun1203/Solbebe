@@ -180,9 +180,9 @@ const Home = () => {
   }, [fetchRecommendedProducts])
 
   return (
-    <div className="w-full bg-white dark:bg-gray-950">
+    <div className="w-full">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-pastel-pink/30 via-pastel-pink/10 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 py-16 md:py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-b from-pastel-pink/30 via-pastel-pink/10 to-transparent dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 py-16 md:py-24 lg:py-32 overflow-hidden">
         {/* 배경 장식 요소 */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-10 w-32 h-32 bg-pastel-pink/20 rounded-full blur-3xl animate-pulse"></div>
@@ -224,10 +224,11 @@ const Home = () => {
       {/* Category Quick Menu */}
       <section 
         ref={categorySection.ref}
-        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-pink/10 dark:from-gray-950 dark:to-gray-950 transition-all duration-700 ${
+        className={`w-full py-12 md:py-16 bg-gradient-to-b from-transparent via-transparent to-pastel-pink/10 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 transition-all duration-700 ${
           categorySection.isVisible ? 'animate-fade-in-up' : 'opacity-0'
         }`}
       >
+        <div className="container mx-auto px-4">
         <div className="text-center mb-10 md:mb-12">
           <div className="inline-block bg-pastel-pink/20 rounded-full px-4 py-1.5 mb-4">
             <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
@@ -259,15 +260,17 @@ const Home = () => {
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* Recommended Products */}
       <section 
         ref={productSection.ref}
-        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-pastel-pink/10 to-white dark:from-gray-950 dark:to-gray-950 transition-all duration-700 ${
+        className={`w-full py-12 md:py-16 bg-gradient-to-b from-pastel-pink/10 via-transparent to-transparent dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 transition-all duration-700 ${
           productSection.isVisible ? 'animate-fade-in-up' : 'opacity-0'
         }`}
       >
+        <div className="container mx-auto px-4">
         <div className="text-center mb-10 md:mb-12">
           <div className="inline-block bg-pastel-blue/20 rounded-full px-4 py-1.5 mb-4">
             <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
@@ -326,15 +329,17 @@ const Home = () => {
             ))}
           </div>
         )}
+        </div>
       </section>
 
       {/* Brand Story Section */}
       <section 
         ref={brandSection.ref}
-        className={`container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-white to-pastel-beige/20 dark:from-gray-950 dark:to-gray-950 transition-all duration-700 ${
+        className={`w-full py-12 md:py-16 bg-gradient-to-b from-transparent via-transparent to-pastel-beige/20 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 transition-all duration-700 ${
           brandSection.isVisible ? 'animate-fade-in-up' : 'opacity-0'
         }`}
       >
+        <div className="container mx-auto px-4">
         <div className="text-center mb-10 md:mb-12">
           <div className="inline-block bg-pastel-beige/30 rounded-full px-4 py-1.5 mb-4">
             <span className="text-xs md:text-sm font-semibold text-pastel-pink-text uppercase tracking-wider">
@@ -407,6 +412,7 @@ const Home = () => {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </section>
     </div>
