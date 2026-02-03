@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
-import { ROUTES } from '../constants'
 
 // 코드 스플리팅: 홈 페이지는 즉시 로드, 나머지는 레이지 로드
 import Home from '../pages/Home'
@@ -11,17 +10,6 @@ const ProductList = lazy(() => import('../pages/ProductList'))
 const ProductDetail = lazy(() => import('../pages/ProductDetail'))
 const Inquiry = lazy(() => import('../pages/Inquiry'))
 const InquirySuccess = lazy(() => import('../pages/InquirySuccess'))
-const Cart = lazy(() => import('../pages/Cart'))
-const MyInquiries = lazy(() => import('../pages/MyInquiries'))
-const Profile = lazy(() => import('../pages/Profile'))
-const ForgotPassword = lazy(() => import('../pages/ForgotPassword'))
-const ResetPassword = lazy(() => import('../pages/ResetPassword'))
-const EmailConfirm = lazy(() => import('../pages/EmailConfirm'))
-const AdminLayout = lazy(() => import('../pages/Admin/AdminLayout'))
-const AdminDashboard = lazy(() => import('../pages/Admin/Dashboard'))
-const AdminProducts = lazy(() => import('../pages/Admin/Products'))
-const AdminInquiries = lazy(() => import('../pages/Admin/Inquiries'))
-const AdminProductForm = lazy(() => import('../pages/Admin/ProductForm'))
 
 // 로딩 컴포넌트
 const LoadingFallback = () => (
@@ -40,7 +28,7 @@ const SuspenseWrapper = ({ children }) => (
   </Suspense>
 )
 
-export const router = createBrowserRouter(
+export const router = createHashRouter(
   [
     {
       path: '/',
@@ -79,108 +67,6 @@ export const router = createBrowserRouter(
           element: (
             <SuspenseWrapper>
               <InquirySuccess />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'cart',
-          element: (
-            <SuspenseWrapper>
-              <Cart />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'my-inquiries',
-          element: (
-            <SuspenseWrapper>
-              <MyInquiries />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'profile',
-          element: (
-            <SuspenseWrapper>
-              <Profile />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'forgot-password',
-          element: (
-            <SuspenseWrapper>
-              <ForgotPassword />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'reset-password',
-          element: (
-            <SuspenseWrapper>
-              <ResetPassword />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'auth/confirm',
-          element: (
-            <SuspenseWrapper>
-              <EmailConfirm />
-            </SuspenseWrapper>
-          ),
-        },
-      ],
-    },
-    {
-      path: '/admin',
-      element: (
-        <SuspenseWrapper>
-          <AdminLayout />
-        </SuspenseWrapper>
-      ),
-      children: [
-        {
-          index: true,
-          element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />,
-        },
-        {
-          path: 'dashboard',
-          element: (
-            <SuspenseWrapper>
-              <AdminDashboard />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'products',
-          element: (
-            <SuspenseWrapper>
-              <AdminProducts />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'products/new',
-          element: (
-            <SuspenseWrapper>
-              <AdminProductForm mode="create" />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'products/:id/edit',
-          element: (
-            <SuspenseWrapper>
-              <AdminProductForm mode="edit" />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: 'inquiries',
-          element: (
-            <SuspenseWrapper>
-              <AdminInquiries />
             </SuspenseWrapper>
           ),
         },

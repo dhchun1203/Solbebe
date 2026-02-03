@@ -1,774 +1,122 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import LoginModal from '../common/LoginModal'
-import { useCartStore } from '../../store/cartStore'
-import { useAuthStore } from '../../store/authStore'
 import { useThemeStore } from '../../store/themeStore'
-import { useClickOutside } from '../../hooks/useClickOutside'
-import { ROUTES, CATEGORIES } from '../../constants'
+import { ROUTES } from '../../constants'
 
 const Header = () => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isProductMenuOpen, setIsProductMenuOpen] = useState(false)
-  const [isMobileProductMenuOpen, setIsMobileProductMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
-  const { items, loadCartItems, getTotalItems } = useCartStore()
-  const { user, signOut, checkSession, isAdmin } = useAuthStore()
   const theme = useThemeStore((s) => s.theme)
   const toggleTheme = useThemeStore((s) => s.toggleTheme)
-  const mobileMenuButtonRef = useRef(null)
-  const searchButtonRef = useRef(null)
-  const searchInputRef = useRef(null)
-  const productMenuRef = useRef(null)
-  const productMenuButtonRef = useRef(null)
-  
-  // 중첩된 user_metadata에서 가장 깊은 값을 가져오는 함수
-  const extractDeepestValue = useCallback((obj, key) => {
-    if (!obj || typeof obj !== 'object') return ''
-    
-    // 1. 가장 깊은 중첩 구조에서 찾기 (우선순위 1 - 재귀적으로)
-    if (obj.user_metadata && typeof obj.user_metadata === 'object') {
-      const nestedValue = extractDeepestValue(obj.user_metadata, key)
-      // 중첩된 값이 있으면 우선 반환 (빈 문자열이 아닌 경우)
-      if (nestedValue && nestedValue !== '') return nestedValue
-    }
-    
-    // 2. 현재 레벨에서 직접 찾기 (우선순위 2 - 중첩된 값이 없을 때만)
-    if (obj[key] && obj[key] !== null && obj[key] !== '') return obj[key]
-    
-    return ''
-  }, [])
 
-  // 사용자 이름 가져오기 (중첩된 user_metadata 처리)
-  const userName = useMemo(() => {
-    if (!user?.user_metadata) return '사용자'
-    return extractDeepestValue(user.user_metadata, 'name') || '사용자'
-  }, [user?.user_metadata, extractDeepestValue])
-
-  // 메모이제이션된 값들
-  const totalItems = useMemo(() => getTotalItems(), [getTotalItems, items])
-  const isAdminUser = useMemo(() => isAdmin(), [isAdmin, user])
-
-  // 메뉴 토글 함수들 메모이제이션
-  const toggleMobileMenu = useCallback(() => {
-    setIsMobileMenuOpen(prev => !prev)
-  }, [])
-  const toggleSearch = useCallback(() => {
-    setIsSearchOpen(prev => {
-      if (!prev && searchInputRef.current) {
-        setTimeout(() => searchInputRef.current?.focus(), 100)
-      }
-      return !prev
-    })
-  }, [])
-  const openLogin = useCallback(() => setIsLoginOpen(true), [])
-  const toggleProfileMenu = useCallback(() => setIsProfileMenuOpen(prev => !prev), [])
-
-  // 외부 클릭 감지 훅 (버튼 제외)
-  const closeProfileMenu = useCallback(() => setIsProfileMenuOpen(false), [])
-  const closeSearch = useCallback(() => setIsSearchOpen(false), [])
-  const closeMobileMenu = useCallback((event) => {
-    // 버튼 클릭은 제외
-    if (mobileMenuButtonRef.current && mobileMenuButtonRef.current.contains(event?.target)) {
-      return
-    }
-    setIsMobileMenuOpen(false)
-  }, [])
-  const profileMenuRef = useClickOutside(closeProfileMenu, isProfileMenuOpen)
-  
-  // 상품 메뉴 외부 클릭 감지 (버튼 제외)
-  const closeProductMenu = useCallback(() => setIsProductMenuOpen(false), [])
-  
-  // 검색 드롭다운 외부 클릭 감지 (버튼 제외)
-  const searchRef = useRef(null)
-  useEffect(() => {
-    if (!isSearchOpen) return
-
-    const handleClickOutside = (event) => {
-      if (
-        searchRef.current && 
-        !searchRef.current.contains(event.target) &&
-        searchButtonRef.current &&
-        !searchButtonRef.current.contains(event.target)
-      ) {
-        setIsSearchOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isSearchOpen])
-  
-  // 상품 메뉴 외부 클릭 감지 (버튼 제외)
-  useEffect(() => {
-    if (!isProductMenuOpen) return
-
-    const handleClickOutside = (event) => {
-      if (
-        productMenuRef.current && 
-        !productMenuRef.current.contains(event.target) &&
-        productMenuButtonRef.current &&
-        !productMenuButtonRef.current.contains(event.target)
-      ) {
-        setIsProductMenuOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isProductMenuOpen])
-  
-  // 검색 제출 핸들러
-  const handleSearchSubmit = useCallback((e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
-      setIsSearchOpen(false)
-      setSearchQuery('')
-    }
-  }, [searchQuery, navigate])
-  
-  // ESC 키로 검색 닫기
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isSearchOpen) {
-        setIsSearchOpen(false)
-        setSearchQuery('')
-      }
-    }
-    
-    if (isSearchOpen) {
-      document.addEventListener('keydown', handleKeyDown)
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown)
-      }
-    }
-  }, [isSearchOpen])
-  
-  // 모바일 메뉴 body 스크롤 제어
+    if (!searchQuery.trim()) return
+    navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
+    setSearchQuery('')
+    setIsMobileMenuOpen(false)
+  }
+
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // body 스크롤 방지
       document.body.style.overflow = 'hidden'
     } else {
-      // body 스크롤 복원
       document.body.style.overflow = ''
     }
-
     return () => {
       document.body.style.overflow = ''
     }
   }, [isMobileMenuOpen])
 
-  useEffect(() => {
-    checkSession()
-  }, [checkSession])
-
-  useEffect(() => {
-    if (user) {
-      loadCartItems()
-    }
-  }, [user, loadCartItems])
-
-  const handleSignOut = useCallback(async (e) => {
-    if (e) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-    
-    if (import.meta.env.DEV) {
-      console.log('🔴 로그아웃 버튼 클릭됨')
-    }
-    
-    // 메뉴 닫기
-    setIsProfileMenuOpen(false)
-    
-    try {
-      if (import.meta.env.DEV) {
-        console.log('🔴 signOut 함수 호출 시작...')
-      }
-      
-      // signOut 호출 (즉시 반환됨)
-      const result = await signOut()
-      
-      if (import.meta.env.DEV) {
-        console.log('🔴 signOut 결과:', result)
-        console.log('🔴 홈으로 이동 중...')
-      }
-      
-      // 약간의 딜레이 후 페이지 새로고침 (상태 초기화가 완료되도록)
-      setTimeout(() => {
-        window.location.href = ROUTES.HOME
-      }, 100)
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('🔴 로그아웃 중 오류 발생:', error)
-      }
-      
-      // 상태 강제 초기화
-      try {
-        localStorage.removeItem('auth-storage')
-      } catch (e) {
-        if (import.meta.env.DEV) {
-          console.warn('localStorage 제거 실패:', e)
-        }
-      }
-      
-      // 에러가 발생해도 홈으로 이동
-      setTimeout(() => {
-        window.location.href = ROUTES.HOME
-      }, 100)
-    }
-  }, [signOut])
-
   return (
-    <>
-      <header className="bg-white dark:bg-gray-950 shadow-md sticky top-0 z-50 border-b border-transparent dark:border-gray-800/60">
-        <div className="container mx-auto px-4 py-2 md:py-3">
-          <div className="flex items-center justify-between">
-            {/* 로고 및 메뉴 */}
-            <div className="flex items-center gap-3 md:gap-8">
-              {/* 로고 */}
-              <Link to={ROUTES.HOME} className="flex items-center">
-                {/* 로고 이미지가 있으면 이미지 사용, 없으면 텍스트 표시 */}
-                <img 
-                  src="/logo.png" 
-                  alt="Solbebe" 
-                  className="h-10 md:h-12 max-h-12 md:max-h-14 w-auto object-contain"
-                  loading="eager"
-                  decoding="async"
-                  onError={(e) => {
-                    // 이미지 로드 실패 시 텍스트로 대체
-                    e.target.style.display = 'none'
-                    const textElement = e.target.nextElementSibling
-                    if (textElement) {
-                      textElement.style.display = 'block'
-                    }
-                  }}
-                />
-                <span className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100" style={{ display: 'none' }}>
-                  Solbebe
-                </span>
+    <header className="bg-white dark:bg-gray-950 shadow-md sticky top-0 z-50 border-b border-transparent dark:border-gray-800/60">
+      <div className="container mx-auto px-4 py-2 md:py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Link to={ROUTES.HOME} className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100">
+              Solbebe
+            </Link>
+            <nav className="hidden md:flex items-center gap-4 text-sm font-medium text-gray-700 dark:text-gray-200">
+              <Link to={ROUTES.HOME} className="hover:text-pastel-pink-text transition-colors">
+                홈
               </Link>
-
-              {/* 모바일 햄버거 메뉴 버튼 */}
-              <button
-                ref={mobileMenuButtonRef}
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  setIsMobileMenuOpen(!isMobileMenuOpen)
-                }}
-                className="md:hidden text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors z-50 relative flex items-center justify-center w-6 h-6"
-                aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
-                type="button"
-              >
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {isMobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-
-              {/* 데스크탑 메뉴 */}
-              <nav className="hidden md:flex items-center gap-8">
-                <Link 
-                  to={ROUTES.HOME} 
-                  className="text-lg text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors"
-                >
-                  홈
-                </Link>
-                <div 
-                  className="relative" 
-                  ref={productMenuRef}
-                  onMouseEnter={() => setIsProductMenuOpen(true)}
-                  onMouseLeave={() => setIsProductMenuOpen(false)}
-                >
-                  <button
-                    ref={productMenuButtonRef}
-                    className="text-lg text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors flex items-center gap-1"
-                  >
-                    상품
-                    <svg 
-                      className={`w-4 h-4 transition-transform duration-150 ${isProductMenuOpen ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  
-                  {/* 카테고리 서브메뉴 */}
-                  {isProductMenuOpen && (
-                    <div 
-                      className="absolute top-full left-0 pt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 py-2 z-50 animate-fade-in-up"
-                    >
-                      <Link
-                        to={ROUTES.PRODUCTS}
-                        onClick={() => setIsProductMenuOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:text-pastel-pink-text hover:bg-pastel-pink/10 dark:hover:bg-gray-800/60 transition-colors"
-                      >
-                        전체 상품
-                      </Link>
-                      {CATEGORIES.map((category) => (
-                        <Link
-                          key={category.value}
-                          to={`${ROUTES.PRODUCTS}?category=${category.value}`}
-                          onClick={() => setIsProductMenuOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:text-pastel-pink-text hover:bg-pastel-pink/10 dark:hover:bg-gray-800/60 transition-colors"
-                        >
-                          {category.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </nav>
-            </div>
-
-            {/* 아이콘 버튼들 */}
-            <div className="flex items-center gap-3 md:gap-4">
-              {/* 다크모드 토글 */}
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
-                aria-label="다크모드 토글"
-                title={theme === 'dark' ? '라이트 모드로' : '다크 모드로'}
-              >
-                {theme === 'dark' ? (
-                  // Sun icon
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414m12.728 0-1.414-1.414M7.05 7.05 5.636 5.636" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8a4 4 0 100 8 4 4 0 000-8z" />
-                  </svg>
-                ) : (
-                  // Moon icon
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
-                  </svg>
-                )}
-              </button>
-
-              {/* 검색 버튼 및 드롭다운 (데스크탑만) */}
-              <div className="relative hidden md:block" ref={searchRef}>
-                <button
-                  ref={searchButtonRef}
-                  onClick={toggleSearch}
-                  className="text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
-                  aria-label="검색"
-                >
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                
-                {/* 검색 드롭다운 */}
-                {isSearchOpen && (
-                  <div className="absolute right-0 mt-2 w-80 md:w-96 max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 py-3 z-50 animate-fade-in-up">
-                    <form onSubmit={handleSearchSubmit} className="px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 relative">
-                          <input
-                            ref={searchInputRef}
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="상품을 검색하세요..."
-                            className="w-full px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pastel-pink-text focus:border-transparent bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
-                            autoFocus
-                          />
-                        </div>
-                        <button
-                          type="submit"
-                          className="px-4 py-2.5 text-sm bg-pastel-pink-text text-white rounded-lg hover:bg-pastel-pink-text/90 transition-colors whitespace-nowrap"
-                        >
-                          검색
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
-              </div>
-
-              {/* 프로필 메뉴 (로그인한 사용자) */}
-              {user ? (
-                <div className="relative" ref={profileMenuRef}>
-                  <button
-                    onClick={toggleProfileMenu}
-                    className="text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
-                    aria-label="프로필 메뉴"
-                  >
-                    <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                  </button>
-
-                  {/* 드롭다운 메뉴 */}
-                  {isProfileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 py-2 z-50">
-                      {/* 프로필 정보 */}
-                      <Link
-                        to={ROUTES.PROFILE}
-                        onClick={() => setIsProfileMenuOpen(false)}
-                        className="block px-4 py-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors cursor-pointer"
-                      >
-                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                          {userName}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {user.email}
-                        </p>
-                      </Link>
-
-                      {/* 장바구니 메뉴 */}
-                      <Link
-                        to={ROUTES.CART}
-                        onClick={() => setIsProfileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
-                      >
-                        <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                        <span className="text-sm text-gray-700 dark:text-gray-200">장바구니</span>
-                        {totalItems > 0 && (
-                          <span className="ml-auto bg-pastel-pink-text text-white text-xs font-bold rounded-full px-2 py-0.5">
-                            {totalItems > 9 ? '9+' : totalItems}
-                          </span>
-                        )}
-                      </Link>
-
-                      {/* 내 문의 내역 메뉴 */}
-                      <Link
-                        to={ROUTES.MY_INQUIRIES}
-                        onClick={() => setIsProfileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors border-t border-gray-100 dark:border-gray-800"
-                      >
-                        <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                        </svg>
-                        <span className="text-sm text-gray-700 dark:text-gray-200">내 문의 내역</span>
-                      </Link>
-
-                      {/* 관리자 대시보드 메뉴 */}
-                      {isAdminUser && (
-                        <Link
-                          to={ROUTES.ADMIN_DASHBOARD}
-                          onClick={() => setIsProfileMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors border-t border-gray-100 dark:border-gray-800"
-                        >
-                          <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                          </svg>
-                          <span className="text-sm text-gray-700 dark:text-gray-200 font-medium">관리자 대시보드</span>
-                        </Link>
-                      )}
-
-                      {/* 로그아웃 */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          handleSignOut(e)
-                        }}
-                        onMouseDown={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors text-left cursor-pointer"
-                      >
-                        <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span className="text-sm text-gray-700 dark:text-gray-200">로그아웃</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                /* 로그인 버튼 (프로필 아이콘) */
-                <button
-                  onClick={openLogin}
-                  className="text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors flex items-center justify-center w-6 h-6"
-                  aria-label="로그인"
-                >
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </button>
-              )}
-            </div>
+              <Link to={ROUTES.PRODUCTS} className="hover:text-pastel-pink-text transition-colors">
+                상품
+              </Link>
+              <Link to={ROUTES.INQUIRY} className="hover:text-pastel-pink-text transition-colors">
+                문의
+              </Link>
+            </nav>
           </div>
 
-        </div>
-      </header>
+          <div className="hidden md:flex items-center gap-3">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="상품 검색"
+                className="w-48 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+              />
+            </form>
+            <button
+              onClick={toggleTheme}
+              className="w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="테마 전환"
+            >
+              {theme === 'dark' ? '🌙' : '☀️'}
+            </button>
+          </div>
 
-      {/* 모바일 사이드 메뉴 오버레이 */}
-      {isMobileMenuOpen && (
-        <div
-          data-mobile-overlay
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="fixed inset-0 bg-black/50 z-[9998] md:hidden transition-opacity duration-300"
-        />
-      )}
-
-      {/* 모바일 사이드 메뉴 */}
-      <div 
-        data-mobile-menu
-        className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-950 shadow-2xl z-[9999] md:hidden transform transition-transform duration-300 ease-in-out ${
-          isMobileMenuOpen 
-            ? 'translate-x-0' 
-            : '-translate-x-full'
-        }`}
-      >
-        {/* 사이드 메뉴 헤더 */}
-        <div className="flex items-center justify-between p-4 shadow-sm border-b border-transparent dark:border-gray-800/60">
-          <Link 
-            to={ROUTES.HOME} 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center"
-          >
-            <img 
-              src="/logo.png" 
-              alt="Solbebe" 
-              className="h-8 w-auto object-contain"
-              loading="eager"
-              decoding="async"
-              onError={(e) => {
-                e.target.style.display = 'none'
-                const textElement = e.target.nextElementSibling
-                if (textElement) {
-                  textElement.style.display = 'block'
-                }
-              }}
-            />
-            <span className="text-lg font-bold text-gray-900 dark:text-gray-100 ml-2" style={{ display: 'none' }}>
-              Solbebe
-            </span>
-          </Link>
           <button
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text transition-colors p-2"
-            aria-label="메뉴 닫기"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            className="md:hidden w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-200"
+            aria-label="메뉴 열기"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            {isMobileMenuOpen ? '✕' : '☰'}
           </button>
         </div>
-
-        {/* 사이드 메뉴 네비게이션 */}
-        <nav className="flex flex-col h-[calc(100vh-73px)] overflow-y-auto">
-          {/* 검색 폼 */}
-          <div className="p-4 border-b border-gray-100 dark:border-gray-800">
-            <form onSubmit={handleSearchSubmit} className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="flex-1 relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="상품을 검색하세요..."
-                    className="w-full px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pastel-pink-text focus:border-transparent bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 text-sm bg-pastel-pink-text text-white rounded-lg hover:bg-pastel-pink-text/90 transition-colors whitespace-nowrap flex items-center justify-center"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  검색
-                </button>
-              </div>
-            </form>
-          </div>
-          
-          <div className="p-4 space-y-1">
-            <Link 
-              to={ROUTES.HOME} 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-base text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text hover:bg-pastel-pink/10 dark:hover:bg-gray-800/60 rounded-xl transition-all duration-200"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-              <span>홈</span>
-            </Link>
-            
-            <div>
-              <button
-                onClick={() => setIsMobileProductMenuOpen(!isMobileProductMenuOpen)}
-                className="w-full flex items-center justify-between gap-3 px-4 py-3 text-base text-gray-900 dark:text-gray-100 hover:text-pastel-pink-text hover:bg-pastel-pink/10 dark:hover:bg-gray-800/60 rounded-xl transition-all duration-200"
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                  <span>상품</span>
-                </div>
-                <svg 
-                  className={`w-4 h-4 transition-transform duration-200 ${isMobileProductMenuOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              {/* 카테고리 서브메뉴 */}
-              <div 
-                className={`pl-4 mt-1 space-y-1 overflow-hidden transition-all duration-150 ease-out ${
-                  isMobileProductMenuOpen 
-                    ? 'max-h-96 opacity-100' 
-                    : 'max-h-0 opacity-0'
-                }`}
-              >
-                  <Link
-                    to={ROUTES.PRODUCTS}
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      setIsMobileProductMenuOpen(false)
-                    }}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 dark:text-gray-300 hover:text-pastel-pink-text hover:bg-pastel-pink/10 dark:hover:bg-gray-800/60 rounded-lg transition-all duration-200"
-                  >
-                    전체 상품
-                  </Link>
-                  {CATEGORIES.map((category) => (
-                    <Link
-                      key={category.value}
-                      to={`${ROUTES.PRODUCTS}?category=${category.value}`}
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                        setIsMobileProductMenuOpen(false)
-                      }}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 dark:text-gray-300 hover:text-pastel-pink-text hover:bg-pastel-pink/10 dark:hover:bg-gray-800/60 rounded-lg transition-all duration-200"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-              </div>
-            </div>
-
-            {user && (
-              <>
-                <Link 
-                  to={ROUTES.CART} 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
-                >
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    <span>장바구니</span>
-                  </div>
-                  {totalItems > 0 && (
-                    <span className="bg-pastel-pink-text text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[24px] text-center">
-                      {totalItems > 9 ? '9+' : totalItems}
-                    </span>
-                  )}
-                </Link>
-
-                <Link 
-                  to={ROUTES.MY_INQUIRIES} 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                  </svg>
-                  <span>내 문의 내역</span>
-                </Link>
-
-                {isAdminUser && (
-                  <Link 
-                    to={ROUTES.ADMIN_DASHBOARD} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:text-pastel-pink-text hover:bg-pastel-pink/10 rounded-xl transition-all duration-200"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <span>관리자 대시보드</span>
-                  </Link>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* 사용자 정보 섹션 */}
-          {user ? (
-            <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-              <Link
-                to={ROUTES.PROFILE}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800/60 rounded-lg transition-colors cursor-pointer"
-              >
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  {userName}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {user.email}
-                </p>
-              </Link>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  setIsMobileMenuOpen(false)
-                  handleSignOut(e)
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-base text-gray-900 dark:text-gray-100 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-200"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                <span>로그아웃</span>
-              </button>
-            </div>
-          ) : (
-            <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800">
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false)
-                  setIsLoginOpen(true)
-                }}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 text-base text-white bg-pastel-pink-text hover:bg-pastel-pink-text/90 rounded-xl transition-all duration-200"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <span>로그인</span>
-              </button>
-            </div>
-          )}
-        </nav>
       </div>
 
-      {/* 로그인 모달 */}
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-    </>
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 py-4 space-y-4">
+          <nav className="flex flex-col gap-2 text-sm font-medium text-gray-700 dark:text-gray-200">
+            <Link to={ROUTES.HOME} onClick={() => setIsMobileMenuOpen(false)}>
+              홈
+            </Link>
+            <Link to={ROUTES.PRODUCTS} onClick={() => setIsMobileMenuOpen(false)}>
+              상품
+            </Link>
+            <Link to={ROUTES.INQUIRY} onClick={() => setIsMobileMenuOpen(false)}>
+              문의
+            </Link>
+          </nav>
+          <form onSubmit={handleSearchSubmit} className="flex gap-2">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="상품 검색"
+              className="flex-1 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-pastel-pink-text"
+            />
+            <button
+              type="submit"
+              className="rounded-full bg-pastel-pink-text text-white px-4 text-sm font-semibold"
+            >
+              검색
+            </button>
+          </form>
+          <button
+            onClick={toggleTheme}
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 py-2 text-sm text-gray-700 dark:text-gray-200"
+          >
+            테마 전환: {theme === 'dark' ? '다크' : '라이트'}
+          </button>
+        </div>
+      )}
+    </header>
   )
 }
 
 export default Header
-
-
-

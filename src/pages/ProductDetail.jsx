@@ -1,11 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import InquiryButton from '../components/common/InquiryButton'
-import Toast from '../components/common/Toast'
 import { productApi } from '../services/api'
 import { useProductStore } from '../store/productStore'
-import { useCartStore } from '../store/cartStore'
-import { useAuthStore } from '../store/authStore'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -13,7 +10,6 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [activeTab, setActiveTab] = useState('info')
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
   
   // 드래그 관련 상태
   const thumbnailContainerRef = useRef(null)
@@ -22,10 +18,6 @@ const ProductDetail = () => {
   const [scrollLeft, setScrollLeft] = useState(0)
 
   const { setSelectedProduct, setSelectedSize, setSelectedColor, selectedSize, selectedColor } = useProductStore()
-  const { addToCart } = useCartStore()
-  const { user } = useAuthStore()
-  const navigate = useNavigate()
-  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' })
 
   // 색상 이름을 영어로 매핑
   const getColorCode = (colorName) => {
@@ -51,7 +43,7 @@ const ProductDetail = () => {
     const colorCode = getColorCode(selectedColor)
     
     // 이미지 URL에서 해당 색상 코드가 포함된 이미지만 필터링
-    return product.images.filter(image => {
+    const matchedImages = product.images.filter(image => {
       const imageUrl = image.toLowerCase()
       // 다양한 패턴 지원:
       // - 하이픈 사이: -beige-, -blue-, -pink-
@@ -64,6 +56,8 @@ const ProductDetail = () => {
         imageUrl.endsWith(`-${colorCode}.png`)
       )
     })
+
+    return matchedImages.length > 0 ? matchedImages : product.images
   }
 
   const filteredImages = getFilteredImages()
@@ -323,133 +317,12 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* 장바구니 추가 버튼 */}
-          <button
-            onClick={async () => {
-              // 로그인 체크
-              if (!user) {
-                setToast({
-                  isVisible: true,
-                  message: '로그인이 필요합니다. 로그인 후 이용해주세요.',
-                  type: 'error',
-                })
-                // 로그인 모달을 열기 위해 약간의 딜레이 후 Header의 로그인 버튼 클릭 이벤트 트리거
-                setTimeout(() => {
-                  const loginButton = document.querySelector('[aria-label="로그인"]')
-                  if (loginButton) {
-                    loginButton.click()
-                  }
-                }, 500)
-                return
-              }
-
-              // 사이즈와 색상이 필수인지 확인
-              if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-                setToast({
-                  isVisible: true,
-                  message: '사이즈를 선택해주세요.',
-                  type: 'error',
-                })
-                return
-              }
-              if (product.colors && product.colors.length > 0 && !selectedColor) {
-                setToast({
-                  isVisible: true,
-                  message: '색상을 선택해주세요.',
-                  type: 'error',
-                })
-                return
-              }
-
-              // 로딩 시작
-              setIsAddingToCart(true)
-
-              // 장바구니에 추가
-              console.log('🛒 장바구니 추가 시작:', { productId: product.id, size: selectedSize, color: selectedColor })
-              
-              try {
-                const result = await addToCart(product, {
-                  size: selectedSize,
-                  color: selectedColor,
-                })
-
-                console.log('🛒 장바구니 추가 결과:', result)
-
-                if (result.success) {
-                  setToast({
-                    isVisible: true,
-                    message: '장바구니에 추가되었습니다!',
-                    type: 'success',
-                  })
-                } else {
-                  setToast({
-                    isVisible: true,
-                    message: result.error || '장바구니에 추가하는데 실패했습니다.',
-                    type: 'error',
-                  })
-                }
-              } catch (error) {
-                console.error('🛒 장바구니 추가 중 오류:', error)
-                setToast({
-                  isVisible: true,
-                  message: error?.message || '장바구니에 추가하는데 실패했습니다.',
-                  type: 'error',
-                })
-              } finally {
-                // Toast 메시지가 표시될 때까지 약간의 딜레이 후 로딩 종료
-                setTimeout(() => {
-                  setIsAddingToCart(false)
-                }, 300)
-              }
-            }}
-            disabled={isAddingToCart}
-            className={`w-full text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold transition-all shadow-md mb-3 flex items-center justify-center gap-2 ${
-              isAddingToCart
-                ? 'bg-gray-500 text-white cursor-not-allowed'
-                : 'bg-gray-800 text-white hover:bg-gray-700 hover:shadow-lg'
-            }`}
-          >
-            {isAddingToCart ? (
-              <>
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span>추가 중...</span>
-              </>
-            ) : (
-              <span>장바구니에 추가</span>
-            )}
-          </button>
-
-          {/* 구매 문의 버튼 */}
+          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-300 mb-3">
+            이 페이지는 데모 버전입니다. 장바구니 대신 문의로 연결됩니다.
+          </p>
           <InquiryButton productId={product.id} />
         </div>
       </div>
-
-      {/* 토스트 알림 */}
-      <Toast
-        isVisible={toast.isVisible}
-        message={toast.message}
-        type={toast.type}
-        onClose={() => setToast({ ...toast, isVisible: false })}
-      />
 
       {/* 설명 탭 */}
       <div className="mb-6 md:mb-8">
