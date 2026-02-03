@@ -1,20 +1,23 @@
 # Solbebe - 아기 의류 쇼핑몰 MVP
 
-React + Vite + Tailwind CSS + Supabase 기반의 아기 의류 쇼핑몰 MVP 프로젝트입니다.
+React + Vite + Tailwind CSS 기반의 아기 의류 쇼핑몰 MVP 프로젝트입니다.
 
 파스텔톤의 감성적인 UI/UX로 구현된 포트폴리오용 이커머스 사이트입니다.
 
 ## 주요 기능
 
-- **상품 관리**: 상품 목록, 상세 페이지, 카테고리 필터링, 정렬 기능
-- **장바구니**: 상품 추가, 수량 조절, 개별/전체 삭제, 주문 요약
-- **구매 문의**: 단일 상품 또는 장바구니 전체 문의, 문의 제출 후 장바구니 자동 비우기
-- **사용자 기능**: 로그인, 회원가입, 내 문의 내역 조회, 처리 상태 확인, 프로필 관리
-- **관리자 페이지**: 상품 CRUD (생성/수정/삭제), 문의 관리, 처리 상태 변경, 통계 대시보드
+- **상품 탐색**: 상품 목록, 상세 페이지, 카테고리 필터링, 정렬 기능
+- **구매 문의**: 단일 상품 문의 폼 제출 및 성공 페이지
 - **다크모드**: 라이트/다크 모드 전환, 시스템 설정 자동 감지, 설정 저장
 - **반응형 디자인**: 모바일 퍼스트 디자인, 모바일/태블릿/데스크탑 지원
-- **인증 시스템**: Supabase Auth 기반 로그인/회원가입, 관리자 권한 관리, 비밀번호 재설정
-- **성능 최적화**: 코드 스플리팅, 레이지 로딩, 타임아웃 처리, 에러 핸들링, Supabase REST API 직접 사용
+- **성능 최적화**: 코드 스플리팅, 레이지 로딩, 에러 핸들링
+
+## 현재 상태 요약 (2026-02-03)
+
+- **Supabase 연동 제거**: 인증/프로필/관리자/장바구니 기능 비활성화
+- **정적 데이터 사용**: 상품 데이터는 `src/data/products.js`의 더미 데이터로 제공
+- **배포 유지**: Vercel 배포 구조 유지, GitHub Pages 브랜치 제거
+- **문서 참고**: Supabase 관련 문서는 레거시 참고용
 
 ---
 
@@ -25,15 +28,13 @@ React + Vite + Tailwind CSS + Supabase 기반의 아기 의류 쇼핑몰 MVP 프
 - **목적**: React 기반 쇼핑몰 UI/UX 구현 및 프론트엔드 실력 포트폴리오 제작
 - **타겟**: 아기/유아 의류에 관심 있는 고객, 모바일 쇼핑 선호 사용자
 - **핵심 플로우**: 
-  - **일반 사용자**: Home → Product List → Product Detail → Cart → Inquiry → Success
-  - **로그인 사용자**: Home → Profile → My Inquiries (문의 내역 조회)
-  - **관리자**: Home → Admin Dashboard → Products/Inquiries Management
+  - **일반 사용자**: Home → Product List → Product Detail → Inquiry → Success
 - **주요 특징**:
   - 파스텔톤 감성 UI/UX
   - 다크모드 지원 (라이트/다크 자동 전환)
   - 모바일 퍼스트 반응형 디자인
   - 코드 스플리팅 및 레이지 로딩으로 최적화된 성능
-  - Supabase 기반 풀스택 구현
+  - 정적 데이터 기반 데모 플로우
 
 ---
 
@@ -50,27 +51,7 @@ cd Solbebe
 npm install
 ```
 
-### 2. Supabase 설정
-
-**상세 가이드는 [docs/SUPABASE_SETUP.md](./docs/SUPABASE_SETUP.md) 참고**
-
-1. [Supabase](https://supabase.com)에서 프로젝트 생성
-2. SQL Editor에서 `docs/SUPABASE_SQL.sql` 실행
-3. Settings → API에서 URL과 Key 복사
-4. 프로젝트 루트에 `.env` 파일 생성:
-
-```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your_anon_key_here
-VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
-```
-
-**환경 변수 설명**:
-- `VITE_SUPABASE_URL`: Supabase 프로젝트 URL (필수)
-- `VITE_SUPABASE_ANON_KEY`: Supabase anon public key (필수)
-- `VITE_ADMIN_EMAILS`: 관리자 이메일 목록 (쉼표로 구분, 선택사항)
-
-### 3. 개발 서버 실행
+### 2. 개발 서버 실행
 
 ```bash
 npm run dev
@@ -78,7 +59,7 @@ npm run dev
 
 브라우저에서 `http://localhost:5173` 접속
 
-### 4. 프로덕션 빌드
+### 3. 프로덕션 빌드
 
 ```bash
 npm run build
@@ -91,25 +72,21 @@ npm run preview
 
 ```
 Solbebe/
-├── docs/                          # 문서
-│   ├── SUPABASE_SETUP.md         # Supabase 설정 가이드
-│   ├── SUPABASE_SQL.sql          # 데이터베이스 SQL 파일
-│   └── QUICK_START.md            # 빠른 시작 가이드
+├── docs/                          # 문서 (일부 Supabase 관련 문서는 레거시)
+│   ├── QUICK_START.md            # 빠른 시작 가이드
 │
 ├── src/
 │   ├── components/               # 재사용 가능한 컴포넌트
 │   │   ├── common/              # 공통 컴포넌트
 │   │   │   ├── CategoryCard.jsx # 카테고리 카드
 │   │   │   ├── InquiryButton.jsx # 문의 버튼
-│   │   │   ├── AdminRoute.jsx   # 관리자 라우트 보호
 │   │   │   ├── Toast.jsx         # 토스트 알림
 │   │   │   ├── SearchModal.jsx  # 검색 모달
-│   │   │   ├── LoginModal.jsx   # 로그인 모달
 │   │   │   ├── PrivacyModal.jsx # 개인정보처리방침 모달
 │   │   │   ├── TermsModal.jsx   # 이용약관 모달
 │   │   │   └── ScrollToTop.jsx  # 스크롤 상단 이동
 │   │   ├── layout/              # 레이아웃 컴포넌트
-│   │   │   ├── Header.jsx       # 헤더 (네비게이션, 검색, 로그인, 프로필, 다크모드 토글)
+│   │   │   ├── Header.jsx       # 헤더 (네비게이션, 검색, 다크모드 토글)
 │   │   │   ├── Footer.jsx       # 푸터
 │   │   │   └── Layout.jsx       # 레이아웃 래퍼
 │   │   └── product/             # 상품 관련 컴포넌트
@@ -119,29 +96,16 @@ Solbebe/
 │   │   ├── Home.jsx             # 홈 페이지
 │   │   ├── ProductList.jsx      # 상품 목록 페이지
 │   │   ├── ProductDetail.jsx    # 상품 상세 페이지
-│   │   ├── Cart.jsx             # 장바구니 페이지
 │   │   ├── Inquiry.jsx          # 구매 문의 페이지
 │   │   ├── InquirySuccess.jsx   # 문의 성공 페이지
-│   │   ├── MyInquiries.jsx      # 내 문의 내역 페이지
-│   │   ├── Profile.jsx          # 프로필 페이지
-│   │   ├── ForgotPassword.jsx   # 비밀번호 찾기
-│   │   ├── ResetPassword.jsx    # 비밀번호 재설정
-│   │   ├── EmailConfirm.jsx     # 이메일 인증 확인
-│   │   └── Admin/               # 관리자 페이지
-│   │       ├── AdminLayout.jsx  # 관리자 레이아웃
-│   │       ├── Dashboard.jsx    # 대시보드
-│   │       ├── Products.jsx     # 상품 관리
-│   │       ├── ProductForm.jsx  # 상품 생성/수정 폼
-│   │       └── Inquiries.jsx    # 문의 관리
+│   │   ├── ForgotPassword.jsx   # 비밀번호 찾기 (레거시 UI)
+│   │   ├── ResetPassword.jsx    # 비밀번호 재설정 (레거시 UI)
 │   │
 │   ├── services/                # API 서비스
-│   │   ├── supabase.js          # Supabase 클라이언트 설정
-│   │   └── api.js               # API 함수 (상품, 문의, 장바구니, 인증)
+│   │   └── api.js               # API 함수 (더미 상품 데이터)
 │   │
 │   ├── store/                   # Zustand 상태 관리
 │   │   ├── productStore.js      # 상품 상태 관리
-│   │   ├── cartStore.js         # 장바구니 상태 관리
-│   │   ├── authStore.js         # 인증 상태 관리
 │   │   └── themeStore.js        # 테마(다크모드) 상태 관리
 │   │
 │   ├── router/                  # 라우터 설정
@@ -189,14 +153,10 @@ Solbebe/
 - **Zustand** - 상태 관리 라이브러리 (경량, 간단한 API)
 
 ### Backend / Database
-- **Supabase** - 백엔드 서비스
-  - PostgreSQL 데이터베이스
-  - RESTful API
-  - Storage (이미지 저장용)
+- **없음** - 정적 더미 데이터 사용
 
 ### 배포
 - **Vercel** - 프론트엔드 배포
-- **Supabase** - 백엔드 및 데이터베이스
 
 ---
 
@@ -228,85 +188,21 @@ Solbebe/
   - 사이즈 선택 (버튼 형태)
   - 색상 선택 (버튼 형태)
   - 설명 탭 (Info / Material / Shipping)
-  - "장바구니에 추가" 버튼
   - "구매 문의하기" 버튼
 - **상태 관리**: Zustand를 통한 선택 옵션 저장
 
-### 4. Cart (장바구니)
-- **경로**: `/cart`
-- **기능**:
-  - 로그인한 사용자의 장바구니 아이템 표시
-  - 상품별 수량 조절 (증가/감소)
-  - 개별 상품 삭제
-  - 전체 삭제
-  - 주문 요약 (상품 금액, 배송비, 총 결제금액)
-  - "구매 문의하기" 버튼 (장바구니 전체 상품 문의)
-- **인증**: 로그인 필수
-
-### 5. Inquiry (구매 문의)
-- **경로**: `/inquiry?productId=xxx` 또는 `/inquiry` (장바구니에서)
+### 4. Inquiry (구매 문의)
+- **경로**: `/inquiry?productId=xxx`
 - **기능**:
   - 단일 상품 문의: 상품 정보 자동 표시 (읽기 전용)
-  - 장바구니 문의: 장바구니의 모든 상품 정보 표시
   - 입력 필드: 이름, 연락처, 요청사항
-  - 선택 옵션 표시 (사이즈, 색상, 수량)
-  - Supabase에 데이터 저장
-  - 제출 후 장바구니 자동 비우기 (장바구니에서 온 경우)
   - 제출 후 성공 페이지로 이동
-- **데이터 저장**: `inquiries` 테이블에 INSERT
 
-### 6. Inquiry Success (문의 성공)
+### 5. Inquiry Success (문의 성공)
 - **경로**: `/inquiry/success`
 - **기능**:
   - 성공 메시지 표시
   - "홈으로 돌아가기" 버튼
-
-### 7. My Inquiries (내 문의 내역)
-- **경로**: `/my-inquiries`
-- **기능**:
-  - 로그인한 사용자의 문의 내역 조회
-  - 문의 상세 정보 표시 (상품, 옵션, 요청사항)
-  - 처리 상태 확인 (접수 대기/처리 중/처리 완료/취소됨)
-  - 문의 상세 모달
-- **인증**: 로그인 필수
-- **접근**: 프로필 드롭다운 메뉴에서 "내 문의 내역" 클릭
-
-### 8. Profile (프로필)
-- **경로**: `/profile`
-- **기능**:
-  - 사용자 정보 표시
-  - 프로필 수정 (이름 등)
-  - 로그아웃
-- **인증**: 로그인 필수
-- **접근**: 프로필 드롭다운 메뉴에서 "프로필" 클릭
-
-### 9. Admin (관리자 페이지)
-- **경로**: `/admin`
-- **인증**: 관리자 이메일로 로그인 필수
-- **접근**: 프로필 드롭다운 메뉴에서 "관리자 대시보드" 클릭 (관리자만 표시)
-
-#### 9-1. Dashboard (대시보드)
-- **경로**: `/admin/dashboard`
-- **기능**:
-  - 통계 정보 표시 (전체 상품 수, 전체 문의 수)
-  - 빠른 액션 버튼 (상품 관리, 문의 관리)
-
-#### 9-2. Products (상품 관리)
-- **경로**: `/admin/products`
-- **기능**:
-  - 상품 목록 조회
-  - 상품 추가 (`/admin/products/new`)
-  - 상품 수정 (`/admin/products/:id/edit`)
-  - 상품 삭제
-  - 상품 폼: 상품명, 가격, 카테고리, 사이즈, 색상, 이미지 URL, 설명, 원단 정보, 세탁 방법
-
-#### 9-3. Inquiries (문의 관리)
-- **경로**: `/admin/inquiries`
-- **기능**:
-  - 모든 문의 내역 조회
-  - 문의 상세 정보 표시
-  - 처리 상태 변경 (접수 대기/처리 중/처리 완료/취소됨)
-  - 문의 상세 모달
 
 ---
 
@@ -438,9 +334,9 @@ Solbebe/
 
 ---
 
-## API 구조
+## API 구조 (정적)
 
-### 상품 API (`productApi`)
+### 상품 데이터 (`productApi`)
 
 ```javascript
 // 모든 상품 조회
@@ -454,83 +350,15 @@ productApi.getProductById(id)
 
 // 추천 상품 조회
 productApi.getRecommendedProducts(limit)
-
-// 관리자: 상품 생성
-productApi.createProduct(product)
-
-// 관리자: 상품 수정
-productApi.updateProduct(id, product)
-
-// 관리자: 상품 삭제
-productApi.deleteProduct(id)
 ```
 
-### 문의 API (`inquiryApi`)
-
-```javascript
-// 문의 생성
-inquiryApi.createInquiry(inquiry)
-
-// 사용자: 내 문의 조회
-inquiryApi.getUserInquiries(email, userId)
-
-// 관리자: 모든 문의 조회
-inquiryApi.getAllInquiries()
-
-// 관리자: 문의 상세 조회
-inquiryApi.getInquiryById(id)
-
-// 관리자: 문의 상태 업데이트
-inquiryApi.updateInquiryStatus(id, status)
-```
-
-### 장바구니 API (`cartApi`)
-
-```javascript
-// 장바구니 아이템 조회
-cartApi.getCartItems()
-
-// 장바구니에 상품 추가
-cartApi.addToCart(productId, options)
-
-// 장바구니에서 상품 제거
-cartApi.removeFromCart(itemId)
-
-// 수량 업데이트
-cartApi.updateCartItemQuantity(itemId, quantity)
-
-// 장바구니 비우기
-cartApi.clearCart()
-```
-
-### 인증 API (`authApi`)
-
-```javascript
-// 비밀번호 재설정 이메일 발송
-authApi.resetPassword(email)
-
-// 비밀번호 업데이트
-authApi.updatePassword(newPassword)
-```
+> 상품 데이터는 `src/data/products.js`의 더미 데이터로 제공됩니다.
 
 ---
 
 ## 환경 변수
 
-프로젝트 루트에 `.env` 파일 생성:
-
-```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your_anon_key_here
-VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
-```
-
-**환경 변수 설명**:
-- `VITE_SUPABASE_URL`: Supabase 프로젝트 URL
-- `VITE_SUPABASE_ANON_KEY`: Supabase anon public key
-- `VITE_ADMIN_EMAILS`: 관리자 이메일 목록 (쉼표로 구분, 선택사항)
-
-**주의**: `.env` 파일은 Git에 커밋되지 않습니다 (`.gitignore`에 포함됨)
+별도의 환경 변수 설정 없이 실행됩니다.
 
 ---
 
@@ -555,42 +383,6 @@ VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
 - `setSelectedSize(size)` - 사이즈 선택
 - `setSelectedColor(color)` - 색상 선택
 - `resetSelection()` - 선택 초기화
-
-### cartStore
-
-```javascript
-{
-  items: [],              // 장바구니 아이템 목록
-  loading: false,         // 로딩 상태
-  error: null,            // 에러 메시지
-}
-```
-
-**액션**:
-- `loadCartItems()` - 장바구니 아이템 로드
-- `addToCart(product, options)` - 장바구니에 상품 추가
-- `removeFromCart(itemId)` - 장바구니에서 상품 제거
-- `updateQuantity(itemId, quantity)` - 수량 업데이트
-- `clearCart()` - 장바구니 비우기
-- `getTotalItems()` - 장바구니 총 개수
-- `getTotalPrice()` - 장바구니 총 금액
-
-### authStore
-
-```javascript
-{
-  user: null,             // 현재 사용자 정보
-  session: null,          // 세션 정보
-  loading: false,         // 로딩 상태
-}
-```
-
-**액션**:
-- `signIn(email, password)` - 로그인
-- `signUp(email, password, metadata)` - 회원가입
-- `signOut()` - 로그아웃
-- `checkSession()` - 세션 확인
-- `isAdmin()` - 관리자 여부 확인
 
 ### themeStore
 
@@ -619,25 +411,9 @@ VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
    - GitHub 저장소 선택
    - 프로젝트 설정 확인
 
-3. **환경 변수 설정**
-   - Project Settings → Environment Variables
-   - `VITE_SUPABASE_URL` 추가
-   - `VITE_SUPABASE_ANON_KEY` 추가
-   - `VITE_ADMIN_EMAILS` 추가 (선택사항)
-
-4. **배포 완료**
+3. **배포 완료**
    - 자동 배포 실행
    - 배포 완료 후 URL 확인
-
-### Supabase 설정
-
-1. **RLS 설정** (프로덕션용)
-   - SQL Editor에서 RLS 활성화
-   - 정책(Policy) 생성
-
-2. **Storage 설정** (선택사항)
-   - Storage 버킷 생성
-   - 이미지 업로드 기능 추가
 
 ---
 
@@ -652,39 +428,18 @@ VITE_ADMIN_EMAILS=admin@solbebe.com,manager@solbebe.com
 npm install
 ```
 
-### 환경 변수가 적용되지 않는 경우
+### 환경 변수 관련
 
-1. `.env` 파일이 프로젝트 루트에 있는지 확인
-2. 환경 변수명이 `VITE_`로 시작하는지 확인
-3. 개발 서버 재시작
-
-### Supabase 연결 오류
-
-1. **"Invalid API key"**
-   - `.env` 파일의 키 확인
-   - 개발 서버 재시작
-
-2. **"Failed to fetch"**
-   - Supabase 프로젝트 URL 확인
-   - 네트워크 연결 확인
-
-3. **"relation does not exist"**
-   - 테이블이 생성되었는지 확인
-   - SQL 파일 다시 실행
+- 현재 버전은 환경 변수가 필요하지 않습니다.
 
 ---
 
 ## 문서
 
-- **[Supabase 설정 가이드](./docs/SUPABASE_SETUP.md)** - 상세한 Supabase 설정 방법
 - **[빠른 시작 가이드](./docs/QUICK_START.md)** - 빠른 시작 가이드
-- **[Supabase SQL 파일](./docs/SUPABASE_SQL.sql)** - 데이터베이스 설정 SQL
-- **[관리자 페이지 설정 가이드](./docs/ADMIN_SETUP.md)** - 관리자 페이지 설정 방법
-- **[장바구니 삭제 문제 해결](./docs/FIX_CART_DELETE.sql)** - 장바구니 삭제 RLS 정책 설정
-- **[문의 테이블 스키마 업데이트](./docs/UPDATE_INQUIRIES_TABLE.sql)** - inquiries 테이블 개선 SQL
 - **[AI 이미지 생성 가이드](./docs/AI_IMAGE_GUIDE.md)** - DALL·E/Midjourney/Ideogram로 상품 이미지 생성
-- **[이미지 업로드 가이드](./docs/IMAGE_UPLOAD_GUIDE.md)** - Supabase Storage에 이미지 업로드 및 적용
 - **[Vercel 배포 가이드](./docs/VERCEL_DEPLOYMENT.md)** - Vercel 배포 상세 가이드
+- **레거시 문서**: Supabase/관리자/장바구니 관련 문서는 참고용으로 남아 있습니다.
 
 ---
 
@@ -723,29 +478,18 @@ npm run dev
 ### 초기 설정
 - [ ] Node.js 설치 (v18 이상)
 - [ ] `npm install` 실행
-- [ ] Supabase 프로젝트 생성
-- [ ] SQL 파일 실행 (테이블 생성)
-- [ ] `.env` 파일 생성 및 환경 변수 설정
 - [ ] 개발 서버 실행 확인
 
 ### 기능 테스트
 - [x] 홈 페이지 상품 표시 확인
 - [x] 상품 목록 필터링 동작 확인
 - [x] 상품 상세 페이지 옵션 선택 확인
-- [x] 장바구니 기능 (추가, 조회, 삭제, 수량 변경)
-- [x] 문의 폼 제출 및 데이터 저장 확인
-- [x] 내 문의 내역 조회 기능
-- [x] 관리자 페이지 기능 (상품 관리, 문의 관리)
-- [x] 관리자 상품 생성/수정 폼 기능
-- [x] 로그인/로그아웃 기능
-- [x] 프로필 페이지 기능
+- [x] 문의 폼 제출 및 성공 페이지 이동 확인
 - [x] 다크모드 전환 기능
 - [x] 반응형 디자인 확인 (모바일/데스크탑)
 
 ### 배포 준비
 - [ ] 프로덕션 빌드 테스트
-- [ ] 환경 변수 설정 (Vercel)
-- [ ] RLS 정책 설정 (Supabase)
 - [ ] 도메인 연결 (선택사항)
 
 ---
@@ -753,13 +497,6 @@ npm run dev
 ## 향후 개선 사항
 
 ### 기능 추가
-- [x] 관리자 페이지 구현
-- [x] Supabase Auth를 통한 로그인
-- [x] 장바구니 기능
-- [x] 내 문의 내역 조회 기능
-- [x] 다크모드 기능
-- [x] 프로필 페이지
-- [x] 관리자 상품 생성/수정 폼
 - [ ] 상품 검색 기능
 - [ ] 찜하기 기능
 - [ ] 상품 리뷰 기능
@@ -809,14 +546,13 @@ MIT License
 - **컴포넌트 기반**: 재사용 가능한 컴포넌트로 구성
 - **페이지 기반 라우팅**: React Router를 통한 SPA 구조
 - **상태 관리**: Zustand를 통한 전역 상태 관리 (경량, 간단한 API)
-- **API 레이어**: `services/api.js`에서 모든 API 호출 중앙화
+- **데이터 레이어**: `services/api.js`에서 더미 데이터 로드
 - **에러 처리**: 통합 에러 핸들러 및 Toast 알림 시스템
 
 ### 성능 최적화
 - **코드 스플리팅**: React.lazy를 통한 페이지별 레이지 로딩
 - **Suspense**: 로딩 상태 관리 및 사용자 경험 개선
 - **이미지 최적화**: 외부 이미지 URL 사용 (향후 CDN 연동 가능)
-- **API 최적화**: Supabase REST API 직접 사용으로 빠른 응답
 
 ### 접근성 및 UX
 - **다크모드**: 시스템 설정 자동 감지 및 수동 전환 지원
@@ -826,10 +562,7 @@ MIT License
 - **폼 검증**: 클라이언트 사이드 폼 검증
 
 ### 보안
-- **인증**: Supabase Auth를 통한 안전한 사용자 인증
-- **권한 관리**: 관리자 이메일 기반 권한 체크
-- **RLS**: Supabase Row Level Security 정책 (프로덕션 권장)
-- **환경 변수**: 민감한 정보는 환경 변수로 관리
+- **정적 데모**: 인증/권한 관리 기능 미포함
 
 ---
 
@@ -837,11 +570,10 @@ MIT License
 
 ### 최근 업데이트
 - 다크모드 기능 추가 (2024)
-- 관리자 상품 생성/수정 폼 구현
-- 프로필 페이지 추가
 - 코드 스플리팅 및 레이지 로딩 적용
 - 커스텀 훅 추가 (useApi, useDebounce, useMousePosition 등)
 - UI/UX 개선 (애니메이션, 로딩 상태 등)
+- Supabase 연동 제거 및 정적 데이터 전환 (2026-02-03)
 
 ### 알려진 이슈
 - 이미지 lazy loading 미구현 (향후 개선 예정)
@@ -850,4 +582,4 @@ MIT License
 
 ---
 
-**Made with React, Vite, Tailwind CSS, and Supabase**
+**Made with React, Vite, and Tailwind CSS**
