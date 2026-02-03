@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createHashRouter } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 
 // 코드 스플리팅: 홈 페이지는 즉시 로드, 나머지는 레이지 로드
@@ -28,7 +28,7 @@ const SuspenseWrapper = ({ children }) => (
   </Suspense>
 )
 
-export const router = createHashRouter(
+export const router = createBrowserRouter(
   [
     {
       path: '/',
